@@ -22,12 +22,18 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const generateGeminiResponse = async (userInput) => {
-    try {
-      const response = await api.post('/api/chatbot/gemini', {
-        prompt: userInput,
-        history: messages.slice(1)
-      });
+ const response = await api.post(
+  '/api/chatbot/gemini',
+  {
+    prompt: userInput,
+    history: messages.slice(1)
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  }
+);
 
       if (response.data && response.data.response) {
         return response.data.response;
