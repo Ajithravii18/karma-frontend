@@ -192,8 +192,8 @@ const Main = forwardRef((props, ref) => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 hidden lg:block" data-aos="fade-left" data-aos-delay="400">
-            <div className="bg-white p-8 rounded-[2rem] shadow-2xl space-y-6 relative overflow-hidden max-w-sm ml-auto">
+          <div className="lg:col-span-5 mt-10 lg:mt-0" data-aos="fade-left" data-aos-delay="400">
+            <div className="bg-white p-6 sm:p-8 rounded-[2rem] shadow-2xl space-y-6 relative overflow-hidden max-w-sm mx-auto lg:ml-auto lg:mr-0">
               <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 -mr-12 -mt-12 rounded-full"></div>
 
               <div className="relative">
@@ -274,7 +274,7 @@ const Main = forwardRef((props, ref) => {
             </div>
 
             {/* --- CONDENSED MARQUEE --- */}
-            <div className="mt-8 overflow-hidden max-w-sm ml-auto">
+            <div className="mt-8 overflow-hidden max-w-sm mx-auto lg:ml-auto lg:mr-0">
               <div className="animate-marquee whitespace-nowrap flex items-center gap-12 text-white/60 text-[9px] font-thin uppercase tracking-[.5em] select-none">
                 <span>Clean Kerala • Life Impact • Zero Waste • Restore Nature • Bio-Management • Future Focus • </span>
                 <span aria-hidden="true">Clean Kerala • Life Impact • Zero Waste • Restore Nature • Bio-Management • Future Focus • </span>
