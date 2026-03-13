@@ -181,7 +181,7 @@ const Chatbot = () => {
               </button>
             </div>
             <div className="text-center mt-3">
-              <span className="text-[10px] text-gray-400 font-medium">✨ Powered by Gemini AI</span>
+              <span className="text-[10px] text-gray-400 font-medium">✨ Powered by Grok AI</span>
             </div>
           </div>
 
