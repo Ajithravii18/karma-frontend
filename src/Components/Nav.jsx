@@ -267,65 +267,74 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         <div className="flex items-center gap-2 md:gap-4">
           {isLoggedIn ? (
             <>
-              {/* Notification Bell */}
-              <div className="relative" ref={notifRef}>
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-2.5 rounded-full bg-gray-50 text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all cursor-pointer"
-                >
-                  <FaBell size={18} />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
-                      {unreadCount}
-                    </span>
-                  )}
-                </button>
+              
+          {/* Notification Bell */}
+<div className="relative" ref={notifRef}>
+  <button
+    onClick={() => setShowNotifications(!showNotifications)}
+    className="relative p-2.5 rounded-full bg-gray-50 text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all cursor-pointer"
+  >
+    <FaBell size={18} />
+    {unreadCount > 0 && (
+      <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
+        {unreadCount}
+      </span>
+    )}
+  </button>
 
-                {showNotifications && (
-                  <div className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 z-[110] overflow-hidden animate-in fade-in zoom-in duration-200">
-                    <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-                      <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">Alerts Hub</h3>
-                      {unreadCount > 0 && <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">{unreadCount} New Unread</span>}
-                    </div>
-                    <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-                      {notifications.length > 0 ? notifications.map(n => {
-                        let Icon = FaInfoCircle;
-                        let iconBg = "bg-blue-100 text-blue-600";
-                        if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
-                        else if (n.type === 'PAYMENT_SUCCESS' || n.type === 'PAYMENT_RECEIVED') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
-                        else if (n.type === 'PICKUP_FINISHED') { Icon = FaCheckCircle; iconBg = "bg-green-100 text-green-600"; }
-                        else if (n.type === 'POLLUTION_ALERT') { Icon = FaExclamationCircle; iconBg = "bg-red-100 text-red-600"; }
+  {showNotifications && (
+    /* Changed: Added fixed positioning for mobile and absolute for desktop */
+    <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+        <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">Alerts Hub</h3>
+        <div className="flex items-center gap-3">
+            {unreadCount > 0 && <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">{unreadCount} New</span>}
+            {/* Added a close button for mobile convenience */}
+            <button onClick={() => setShowNotifications(false)} className="md:hidden text-gray-400 p-1">
+                <FaTimes size={14} />
+            </button>
+        </div>
+      </div>
+      
+      <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto custom-scrollbar">
+        {notifications.length > 0 ? notifications.map(n => {
+          let Icon = FaInfoCircle;
+          let iconBg = "bg-blue-100 text-blue-600";
+          if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
+          else if (n.type === 'PAYMENT_SUCCESS' || n.type === 'PAYMENT_RECEIVED') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
+          else if (n.type === 'PICKUP_FINISHED') { Icon = FaCheckCircle; iconBg = "bg-green-100 text-green-600"; }
+          else if (n.type === 'POLLUTION_ALERT') { Icon = FaExclamationCircle; iconBg = "bg-red-100 text-red-600"; }
 
-                        return (
-                          <div
-                            key={n._id}
-                            onClick={() => { markAsRead(n._id); setShowNotifications(false); }}
-                            className={`p-5 border-b border-gray-50 flex gap-4 items-start hover:bg-gray-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-green-50/40' : ''}`}
-                          >
-                            <div className={`${iconBg} p-2 rounded-xl text-sm`}>
-                              <Icon />
-                            </div>
-                            <div className="flex-1 text-left">
-                              <p className="text-xs font-bold text-gray-800 leading-relaxed">{n.message}</p>
-                              <div className="flex items-center gap-2 mt-2">
-                                <FaClock className="text-[9px] text-gray-300" />
-                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter">
-                                  {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.createdAt).toLocaleDateString()}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }) : (
-                        <div className="p-12 text-center">
-                          <FaInfoCircle className="mx-auto text-gray-200 text-3xl mb-3" />
-                          <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">No Alerts Yet</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+          return (
+            <div
+              key={n._id}
+              onClick={() => { markAsRead(n._id); setShowNotifications(false); }}
+              className={`p-5 border-b border-gray-50 flex gap-4 items-start hover:bg-gray-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-green-50/40' : ''}`}
+            >
+              <div className={`${iconBg} p-2 rounded-xl text-sm shrink-0`}>
+                <Icon />
               </div>
+              <div className="flex-1 text-left">
+                <p className="text-xs font-bold text-gray-800 leading-relaxed">{n.message}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <FaClock className="text-[9px] text-gray-300" />
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter">
+                    {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        }) : (
+          <div className="p-12 text-center">
+            <FaInfoCircle className="mx-auto text-gray-200 text-3xl mb-3" />
+            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">No Alerts Yet</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+</div>
 
               {/* Profile Dropdown */}
               <div className="relative group/profile" ref={dropdownRef}>
