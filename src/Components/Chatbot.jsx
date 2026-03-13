@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaRobot, FaTimes, FaPaperPlane, FaLeaf, FaMagic } from 'react-icons/fa';
+import { FaRobot, FaTimes, FaPaperPlane, FaLeaf } from 'react-icons/fa';
 import api from '../utils/api';
 
 const Chatbot = () => {
@@ -7,33 +7,39 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([
     {
       type: 'bot',
-      text: '👋 Hi! I\'m your Karma assistant. I can help you with:\n\n• Scheduling waste pickups\n• Reporting pollution\n• Food donations\n• General questions\n\nHow can I help you today?'
+      text: `👋 Hi! I'm your e-Karma Assistant. I can help you with:\n
+• Scheduling waste pickups
+• Reporting pollution
+• Food donations
+• General questions\n
+How can I help you today?`
     }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Scroll to bottom when messages update
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  useEffect(() => { scrollToBottom(); }, [messages]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
- const response = await api.post(
-  '/api/chatbot/gemini',
-  {
-    prompt: userInput,
-    history: messages.slice(1)
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-  }
-);
+  // Function to call Groq AI backend
+  const generateGroqResponse = async (userPrompt) => {
+    try {
+      const response = await api.post(
+        '/api/chatbot/gemini', // Keep route same for frontend compatibility
+        {
+          prompt: userPrompt,
+          history: messages.slice(1)
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
 
       if (response.data && response.data.response) {
         return response.data.response;
@@ -48,6 +54,7 @@ const Chatbot = () => {
     }
   };
 
+  // Handle sending a message
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -57,11 +64,12 @@ const Chatbot = () => {
     setInput('');
     setIsTyping(true);
 
-    const botResponse = await generateGeminiResponse(currentInput);
+    const botResponse = await generateGroqResponse(currentInput);
     setMessages(prev => [...prev, { type: 'bot', text: botResponse }]);
     setIsTyping(false);
   };
 
+  // Send message on Enter key
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -77,12 +85,8 @@ const Chatbot = () => {
           onClick={() => setIsOpen(true)}
           className="relative flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-green-500 to-emerald-700 text-white rounded-full shadow-2xl hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:scale-105 transition-all duration-300 group overflow-hidden"
         >
-          {/* Subtle animated background glow */}
           <div className="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
           <FaRobot size={28} className="relative z-10 animate-pulse group-hover:animate-bounce transition-transform duration-300" />
-
-          {/* Notification dot */}
           <span className="absolute top-0 right-1 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border border-white"></span>
@@ -119,7 +123,6 @@ const Chatbot = () => {
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-gradient-to-b from-gray-50 to-white/50 scroll-smooth custom-scrollbar">
-            {/* Timestamp for when chat started */}
             <div className="text-center">
               <span className="text-[10px] uppercase font-bold tracking-widest text-gray-400 bg-gray-100/50 px-3 py-1 rounded-full">Today</span>
             </div>
@@ -131,11 +134,10 @@ const Chatbot = () => {
                     <FaRobot size={14} />
                   </div>
                 )}
-
                 <div className={`max-w-[75%] px-4 py-3 text-[15px] leading-relaxed shadow-sm relative ${msg.type === 'user'
                   ? 'bg-emerald-600 text-white rounded-[20px] rounded-br-[4px]'
                   : 'bg-white text-gray-700 rounded-[20px] rounded-bl-[4px] border border-gray-100'
-                  }`}>
+                }`}>
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                 </div>
               </div>
@@ -154,6 +156,7 @@ const Chatbot = () => {
                 </div>
               </div>
             )}
+
             <div ref={messagesEndRef} className="h-2" />
           </div>
 
@@ -175,39 +178,30 @@ const Chatbot = () => {
                 className={`flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 ${isTyping || !input.trim()
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95'
-                  }`}
+                }`}
               >
                 <FaPaperPlane size={16} className={`ml-[-2px] ${input.trim() ? 'animate-pulse' : ''}`} />
               </button>
             </div>
             <div className="text-center mt-3">
-              <span className="text-[10px] text-gray-400 font-medium">✨ Powered by Grok AI</span>
+              <span className="text-[10px] text-gray-400 font-medium">✨ Powered by Groq AI</span>
             </div>
           </div>
-
         </div>
       )}
 
-      {/* Adding custom animations to the global document within this component to avoid touching index.css */}
+      {/* Animations & Custom Scrollbar */}
       <style dangerouslySetInnerHTML={{
         __html: `
-        @keyframes fade-in-up {
-          0% { opacity: 0; transform: translateY(20px) scale(0.95); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes slide-in-up {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up { animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-slide-in-up { animation: slide-in-up 0.3s ease-out forwards; }
-        .animate-fade-in { animation: fade-in-up 0.2s ease-out forwards; }
-        
-        /* Custom scrollbar for Chat area */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(16, 185, 129, 0.2); border-radius: 20px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(16, 185, 129, 0.4); }
+        @keyframes fade-in-up {0% {opacity: 0; transform: translateY(20px) scale(0.95);} 100% {opacity: 1; transform: translateY(0) scale(1);}}
+        @keyframes slide-in-up {0% {opacity: 0; transform: translateY(10px);} 100% {opacity: 1; transform: translateY(0);}}
+        .animate-fade-in-up {animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+        .animate-slide-in-up {animation: slide-in-up 0.3s ease-out forwards;}
+        .animate-fade-in {animation: fade-in-up 0.2s ease-out forwards;}
+        .custom-scrollbar::-webkit-scrollbar {width: 6px;}
+        .custom-scrollbar::-webkit-scrollbar-track {background: transparent;}
+        .custom-scrollbar::-webkit-scrollbar-thumb {background-color: rgba(16,185,129,0.2); border-radius: 20px;}
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {background-color: rgba(16,185,129,0.4);}
       `}} />
     </div>
   );
