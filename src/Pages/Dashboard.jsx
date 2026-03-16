@@ -221,16 +221,20 @@ const Dashboard = () => {
     try {
       setPhoneState(prev => ({ ...prev, loading: true }));
       // 1. Confirm Firebase Code
-      await window.confirmationResult.confirm(phoneState.otp);
+      const cred = await window.confirmationResult.confirm(phoneState.otp);
+      const firebaseUid = cred?.user?.uid || auth.currentUser?.uid;
 
       // 2. Update Backend
-      await api.patch("/api/update-phone", { newPhone: phoneState.newPhone });
+      await api.patch("/api/update-phone", { newPhone: phoneState.newPhone, firebaseUid });
 
       toast.success("Shield updated! Rebooting session...");
       localStorage.clear();
       setTimeout(() => window.location.href = "/login", 1500);
     } catch (err) {
-      toast.error("Invalid verification code");
+      const status = err?.response?.status;
+      const msg = err?.response?.data?.message;
+      if (status === 424) toast.error(msg || "Server is missing Firebase config. Try again later.");
+      else toast.error("Invalid verification code");
       setPhoneState(prev => ({ ...prev, loading: false }));
     }
   };
@@ -265,16 +269,21 @@ const Dashboard = () => {
     try {
       setDeleteState(prev => ({ ...prev, loading: true }));
       // 1. Verify Firebase
-      await window.confirmationResult.confirm(deleteState.otp);
+      const cred = await window.confirmationResult.confirm(deleteState.otp);
+      const firebaseUid = cred?.user?.uid || auth.currentUser?.uid;
 
       // 2. Final Purge
-      await api.delete("/api/delete-account", { data: { reason: deleteState.reason } });
+      await api.delete("/api/delete-account", { data: { reason: deleteState.reason, firebaseUid } });
 
       toast.success("Identity purged. Goodbye.");
       localStorage.clear();
       setTimeout(() => window.location.href = "/", 1500);
     } catch (err) {
-      toast.error("Verification failed");
+      const status = err?.response?.status;
+      const msg = err?.response?.data?.message;
+      if (status === 424) toast.error(msg || "Server is missing Firebase config. Try again later.");
+      else if (status === 502) toast.error(msg || "Firebase delete failed. Please retry.");
+      else toast.error("Verification failed");
       setDeleteState(prev => ({ ...prev, loading: false }));
     }
   };
