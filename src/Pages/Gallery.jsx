@@ -56,6 +56,16 @@ const Gallery = forwardRef((props, ref) => {
     return () => clearInterval(timer);
   }, []);
 
+  // Helper to get visible photos for infinite effect
+  const getVisiblePhotos = () => {
+    const total = photos.length;
+    const items = [];
+    for (let i = 0; i < total + 3; i++) {
+      items.push(photos[(currentIndex + i) % total]);
+    }
+    return items;
+  };
+
   return (
     <section ref={ref} className="bg-gray-50 py-20 px-6 md:px-20 overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -69,18 +79,18 @@ const Gallery = forwardRef((props, ref) => {
           </p>
         </div>
 
-        <div className="relative">
+        <div className="relative group/carousel">
           {/* Main Carousel Wrapper */}
-          <div className="flex transition-transform duration-700 ease-out" style={{ transform: `translateX(-${currentIndex * (100 / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1))}%)` }}>
-            {photos.map((photo, index) => (
+          <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(0%)` }}>
+            {getVisiblePhotos().map((photo, index) => (
               <div 
-                key={index} 
+                key={`${currentIndex}-${index}`}
                 className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4"
               >
                 <div 
                   className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-600 hover:shadow-2xl transition-all duration-300 group h-full flex flex-col"
-                  data-aos="zoom-in"
-                  data-aos-delay={index * 100}
+                  data-aos="fade-up"
+                  data-aos-delay={(index % 3) * 100}
                 >
                   <div className="relative overflow-hidden h-60">
                     <img

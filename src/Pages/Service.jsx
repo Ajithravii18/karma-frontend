@@ -52,11 +52,14 @@ const Services = forwardRef((props, ref) => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white p-8 rounded-xl shadow-md hover:shadow-2xl transition duration-300 border-t-4 border-green-600"
+              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-green-600 group flex flex-col"
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
             >
-              <div className="text-green-700 mb-6">{service.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">{service.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{service.desc}</p>
+              <div className="text-green-700 mb-6 group-hover:scale-110 transition-transform duration-300">{service.icon}</div>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">{service.title}</h3>
+              <p className="text-gray-600 leading-relaxed mb-6 flex-grow">{service.desc}</p>
+              <div className="w-10 h-1 bg-green-100 group-hover:w-full transition-all duration-500 rounded-full"></div>
             </div>
           ))}
         </div>
