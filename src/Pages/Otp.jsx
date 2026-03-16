@@ -111,9 +111,14 @@ const OTPPage = () => {
         </div>
 
         {/* RIGHT SIDE Form - Matches Login Form Style */}
-        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-10 md:p-14 rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
+        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
+          <div className="md:hidden mb-8 text-center" data-aos="fade-down">
+             <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
+             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Secure Verification</p>
+             <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
+          </div>
           <div className="mb-10 text-center md:text-left">
-            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Verify</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Verify</h2>
             <p className="text-gray-500 mt-2 font-semibold italic text-sm">
               Code sent to <span className="text-green-600">+91 {phone?.slice(-10)}</span>
             </p>

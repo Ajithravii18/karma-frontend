@@ -44,23 +44,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative p-4 font-sans">
-      {/* Background Layer - Exactly like Login */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={hero}
-          alt="background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/50"></div>
+    <div className="min-h-screen bg-slate-50/90 flex items-center justify-center relative overflow-hidden font-sans">
+      {/* Background Layer - Matches Login */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${hero})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-linear-to-r from-green-950/90 via-green-900/60 to-black/40"></div>
       </div>
 
       {/* Solid Reset Card */}
-      <div className="relative z-10 w-full max-w-md">
-        <div className="bg-white p-8 md:p-10 rounded-2xl shadow-2xl">
+      <div className="relative z-10 max-w-md mx-auto w-full px-4">
+        <div className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20">
+          <div className="md:hidden mb-8 text-center" data-aos="fade-down">
+             <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
+             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Security Portal</p>
+             <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+
           <button
             onClick={() => nav("/login")}
-            className="flex items-center gap-2 text-gray-500 hover:text-green-600 mb-6 transition-colors font-medium text-sm"
+            className="flex items-center gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-6"
           >
             <FaArrowLeft />
             <span>Back to Login</span>

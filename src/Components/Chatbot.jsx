@@ -7,12 +7,9 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([
     {
       type: 'bot',
-      text: `👋 Hi! I'm your e-Karma Assistant. I can help you with:\n
-• Scheduling waste pickups
-• Reporting pollution
-• Food donations
-• General questions\n
-How can I help you today?`
+      text: `e-Karma Assistant online.
+I can help with Pickups, Donations, and Pollution reporting. 
+How can I assist?`
     }
   ]);
   const [input, setInput] = useState('');

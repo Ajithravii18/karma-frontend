@@ -92,32 +92,37 @@ const Login = () => {
         <div className="absolute inset-0 bg-linear-to-r from-green-950/90 via-green-900/60 to-black/40"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6">
+      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center px-4 md:px-6 py-12 md:py-0">
 
         {/* LEFT SIDE Content */}
         <div className="hidden md:block space-y-8">
           <div data-aos="fade-right">
-            <h1 className="text-7xl font-black text-white leading-[1.1] tracking-tighter">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
               E-KARMA <br />
               <span className="text-green-400">ECO-PORTAL</span>
             </h1>
             <div className="h-1.5 w-24 bg-green-500 mt-4 rounded-full"></div>
           </div>
 
-          <p data-aos="fade-right" data-aos-delay="100" className="text-green-50 text-xl max-w-md leading-relaxed opacity-90 font-medium">
+          <p data-aos="fade-right" data-aos-delay="100" className="text-green-50 text-lg md:text-xl max-w-md leading-relaxed opacity-90 font-medium">
             Join the movement. Log in to track your environmental contributions,
             schedule waste pickups, and report pollution.
           </p>
         </div>
 
         {/* RIGHT SIDE Form */}
-        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-10 md:p-14 rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
-          <div className="mb-10 text-center md:text-left">
+        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
+          <div className="md:hidden mb-8 text-center" data-aos="fade-down">
+             <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
+             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Eco-Portal Initiative</p>
+             <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+          <div className="mb-8 md:mb-10 text-center md:text-left">
             <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-4">
               <FaArrowLeft /> Back to Home
             </Link>
-            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Login</h2>
-            <p className="text-gray-500 mt-2 font-semibold">Enter your credentials to continue</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Login</h2>
+            <p className="text-gray-500 mt-2 font-semibold text-sm italic md:not-italic">Enter your credentials to continue</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

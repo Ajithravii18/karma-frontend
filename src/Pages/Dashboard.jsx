@@ -347,20 +347,84 @@ const Dashboard = () => {
   const TabButton = ({ id, icon: Icon, label }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`w-full flex items-center justify-between p-4 px-6 rounded-2xl transition-all duration-300 group ${activeTab === id
-        ? "bg-green-600 text-white shadow-xl shadow-green-900/10 translate-x-1"
-        : "bg-white text-gray-500 hover:bg-green-50 hover:text-green-700"
-        }`}
+      className={`flex items-center gap-2 p-3 md:p-4 md:px-6 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap ${activeTab === id
+        ? "bg-green-600 text-white shadow-lg md:shadow-xl md:shadow-green-900/10 md:translate-x-1"
+        : "bg-white md:bg-white text-gray-500 hover:bg-green-50 hover:text-green-700"
+        } ${id === 'profile' ? 'md:w-full' : 'md:w-full'}`}
     >
-      <div className="flex items-center gap-4 font-bold tracking-tight">
-        <div className={`p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/20" : "bg-gray-50 group-hover:bg-green-100"}`}>
-          <Icon size={18} />
+      <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
+        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/20" : "bg-gray-50 group-hover:bg-green-100"}`}>
+          <Icon size={14} className="md:w-4.5 md:h-4.5" />
         </div>
         {label}
       </div>
-      <FaChevronRight className={`text-xs transition-transform duration-300 ${activeTab === id ? "translate-x-1" : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
+      <FaChevronRight className={`hidden md:block text-xs transition-transform duration-300 ${activeTab === id ? "translate-x-1" : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
     </button>
   );
+
+  const renderMobileCard = (item, type) => {
+    const status = item.status?.toLowerCase();
+    const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+    const hasVolunteer = item.assignedVolunteer || item.claimedBy;
+    const startDateTime = new Date(item.createdAt || item.reportedAt);
+
+    return (
+      <div key={item._id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm mb-4">
+        <div className="flex justify-between items-start mb-4">
+          <div className={getStatusStyle(item.status || "Pending")}>
+             {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
+             {item.status || "Pending"}
+          </div>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+          </p>
+        </div>
+
+        <h4 className="text-lg font-black text-gray-900 mb-1">
+          {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+        </h4>
+        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
+           Mission ID: #{item._id?.slice(-8)}
+        </p>
+
+        <div className="flex flex-col gap-3">
+          {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+            <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
+              <FaCreditCard /> Pay ₹50
+            </button>
+          ) : status === "collected" && type === "food" ? (
+             !item.donorConfirmedCollection && (
+              <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
+                <FaCheck /> Confirm Collection
+              </button>
+             )
+          ) : status === "completed" && type === "pickups" ? (
+            <button onClick={() => generateReceipt(item)} className="w-full bg-slate-900 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
+              <FaDownload size={10} /> Get Receipt
+            </button>
+          ) : null}
+
+          {hasVolunteer && !isFinished && (
+            <button
+              onClick={() => handleLiveHelp(item, type)}
+              className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100"
+            >
+              <FaInfoCircle /> {item.helpRequested ? "Signal Active" : "Request Help"}
+            </button>
+          )}
+
+          {hasVolunteer && isFinished && !item.review && (
+            <button
+              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+              className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2"
+            >
+              <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const renderTable = (list, columns, type) => {
     if (loading && list.length === 0) return <div className="p-10 text-center"><FaSpinner className="animate-spin text-green-600 text-2xl mx-auto" /></div>;
@@ -371,159 +435,164 @@ const Dashboard = () => {
     );
 
     return (
-      <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left border-separate border-spacing-y-3">
-          <thead>
-            <tr className="text-[11px] uppercase text-gray-400 font-black tracking-[0.2em] px-4">
-              {columns.map(col => <th key={col} className="px-6 py-4">{col}</th>)}
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((item, idx) => {
-              const status = item.status?.toLowerCase();
-              const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
-              const hasVolunteer = item.assignedVolunteer || item.claimedBy;
+      <>
+        <div className="hidden md:block overflow-x-auto custom-scrollbar">
+          <table className="w-full text-left border-separate border-spacing-y-3">
+            <thead>
+              <tr className="text-[11px] uppercase text-gray-400 font-black tracking-[0.2em] px-4">
+                {columns.map(col => <th key={col} className="px-6 py-4">{col}</th>)}
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map((item, idx) => {
+                const status = item.status?.toLowerCase();
+                const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+                const hasVolunteer = item.assignedVolunteer || item.claimedBy;
 
-              const startDateTime = new Date(item.createdAt || item.reportedAt);
-              const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
+                const startDateTime = new Date(item.createdAt || item.reportedAt);
+                const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
 
-              return (
-                <tr key={item._id || idx} className="bg-white group hover:bg-green-50/20 transition-all duration-300 shadow-sm border border-gray-100 rounded-3xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
-                  {/* TIME SECTION (START & END) */}
-                  <td className="px-6 py-6 text-sm font-bold text-gray-500 first:rounded-l-[2rem]">
-                    <div className="space-y-2 min-w-[180px]">
-                      {/* Start Time Row */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
-                        <div className="flex flex-col">
-                          <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">Start Time</span>
-                          <span className="text-[11px] text-gray-800 font-extrabold flex items-center gap-1.5">
-                            {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {startDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* End Time Row */}
-                      <div className="flex items-center gap-3">
-                        <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-gray-200'}`}></div>
-                        <div className="flex flex-col">
-                          <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">End Time</span>
-                          {endDateTime ? (
-                            <span className="text-[11px] text-emerald-600 font-extrabold">
-                              {endDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {endDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                return (
+                  <tr key={item._id || idx} className="bg-white group hover:bg-green-50/20 transition-all duration-300 shadow-sm border border-gray-100 rounded-3xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
+                    {/* TIME SECTION (START & END) */}
+                    <td className="px-6 py-6 text-sm font-bold text-gray-500 first:rounded-l-[2rem]">
+                      <div className="space-y-2 min-w-[180px]">
+                        {/* Start Time Row */}
+                        <div className="flex items-center gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                          <div className="flex flex-col">
+                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">Start Time</span>
+                            <span className="text-[11px] text-gray-800 font-extrabold flex items-center gap-1.5">
+                              {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {startDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
-                          ) : (
-                            <span className="text-[10px] text-gray-300 italic font-medium tracking-tight">Active Mission...</span>
-                          )}
+                          </div>
+                        </div>
+
+                        {/* End Time Row */}
+                        <div className="flex items-center gap-3">
+                          <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-gray-200'}`}></div>
+                          <div className="flex flex-col">
+                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">End Time</span>
+                            {endDateTime ? (
+                              <span className="text-[11px] text-emerald-600 font-extrabold">
+                                {endDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {endDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-gray-300 italic font-medium tracking-tight">Active Mission...</span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  {/* DESCRIPTION */}
-                  <td className="px-6 py-6 border-l border-gray-50">
-                    <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
-                      {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
-                    </p>
-                    <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
-                      <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
-                      {item.weight > 0 && <span className="text-emerald-600 flex items-center gap-1"><FaRecycle size={8} /> {item.weight} KG</span>}
-                    </p>
-                  </td>
+                    {/* DESCRIPTION */}
+                    <td className="px-6 py-6 border-l border-gray-50">
+                      <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
+                        {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+                      </p>
+                      <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
+                        <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
+                        {item.weight > 0 && <span className="text-emerald-600 flex items-center gap-1"><FaRecycle size={8} /> {item.weight} KG</span>}
+                      </p>
+                    </td>
 
-                  <td className="px-6 py-6">
-                    <span className={getStatusStyle(item.status || "Pending")}>
-                      {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
-                      {item.status || "Pending"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-6 last:rounded-r-[2rem]">
-                    <div className="flex flex-col items-center gap-2">
-                      {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
-                        <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
-                          <FaCreditCard /> Pay ₹50
-                        </button>
-                      ) : status === "collected" && type === "food" ? (
-                        item.donorConfirmedCollection ? (
-                          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
-                            <FaCheck size={10} /> Fully Logged
-                          </div>
-                        ) : (
-                          <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 shadow-lg shadow-amber-900/20 transition-all active:scale-95">
-                            <FaCheck /> Confirm
+                    <td className="px-6 py-6">
+                      <span className={getStatusStyle(item.status || "Pending")}>
+                        {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
+                        {item.status || "Pending"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-6 last:rounded-r-[2rem]">
+                      <div className="flex flex-col items-center gap-2">
+                        {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+                          <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
+                            <FaCreditCard /> Pay ₹50
                           </button>
-                        )
-                      ) : status === "completed" && type === "pickups" ? (
-                        <button onClick={() => generateReceipt(item)} className="w-full bg-slate-50 text-blue-600 border border-slate-200 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                          <FaDownload size={10} /> Receipt
-                        </button>
-                      ) : <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">Verified</span>}
+                        ) : status === "collected" && type === "food" ? (
+                          item.donorConfirmedCollection ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
+                              <FaCheck size={10} /> Fully Logged
+                            </div>
+                          ) : (
+                            <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 shadow-lg shadow-amber-900/20 transition-all active:scale-95">
+                              <FaCheck /> Confirm
+                            </button>
+                          )
+                        ) : status === "completed" && type === "pickups" ? (
+                          <button onClick={() => generateReceipt(item)} className="w-full bg-slate-50 text-blue-600 border border-slate-200 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                            <FaDownload size={10} /> Receipt
+                          </button>
+                        ) : <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">Verified</span>}
 
-                      {hasVolunteer && (
-                        !isFinished ? (
-                          item.helpRequested ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-sky-50 text-sky-600 rounded-xl text-[10px] font-black uppercase border border-sky-100 animate-pulse">
-                              <FaInfoCircle size={10} /> Signal Active
-                            </div>
+                        {hasVolunteer && (
+                          !isFinished ? (
+                            item.helpRequested ? (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-sky-50 text-sky-600 rounded-xl text-[10px] font-black uppercase border border-sky-100 animate-pulse">
+                                <FaInfoCircle size={10} /> Signal Active
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => handleLiveHelp(item, type)}
+                                className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-sm active:scale-95"
+                              >
+                                <FaInfoCircle /> Live Help
+                              </button>
+                            )
                           ) : (
-                            <button
-                              onClick={() => handleLiveHelp(item, type)}
-                              className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-sm active:scale-95"
-                            >
-                              <FaInfoCircle /> Live Help
-                            </button>
+                            item.review ? (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
+                                <FaCheckDouble size={10} /> Feedback Logged
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                                className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-sm active:scale-95"
+                              >
+                                <FaStar /> Review & Report
+                              </button>
+                            )
                           )
-                        ) : (
-                          item.review ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
-                              <FaCheckDouble size={10} /> Feedback Logged
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
-                              className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-sm active:scale-95"
-                            >
-                              <FaStar /> Review & Report
-                            </button>
-                          )
-                        )
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="md:hidden space-y-4">
+          {list.map(item => renderMobileCard(item, type))}
+        </div>
+      </>
     );
   };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-green-100">
       <Nav />
-      <div className="max-w-6xl mx-auto pt-32 pb-12 px-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* LEFT COLUMN: Profile Navigation */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 text-center group">
-            <div className="relative w-24 h-24 mx-auto mb-6">
+      <div className="max-w-6xl mx-auto pt-24 md:pt-32 pb-12 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+        {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
+        <div className="lg:col-span-1 space-y-4 md:space-y-6">
+          <div className="bg-white p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm border border-gray-100 text-center group">
+            <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
               <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse group-hover:scale-110 transition-transform duration-500"></div>
-              <div className="relative w-full h-full bg-green-600 rounded-full flex items-center justify-center text-4xl text-white font-black shadow-xl shadow-green-900/20 transform group-hover:rotate-12 transition-transform">
+              <div className="relative w-full h-full bg-green-600 rounded-full flex items-center justify-center text-2xl md:text-4xl text-white font-black shadow-xl shadow-green-900/20 transform group-hover:rotate-12 transition-transform">
                 {currentName.charAt(0).toUpperCase()}
               </div>
             </div>
-            <h2 className="text-xl font-black text-gray-900 tracking-tight">{currentName}</h2>
-            <div className="mt-3 inline-flex px-4 py-1.5 bg-green-50 text-green-700 text-[10px] font-black uppercase rounded-full border border-green-100 italic">
+            <h2 className="text-lg md:text-xl font-black text-gray-900 tracking-tight">{currentName}</h2>
+            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-green-50 text-green-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-green-100 italic">
               Citizen ID: <span className="ml-1 opacity-70">#{user._id?.slice(-6) || 'N/A'}</span>
             </div>
           </div>
-          <nav className="space-y-3">
-            <TabButton id="profile" icon={FaUser} label="My Profile" />
-            <TabButton id="pickups" icon={FaRecycle} label="Waste Pickups" />
-            <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution Reports" />
-            <TabButton id="food" icon={FaUtensils} label="Food Distribution" />
+          <nav className="flex md:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+            <TabButton id="profile" icon={FaUser} label="Profile" />
+            <TabButton id="pickups" icon={FaRecycle} label="Waste" />
+            <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution" />
+            <TabButton id="food" icon={FaUtensils} label="Food" />
           </nav>
         </div>
 
@@ -532,12 +601,12 @@ const Dashboard = () => {
           <div className="bg-white rounded-[48px] shadow-2xl border border-gray-100 overflow-hidden min-h-[600px]">
             {activeTab === "profile" ? (
               <div className="p-8 md:p-12 animate-in fade-in duration-500">
-                <div className="flex justify-between items-start mb-10">
+                <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
                   <div>
-                    <h3 className="text-3xl font-black text-gray-900 tracking-tight">Main Workspace</h3>
-                    <p className="text-gray-400 font-bold text-sm">Managing your environmental contribution</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Main Workspace</h3>
+                    <p className="text-gray-400 font-bold text-xs md:sm">Managing your environmental contribution</p>
                   </div>
-                  <button onClick={() => setIsEditing(!isEditing)} className={`p-3 rounded-2xl transition-all duration-300 flex items-center gap-2 font-black text-[10px] uppercase shadow-sm ${isEditing ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-green-50 text-green-600 hover:bg-green-100 border border-green-100"}`}>
+                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-sm ${isEditing ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-green-50 text-green-600 hover:bg-green-100 border border-green-100"}`}>
                     {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
                   </button>
                 </div>
@@ -579,15 +648,15 @@ const Dashboard = () => {
                     <div className="flex flex-wrap gap-4">
                       <button
                         onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                        className={`px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center gap-3 shadow-sm ${phoneState.show ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-sm ${phoneState.show ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                       >
-                        <FaEdit size={14} className={phoneState.show ? "text-green-400" : "text-green-600"} /> Update Phone Number
+                        <FaEdit size={14} className={phoneState.show ? "text-green-400" : "text-green-600"} /> Update Phone
                       </button>
                       <button
                         onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                        className={`px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center gap-3 shadow-sm ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-100 text-rose-600 hover:bg-rose-50'}`}
+                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-sm ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-100 text-rose-600 hover:bg-rose-50'}`}
                       >
-                        <FaTimes size={14} /> Critical: Account Termination
+                        <FaTimes size={14} /> Account Termination
                       </button>
                     </div>
 
@@ -707,38 +776,38 @@ const Dashboard = () => {
                   <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-150"></div>
                   <FaLeaf className="absolute right-10 bottom-10 text-[180px] opacity-10 group-hover:rotate-12 group-hover:scale-125 transition-all duration-1000" />
 
-                  <div className="relative z-10 grid md:grid-cols-5 items-center gap-10">
-                    <div className="md:col-span-3">
-                      <h4 className="text-green-200 font-black text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
-                      <div className="flex items-baseline gap-4 mb-2">
-                        <span className="text-8xl font-black tracking-tighter">
+                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
+                    <div className="md:col-span-3 text-center md:text-left">
+                      <h4 className="text-green-200 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
+                      <div className="flex flex-col md:flex-row items-center md:items-baseline gap-2 md:gap-4 mb-2">
+                        <span className="text-6xl md:text-8xl font-black tracking-tighter">
                           <Counter end={stats.totalImpact} />
                         </span>
-                        <div className="space-y-1">
-                          <p className="text-2xl font-black text-green-400">CREDITS</p>
-                          <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Total Life Impact</p>
+                        <div className="space-y-0.5 md:space-y-1">
+                          <p className="text-xl md:text-2xl font-black text-green-400">CREDITS</p>
+                          <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest">Total Life Impact</p>
                         </div>
                       </div>
-                      <div className="w-full h-2 bg-white/10 rounded-full mt-6 overflow-hidden">
+                      <div className="w-full h-1.5 md:h-2 bg-white/10 rounded-full mt-6 overflow-hidden">
                         <div className="h-full bg-green-400 w-[75%] rounded-full shadow-[0_0_15px_rgba(74,222,128,0.5)] animate-pulse"></div>
                       </div>
                     </div>
 
-                    <div className="md:col-span-2 space-y-4">
+                    <div className="md:col-span-2 space-y-3 md:space-y-4">
                       {[
                         { icon: FaRecycle, color: "text-green-300", bg: "bg-white/10", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
                         { icon: FaExclamationTriangle, color: "text-red-300", bg: "bg-white/10", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
                         { icon: FaUtensils, color: "text-orange-300", bg: "bg-white/10", label: "Food Donations", val: stats.breakdown?.food, suffix: "♡" }
                       ].map((item, i) => (
-                        <div key={i} className={`${item.bg} backdrop-blur-xl px-6 py-4 rounded-3xl flex items-center gap-4 border border-white/10 hover:bg-white/20 transition-all cursor-default group/item`}>
-                          <div className={`p-2.5 rounded-xl bg-white/10 ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
-                            <item.icon size={16} />
+                        <div key={i} className={`${item.bg} backdrop-blur-xl px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-white/10 hover:bg-white/20 transition-all cursor-default group/item`}>
+                          <div className={`p-2 rounded-xl bg-white/10 ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
+                            <item.icon size={14} className="md:w-4 md:h-4" />
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase font-black text-green-200/60 tracking-widest">{item.label}</p>
-                            <p className="text-xl font-bold flex items-center gap-1">
+                            <p className="text-[8px] md:text-[9px] uppercase font-black text-green-200/60 tracking-widest">{item.label}</p>
+                            <p className="text-lg md:text-xl font-bold flex items-center gap-1">
                               <Counter end={item.val || 0} />
-                              <span className="text-[14px] opacity-40">{item.suffix}</span>
+                              <span className="text-[12px] md:text-[14px] opacity-40">{item.suffix}</span>
                             </p>
                           </div>
                         </div>

@@ -12,6 +12,7 @@ const VolunteerHistory = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("All");
   const navigate = useNavigate();
 
   const token = localStorage.getItem("authToken") || localStorage.getItem("token");
@@ -50,14 +51,29 @@ const VolunteerHistory = () => {
     fetchHistory();
   }, [token, currentVolunteerId]);
 
+  const getAvailableMonths = () => {
+    const months = history.map(item => {
+      const date = new Date(item.completedAt || item.deliveredAt || item.createdAt);
+      return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    });
+    return ["All", ...new Set(months)];
+  };
+
   const filteredHistory = history.filter(h => {
     const q = searchTerm.toLowerCase();
-    return (
+    const date = new Date(h.completedAt || h.deliveredAt || h.createdAt);
+    const itemMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const matchesSearch = (
       (h.wasteType || "").toLowerCase().includes(q) ||
       (h.placeName || "").toLowerCase().includes(q) ||
       (h.pollutionType || "").toLowerCase().includes(q) ||
       (h.address || "").toLowerCase().includes(q)
     );
+
+    const matchesMonth = selectedMonth === "All" || itemMonth === selectedMonth;
+
+    return matchesSearch && matchesMonth;
   });
 
   const handleDownload = () => {
@@ -81,7 +97,7 @@ const VolunteerHistory = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Volunteer_History_${new Date().toLocaleDateString()}.csv`);
+    link.setAttribute("download", `Volunteer_History_${selectedMonth === "All" ? "Full" : selectedMonth.replace(/ /g, "_")}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -146,15 +162,32 @@ const VolunteerHistory = () => {
           </div>
         </div>
 
-        {/* --- SEARCH BAR --- */}
-        <div className="relative mb-8 lg:mb-10">
-          <FaSearch className="absolute left-6 lg:left-8 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-          <input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="SEARCH MISSION ARCHIVES..."
-            className="w-full pl-14 lg:pl-16 pr-6 lg:pr-8 py-5 lg:py-6 bg-white border border-slate-200 rounded-2xl lg:rounded-[2.5rem] text-[9px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] outline-none focus:border-emerald-500 transition-all shadow-sm"
-          />
+        {/* --- SEARCH & FILTER BAR --- */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8 lg:mb-10">
+          <div className="relative flex-1">
+            <FaSearch className="absolute left-6 lg:left-8 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="SEARCH MISSION ARCHIVES..."
+              className="w-full pl-14 lg:pl-16 pr-6 lg:pr-8 py-5 lg:py-6 bg-white border border-slate-200 rounded-2xl lg:rounded-[2.5rem] text-[9px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] outline-none focus:border-emerald-500 transition-all shadow-sm"
+            />
+          </div>
+          
+          <div className="relative min-w-[200px]">
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="w-full h-full pl-6 pr-12 py-5 lg:py-0 bg-white border border-slate-200 rounded-2xl lg:rounded-[2.5rem] text-[9px] lg:text-[11px] font-black uppercase tracking-[0.15em] outline-none focus:border-emerald-500 transition-all shadow-sm appearance-none cursor-pointer"
+            >
+              {getAvailableMonths().map(m => (
+                <option key={m} value={m}>{m === "All" ? "ALL TIME RECORDS" : m.toUpperCase()}</option>
+              ))}
+            </select>
+            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <FaCalendarCheck size={14} />
+            </div>
+          </div>
         </div>
         {/* --- ARCHIVE DISPLAY --- */}
         <div className="space-y-6">

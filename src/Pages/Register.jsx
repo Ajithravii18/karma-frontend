@@ -69,23 +69,28 @@ const Register = () => {
         <div className="absolute inset-0 bg-linear-to-r from-green-950/90 via-green-900/60 to-black/40"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 py-12">
+      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center px-4 md:px-6 py-10 md:py-12">
         
         {/* LEFT SIDE: Brand Message */}
         <div className="hidden md:block space-y-6">
-          <h1 data-aos="fade-right" className="text-6xl font-extrabold text-white leading-tight">
+          <h1 data-aos="fade-right" className="text-5xl md:text-6xl font-extrabold text-white leading-tight">
             Join the <br/>
             <span className="text-green-400">Green Movement.</span>
           </h1>
-          <p data-aos="fade-right" data-aos-delay="100" className="text-green-50 text-xl max-w-md opacity-90 leading-relaxed">
+          <p data-aos="fade-right" data-aos-delay="100" className="text-lg md:text-xl text-green-50 max-w-md opacity-90 leading-relaxed">
             Create an account to start contributing to a cleaner, more sustainable future for Kerala.
           </p>
         </div>
 
         {/* RIGHT SIDE: Register Card */}
-        <div data-aos="fade-left" className="bg-white/95 backdrop-blur-sm p-10 rounded-3xl shadow-2xl border border-white/20 max-w-md mx-auto w-full">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-          <p className="text-gray-500 mb-8 font-medium text-sm italic">Secure registration via Phone OTP</p>
+        <div data-aos="fade-left" className="bg-white/95 backdrop-blur-sm p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 max-w-md mx-auto w-full">
+          <div className="md:hidden mb-8 text-center" data-aos="fade-down">
+             <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
+             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Eco-Portal Initiative</p>
+             <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
+          <p className="text-gray-500 mb-6 md:mb-8 font-medium text-xs md:text-sm italic">Secure registration via Phone OTP</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
