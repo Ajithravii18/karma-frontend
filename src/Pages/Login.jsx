@@ -69,7 +69,10 @@ const Login = () => {
 
     } catch (error) {
       console.error("Login Error:", error);
-      const errorMsg = error.response?.data?.message || "Invalid phone or password";
+      const responseData = error.response?.data;
+      const errorMsg =
+        (typeof responseData === "string" ? responseData : responseData?.message) ||
+        "Invalid phone or password";
       toast.error(errorMsg);
     } finally {
       setLoading(false);

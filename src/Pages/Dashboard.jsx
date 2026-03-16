@@ -264,17 +264,32 @@ const Dashboard = () => {
   const handleFinalDelete = async () => {
     try {
       setDeleteState(prev => ({ ...prev, loading: true }));
-      // 1. Verify Firebase
+
+      // 1. Verify Firebase OTP — this signs the user into Firebase Auth
       await window.confirmationResult.confirm(deleteState.otp);
 
-      // 2. Final Purge
+      // 2. Delete the Firebase Auth user from the client side
+      //    (auth.currentUser is now set after OTP confirmation above)
+      try {
+        if (auth.currentUser) {
+          await auth.currentUser.delete();
+          console.log("Firebase Auth user deleted successfully.");
+        }
+      } catch (firebaseErr) {
+        // Log but don't block — the backend will also attempt Firebase Admin deletion
+        console.warn("Firebase client-side deletion warning:", firebaseErr?.message);
+      }
+
+      // 3. Delete from MongoDB (backend also attempts Firebase Admin deletion as secondary safeguard)
       await api.delete("/api/delete-account", { data: { reason: deleteState.reason } });
 
       toast.success("Identity purged. Goodbye.");
       localStorage.clear();
       setTimeout(() => window.location.href = "/", 1500);
     } catch (err) {
-      toast.error("Verification failed");
+      console.error("Account deletion error:", err);
+      const msg = err?.response?.data?.message || err?.message || "Verification failed";
+      toast.error(msg);
       setDeleteState(prev => ({ ...prev, loading: false }));
     }
   };
