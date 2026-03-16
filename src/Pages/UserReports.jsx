@@ -344,6 +344,11 @@ const UserReports = () => {
                             <FaUser size={9} /> Volunteer Assigned
                           </span>
                         )}
+                        {report.weight > 0 && (
+                          <span className="text-[10px] font-black text-emerald-600 flex items-center gap-1 uppercase">
+                            <FaRecycle size={9} /> {report.weight} KG Collected
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="p-8 text-center">

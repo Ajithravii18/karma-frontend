@@ -502,48 +502,48 @@ const VolunteerPortal = () => {
       <div className="max-w-7xl mx-auto pt-32 px-6">
 
         {/* STATS OVERVIEW */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12">
-          <div className="flex-1 bg-white border border-slate-200 p-8 rounded-[3rem] shadow-sm flex items-center gap-6">
-            <div className="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center text-white text-3xl shadow-lg">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mb-8 lg:mb-12">
+          <div className="flex-1 bg-white border border-slate-200 p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] shadow-sm flex items-center gap-4 lg:gap-6">
+            <div className="w-14 h-14 lg:w-20 lg:h-20 bg-indigo-600 rounded-2xl lg:rounded-[2rem] flex items-center justify-center text-white text-xl lg:text-3xl shadow-lg shrink-0">
               <FaUserShield />
             </div>
-            <div>
-              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">Active Agent</p>
-              <h2 className="text-3xl font-black text-slate-900 leading-none mb-1">{volunteerInfo.name || "Agent"}</h2>
+            <div className="min-w-0">
+              <p className="text-[8px] lg:text-[10px] font-black text-indigo-50 uppercase tracking-widest mb-1 bg-indigo-600 w-fit px-2 py-0.5 rounded">Active Agent</p>
+              <h2 className="text-xl lg:text-3xl font-black text-slate-900 leading-none mb-1 truncate">{volunteerInfo.name || "Agent"}</h2>
 
-              <div className="flex items-center gap-2 mb-3 ml-1">
+              <div className="flex flex-wrap items-center gap-2 mb-2 lg:mb-3 ml-0.5">
                 <div className="flex items-center gap-1 text-amber-500">
                   <FaStar size={10} />
-                  <span className="text-sm font-black text-slate-700">{volunteerInfo.averageRating || "0.0"}</span>
+                  <span className="text-xs lg:text-sm font-black text-slate-700">{volunteerInfo.averageRating || "0.0"}</span>
                 </div>
-                <div className="h-4 w-px bg-slate-200"></div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">({volunteerInfo.reviewCount || 0} reviews)</span>
-                <div className="h-4 w-px bg-slate-200"></div>
-                <span className="text-[10px] text-slate-400 font-bold tracking-tight uppercase">{volunteerInfo.phone}</span>
+                <div className="h-3 w-px bg-slate-200"></div>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">({volunteerInfo.reviewCount || 0})</span>
+                <div className="h-3 w-px bg-slate-200 hidden sm:block"></div>
+                <span className="text-[9px] text-slate-400 font-bold tracking-tight uppercase truncate max-w-[120px]">{volunteerInfo.phone}</span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className={`px-4 py-1 rounded-full text-[9px] font-black uppercase ${isVolunteerBusy ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={`px-3 lg:px-4 py-1 rounded-full text-[8px] lg:text-[9px] font-black uppercase ${isVolunteerBusy ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
                   {isVolunteerBusy ? "• In Mission" : "• Standby"}
                 </span>
                 <button
                   onClick={() => setShowSecurity(!showSecurity)}
-                  className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all flex items-center gap-2 ${showSecurity ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                  className={`px-3 lg:px-4 py-1.5 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all flex items-center gap-2 ${showSecurity ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                 >
-                  <FaUserShield /> {showSecurity ? "Hide Security" : "Account Security"}
+                  <FaUserShield size={10} /> Account Security
                 </button>
               </div>
               {showSecurity && (
                 <div className="flex items-center gap-3 mt-3 animate-in fade-in slide-in-from-left-2 duration-300">
                   <button
                     onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                    className={`text-[9px] font-black uppercase ${phoneState.show ? 'text-indigo-600 underline' : 'text-slate-400 hover:text-indigo-500'}`}
+                    className={`text-[8px] lg:text-[9px] font-black uppercase ${phoneState.show ? 'text-indigo-600 underline' : 'text-slate-400 hover:text-indigo-500'}`}
                   >
                     • Update Phone
                   </button>
                   <button
                     onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                    className={`text-[9px] font-black uppercase ${deleteState.show ? 'text-rose-600 underline' : 'text-slate-400 hover:text-rose-500'}`}
+                    className={`text-[8px] lg:text-[9px] font-black uppercase ${deleteState.show ? 'text-rose-600 underline' : 'text-slate-400 hover:text-rose-500'}`}
                   >
                     • Delete Mission
                   </button>
@@ -553,11 +553,11 @@ const VolunteerPortal = () => {
             </div>
           </div>
 
-          <div onClick={() => navigate("/volunteer-history")} className="cursor-pointer bg-slate-900 px-10 py-8 rounded-[3rem] shadow-xl flex items-center gap-8 group hover:bg-slate-800 transition-all text-white">
-            <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-2xl"><FaCheckCircle /></div>
-            <div>
-              <p className="text-3xl font-black">{myCompletedCount}</p>
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Successful Missions</p>
+          <div onClick={() => navigate("/volunteer-history")} className="cursor-pointer bg-slate-900 px-6 lg:px-10 py-6 lg:py-8 rounded-[2rem] lg:rounded-[3rem] shadow-xl flex items-center gap-4 lg:gap-8 group hover:bg-slate-800 transition-all text-white">
+            <div className="w-12 h-12 lg:w-14 lg:h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl lg:text-2xl shrink-0"><FaCheckCircle /></div>
+            <div className="flex-1">
+              <p className="text-2xl lg:text-3xl font-black">{myCompletedCount}</p>
+              <p className="text-[8px] lg:text-[9px] font-black text-slate-400 uppercase tracking-widest">Successful Missions</p>
             </div>
             <FaArrowRight className="ml-auto group-hover:translate-x-2 transition-transform" />
           </div>
@@ -671,139 +671,233 @@ const VolunteerPortal = () => {
         )}
 
         {/* MISSION CONTROL */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
           <div>
-            <h1 className="text-5xl font-black tracking-tight text-slate-900">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
-            <p className="text-slate-400 font-bold text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
+            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
+            <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
               {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 bg-white p-2.5 rounded-[2.2rem] border border-slate-200 shadow-sm">
-            <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
+            <div className="flex bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
               {["All Sectors", "Food Only", "Waste Only", "Pollution Only"].map(s => (
-                <button key={s} onClick={() => setSectorFilter(s)} className={`px-5 py-2 rounded-lg text-[9px] font-black uppercase transition-all ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
+                <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
               ))}
             </div>
-            <div className="flex bg-slate-100 p-1 rounded-xl">
+            <div className="flex bg-slate-100 p-1 rounded-xl justify-between sm:justify-start">
               {["All", "Pending", "Completed"].map(f => (
-                <button key={f} onClick={() => setStatusFilter(f)} className={`px-5 py-2 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === f ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{f}</button>
+                <button key={f} onClick={() => setStatusFilter(f)} className={`flex-1 sm:flex-none px-4 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all ${statusFilter === f ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{f}</button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* MISSIONS TABLE */}
-        <div className="bg-white border border-slate-200 rounded-[3.5rem] overflow-hidden shadow-2xl">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-100">
-              <tr>
-                <th className="p-8 text-[11px] font-black uppercase text-slate-400">Sector</th>
-                <th className="p-8 text-[11px] font-black uppercase text-slate-400">Intelligence</th>
-                <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-center">Time</th>
-                <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-right">Operational Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {visibleTasks.length > 0 ? visibleTasks.map((task) => {
-                const status = (task.status || "").toLowerCase();
-                const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
-                const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
+        {/* MISSIONS DISPLAY */}
+        <div className="space-y-6">
+          {/* DESKTOP TABLE VIEW */}
+          <div className="hidden lg:block bg-white border border-slate-200 rounded-[3.5rem] overflow-hidden shadow-2xl">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 border-b border-slate-100">
+                <tr>
+                  <th className="p-8 text-[11px] font-black uppercase text-slate-400">Sector</th>
+                  <th className="p-8 text-[11px] font-black uppercase text-slate-400">Intelligence</th>
+                  <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-center">Time</th>
+                  <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-right">Operational Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {visibleTasks.length > 0 ? visibleTasks.map((task) => {
+                  const status = (task.status || "").toLowerCase();
+                  const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
+                  const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
 
-                return (
-                  <tr key={task._id} className={`group transition-all ${isFinished ? 'opacity-50' : assignedToMe ? 'bg-emerald-50/30' : 'hover:bg-slate-50/50'}`}>
-                    <td className="p-8">
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
-                        {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
-                      </div>
-                    </td>
-                    <td className="p-8">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
-                          {task.isFood ? "Food Bank" : task.isPollution ? "Environment" : "Logistics"}
-                        </span>
-                        {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
-                      </div>
-                      <h3 className="text-xl font-black text-slate-900 leading-tight">
-                        {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
-                        {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500">{task.quantity} ppl</span>}
-                      </h3>
-                      <div className="flex items-center gap-4 mt-2">
-                        <button onClick={() => handleNavigation(task)} className="text-[10px] font-black text-indigo-500 flex items-center gap-1 uppercase hover:underline"><FaDirections /> GPS</button>
-                        <a href={`tel:${task.userPhone || task.userId?.phone}`} className="text-[10px] font-black text-slate-400 flex items-center gap-1 uppercase hover:text-slate-600"><FaPhoneAlt size={9} /> Contact</a>
-                      </div>
-                    </td>
-                    <td className="p-8 text-center">
-                      <div className="text-[9px] font-black text-slate-500 uppercase">
-                        {new Date(task.createdAt).toLocaleDateString()} <br />
-                        <span className="text-slate-400">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-                    </td>
-                    <td className="p-8 text-right">
-                      {isFinished ? (
-                        task.review ? (
-                          <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-500 rounded-2xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
-                            <FaCheckCircle size={10} /> Feedback Logged
+                  return (
+                    <tr key={task._id} className={`group transition-all ${isFinished ? 'opacity-50' : assignedToMe ? 'bg-emerald-50/30' : 'hover:bg-slate-50/50'}`}>
+                      <td className="p-8">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
+                          {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
+                        </div>
+                      </td>
+                      <td className="p-8">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                            {task.isFood ? "Food Bank" : task.isPollution ? "Environment" : "Logistics"}
+                          </span>
+                          {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
+                        </div>
+                        <h3 className="text-xl font-black text-slate-900 leading-tight">
+                          {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
+                          {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500">{task.quantity} ppl</span>}
+                        </h3>
+                        <div className="flex items-center gap-4 mt-2">
+                          <button onClick={() => handleNavigation(task)} className="text-[10px] font-black text-indigo-500 flex items-center gap-1 uppercase hover:underline"><FaDirections /> GPS</button>
+                          <a href={`tel:${task.userPhone || task.userId?.phone}`} className="text-[10px] font-black text-slate-400 flex items-center gap-1 uppercase hover:text-slate-600"><FaPhoneAlt size={9} /> Contact</a>
+                        </div>
+                      </td>
+                      <td className="p-8 text-center">
+                        <div className="text-[9px] font-black text-slate-500 uppercase">
+                          {new Date(task.createdAt).toLocaleDateString()} <br />
+                          <span className="text-slate-400">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      </td>
+                      <td className="p-8 text-right">
+                        {isFinished ? (
+                          task.review ? (
+                            <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-500 rounded-2xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
+                              <FaCheckCircle size={10} /> Feedback Logged
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setReviewModal({ show: true, item: task, type: '', rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                              className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-6 py-3 rounded-2xl font-black text-[10px] uppercase inline-flex items-center gap-2 hover:bg-emerald-600 hover:text-white transition-all shadow-sm active:scale-95"
+                            >
+                              <FaStar /> Review Citizen
+                            </button>
+                          )
+                        ) : (!assignedToMe && !task.assignedVolunteer) ? (
+                          <button
+                            onClick={() => handleClaim(task)}
+                            disabled={isVolunteerBusy}
+                            className={`px-8 py-4 rounded-2xl font-black text-[11px] uppercase transition-all ${isVolunteerBusy ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white hover:scale-105 shadow-lg'}`}
+                          >
+                            {isVolunteerBusy ? "Occupied" : "Claim Mission"}
+                          </button>
+                        ) : assignedToMe ? (
+                          <div className="flex flex-col items-end gap-2">
+                            {task.isPollution ? (
+                              <button onClick={() => handleAction(task._id, 'resolve')} className="bg-rose-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-rose-700">Resolve Issue</button>
+                            ) : task.isFood ? (
+                              status === "claimed" ? (
+                                <button onClick={() => handleAction(task._id, 'collect_food')} className="bg-amber-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-amber-600 flex items-center gap-2">
+                                  <FaTruckLoading className="inline mr-2" /> Mark Collected
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor to confirm collection...")}
+                                  className={`${task.donorConfirmedCollection ? 'bg-emerald-600 hover:bg-slate-900' : 'bg-slate-300 cursor-not-allowed'} text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg flex items-center gap-2 transition-all`}
+                                >
+                                  <FaCamera /> {task.donorConfirmedCollection ? "Mark Delivered" : "Waiting Verification"}
+                                </button>
+                              )
+                            ) : status === "claimed" ? (
+                              <button onClick={() => handleAction(task._id, 'arrival')} className="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg"><FaTruckLoading className="inline mr-2" /> Arrived</button>
+                            ) : (status === "arrived" && !task.isPaid) ? (
+                              <div className="text-amber-500 font-black text-[10px] uppercase animate-pulse">Payment Verification Required</div>
+                            ) : (
+                              <button onClick={() => handleAction(task._id, 'complete')} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg">Complete Mission</button>
+                            )}
+                            <div className="flex gap-2">
+                              <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-[9px] font-black text-slate-400 hover:text-rose-500 uppercase tracking-widest hover:underline px-2">Abort Mission</button>
+                              <button onClick={() => handleFlagReport(task._id)} className="text-[9px] font-black text-rose-600 hover:text-rose-700 uppercase tracking-widest hover:underline px-2 border-l border-slate-200">🚩 Fraudulent Report</button>
+                            </div>
                           </div>
                         ) : (
-                          <button
-                            onClick={() => setReviewModal({ show: true, item: task, type: '', rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
-                            className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-6 py-3 rounded-2xl font-black text-[10px] uppercase inline-flex items-center gap-2 hover:bg-emerald-600 hover:text-white transition-all shadow-sm active:scale-95"
-                          >
-                            <FaStar /> Review Citizen
-                          </button>
-                        )
-                      ) : (!assignedToMe && !task.assignedVolunteer) ? (
-                        <button
-                          onClick={() => handleClaim(task)}
-                          disabled={isVolunteerBusy}
-                          className={`px-8 py-4 rounded-2xl font-black text-[11px] uppercase transition-all ${isVolunteerBusy ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white hover:scale-105 shadow-lg'}`}
-                        >
-                          {isVolunteerBusy ? "Occupied" : "Claim Mission"}
-                        </button>
-                      ) : assignedToMe ? (
-                        <div className="flex flex-col items-end gap-2">
+                          <span className="text-[10px] font-black text-slate-400 uppercase italic">Claimed by another agent</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                }) : (
+                  <tr>
+                    <td colSpan="4" className="py-20 text-center text-slate-300 font-black uppercase text-xs tracking-widest">No Sector Intelligence Available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE CARD VIEW */}
+          <div className="lg:hidden space-y-4">
+            {visibleTasks.length > 0 ? visibleTasks.map((task) => {
+              const status = (task.status || "").toLowerCase();
+              const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
+              const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
+
+              return (
+                <div key={task._id} className={`bg-white rounded-[2rem] p-6 shadow-xl border border-slate-100 transition-all ${isFinished ? 'opacity-60 grayscale-[0.5]' : assignedToMe ? 'ring-2 ring-emerald-500/20 bg-emerald-50/10' : ''}`}>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
+                      {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[8px] font-black text-slate-300 uppercase tracking-tighter mb-0.5">{new Date(task.createdAt).toLocaleDateString()}</p>
+                      <p className="text-[9px] font-black text-slate-500 uppercase">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest px-2 py-0.5 bg-emerald-50 rounded">
+                        {task.isFood ? "Food Bank" : task.isPollution ? "Environment" : "Logistics"}
+                      </span>
+                      {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
+                    </div>
+                    <h3 className="text-xl font-black text-slate-900 mb-1">
+                      {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
+                      {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">{task.quantity} ppl</span>}
+                    </h3>
+                    <button onClick={() => handleNavigation(task)} className="text-[10px] font-black text-indigo-500 flex items-center gap-1.5 uppercase hover:underline mb-2">
+                        <FaDirections /> Open GPS Navigation
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    {isFinished ? (
+                      <div className="flex items-center gap-2 px-6 py-4 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase border border-slate-100 italic justify-center">
+                        Mission Resolved Successfully
+                      </div>
+                    ) : (!assignedToMe && !task.assignedVolunteer) ? (
+                      <button
+                        onClick={() => handleClaim(task)}
+                        disabled={isVolunteerBusy}
+                        className={`w-full py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isVolunteerBusy ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white active:scale-95 shadow-lg shadow-slate-200'}`}
+                      >
+                        {isVolunteerBusy ? "Other Protocol Active" : "Initiate Claim"}
+                      </button>
+                    ) : assignedToMe ? (
+                      <div className="space-y-3">
                           {task.isPollution ? (
-                            <button onClick={() => handleAction(task._id, 'resolve')} className="bg-rose-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-rose-700">Resolve Issue</button>
+                            <button onClick={() => handleAction(task._id, 'resolve')} className="w-full bg-rose-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95">Resolve Hazard</button>
                           ) : task.isFood ? (
                             status === "claimed" ? (
-                              <button onClick={() => handleAction(task._id, 'collect_food')} className="bg-amber-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-amber-600 flex items-center gap-2">
-                                <FaTruckLoading className="inline mr-2" /> Mark Collected
+                              <button onClick={() => handleAction(task._id, 'collect_food')} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                                <FaTruckLoading /> Mark Collected
                               </button>
                             ) : (
                               <button
-                                onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor to confirm collection...")}
-                                className={`${task.donorConfirmedCollection ? 'bg-emerald-600 hover:bg-slate-900' : 'bg-slate-300 cursor-not-allowed'} text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg flex items-center gap-2 transition-all`}
+                                onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor verification...")}
+                                className={`w-full ${task.donorConfirmedCollection ? 'bg-emerald-600' : 'bg-slate-300 cursor-not-allowed'} text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2 transition-all`}
                               >
-                                <FaCamera /> {task.donorConfirmedCollection ? "Mark Delivered" : "Waiting Verification"}
+                                <FaCamera /> {task.donorConfirmedCollection ? "Mark Delivered" : "Awaiting Donor Sync"}
                               </button>
                             )
                           ) : status === "claimed" ? (
-                            <button onClick={() => handleAction(task._id, 'arrival')} className="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg"><FaTruckLoading className="inline mr-2" /> Arrived</button>
+                            <button onClick={() => handleAction(task._id, 'arrival')} className="w-full bg-orange-500 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                                <FaTruckLoading /> Confirm Arrival
+                            </button>
                           ) : (status === "arrived" && !task.isPaid) ? (
-                            <div className="text-amber-500 font-black text-[10px] uppercase animate-pulse">Payment Verification Required</div>
+                            <div className="py-4 bg-amber-50 border border-amber-100 text-amber-600 font-black text-[9px] uppercase text-center rounded-2xl animate-pulse">Wait: Citizen Payment Pending</div>
                           ) : (
-                            <button onClick={() => handleAction(task._id, 'complete')} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg">Complete Mission</button>
+                            <button onClick={() => handleAction(task._id, 'complete')} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95">Complete Mission</button>
                           )}
-                          <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-[9px] font-black text-slate-400 hover:text-rose-500 uppercase tracking-widest hover:underline px-2">Abort Mission</button>
-                          <button onClick={() => handleFlagReport(task._id)} className="text-[9px] font-black text-rose-600 hover:text-rose-700 uppercase tracking-widest hover:underline px-2 border-l border-slate-200">🚩 Fraudulent Report</button>
-                        </div>
-
-                      ) : (
-                        <span className="text-[10px] font-black text-slate-400 uppercase italic">Claimed by another agent</span>
-                      )}
-                    </td>
-                  </tr>
-                )
-              }) : (
-                <tr>
-                  <td colSpan="4" className="p-20 text-center">
-                    <p className="text-slate-400 font-black uppercase text-xs tracking-widest">No active missions in this sector</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                          <div className="flex gap-2">
+                            <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="flex-1 py-3 text-[8px] font-black text-slate-400 bg-slate-50 rounded-xl uppercase tracking-widest border border-slate-100 hover:text-rose-500 transition-colors">Abort</button>
+                            <button onClick={() => handleFlagReport(task._id)} className="flex-1 py-3 text-[8px] font-black text-rose-600 bg-rose-50 rounded-xl uppercase tracking-widest border border-rose-100">Flag Fraud</button>
+                          </div>
+                      </div>
+                    ) : (
+                      <div className="py-4 bg-slate-50 text-slate-400 font-black text-[9px] uppercase text-center rounded-2xl border border-slate-100">Sector Claimed: Another Agent Active</div>
+                    )}
+                  </div>
+                </div>
+              )
+            }) : (
+              <div className="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
+                  <p className="text-slate-300 font-black uppercase text-[10px] tracking-widest">No Sector Intelligence Available</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -427,8 +427,9 @@ const Dashboard = () => {
                     <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
                       {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
                     </p>
-                    <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-1">
-                      <FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}
+                    <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
+                      <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
+                      {item.weight > 0 && <span className="text-emerald-600 flex items-center gap-1"><FaRecycle size={8} /> {item.weight} KG</span>}
                     </p>
                   </td>
 

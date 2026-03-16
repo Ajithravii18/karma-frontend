@@ -41,11 +41,12 @@ const WasteAnalysisPage = () => {
             if (new Date(r.createdAt).getFullYear() === currentYear) byMonth[month]++;
         });
 
+        const totalWeight = reports.reduce((acc, r) => acc + (r.weight || 0), 0);
         const completed = byStatus.Completed || 0;
         const total = reports.length;
         const successRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-        return { byStatus, byType, byMonth, total, completed, successRate };
+        return { byStatus, byType, byMonth, total, completed, successRate, totalWeight };
     }, [reports, currentYear]);
 
     const maxMonth = Math.max(...stats.byMonth, 1);
@@ -88,9 +89,10 @@ const WasteAnalysisPage = () => {
                 </div>
 
                 {/* TOP METRICS */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
                     {[
                         { label: "Total Pickups", value: stats.total, icon: <FaTruck />, color: "bg-emerald-50 text-emerald-600" },
+                        { label: "Total Weight", value: `${stats.totalWeight.toFixed(1)} KG`, icon: <FaRecycle />, color: "bg-blue-50 text-blue-600" },
                         { label: "Completed", value: stats.completed, icon: <FaCheckCircle />, color: "bg-indigo-50 text-indigo-600" },
                         { label: "Success Rate", value: `${stats.successRate}%`, icon: <FaChartBar />, color: "bg-amber-50 text-amber-600" },
                         { label: "Waste Types", value: Object.keys(stats.byType).length, icon: <FaLayerGroup />, color: "bg-rose-50 text-rose-500" },

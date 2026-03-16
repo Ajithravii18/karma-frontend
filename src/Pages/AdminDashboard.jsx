@@ -42,8 +42,8 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchAdminData();
-    const liveInterval = setInterval(() => fetchAdminData(true), 20000);
-    return () => clearInterval(liveInterval);
+    const interval = setInterval(() => fetchAdminData(true), 5000); // Live feel
+    return () => clearInterval(interval);
   }, [fetchAdminData]);
 
   const getExpiryStatus = (expiryDate) => {
@@ -602,6 +602,11 @@ const AdminDashboard = () => {
                                 <div className="bg-white rounded-2xl p-4 shadow-sm">
                                   <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaStickyNote size={8} /> Description</p>
                                   <p className="text-[11px] text-slate-700">{report.description || "No description."}</p>
+                                </div>
+                                <div className="bg-white rounded-2xl p-4 shadow-sm">
+                                  <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaLayerGroup size={8} /> Weight Collected</p>
+                                  <p className="text-sm font-black text-emerald-600">{report.weight || "0"} KG</p>
+                                  <p className="text-[9px] text-slate-400 mt-1">Impact metric</p>
                                 </div>
                                 {report.helpRequested && report.helpMessage && (
                                   <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex items-center gap-4">
