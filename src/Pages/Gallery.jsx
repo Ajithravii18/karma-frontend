@@ -95,7 +95,8 @@ const Gallery = forwardRef((props, ref) => {
                   <div className="relative overflow-hidden h-60">
                     <img
                       src={photo.src}
-                      alt={photo.title}
+                      alt={`${photo.title} - Haritha Karma Sena in Kerala`}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-green-900/10 group-hover:bg-transparent transition-colors"></div>

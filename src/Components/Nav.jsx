@@ -215,10 +215,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-200"
             }`}
         >
-          <img src={logo} className="w-8" alt="Logo" />
-          <h1 className="text-lg font-black tracking-tighter uppercase text-green-900">
+          <img src={logo} className="w-8" alt="E-Karma Logo" />
+          <span className="text-lg font-black tracking-tighter uppercase text-green-900">
             E-Karma
-          </h1>
+          </span>
         </div>
 
         {/* Desktop Navigation Links */}

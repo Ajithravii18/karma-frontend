@@ -377,7 +377,8 @@ const Main = forwardRef((props, ref) => {
               <div className="absolute -inset-4 bg-green-100 rounded-3xl group-hover:bg-green-200 transition-all"></div>
               <img
                 src="https://haritham.kerala.gov.in/upload/news/1718772802-hks.jpg"
-                alt="HKS"
+                alt="Haritha Karma Sena members collecting waste"
+                loading="lazy"
                 className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
               />
             </div>
@@ -400,7 +401,8 @@ const Main = forwardRef((props, ref) => {
               <div className="absolute -inset-4 bg-yellow-100 rounded-3xl group-hover:bg-yellow-200 transition-all"></div>
               <img
                 src="https://th-i.thgim.com/public/news/national/kerala/waqs07/article68560214.ece/alternates/LANDSCAPE_1200/Haritha%20Karma%20Sena.jpg"
-                alt="HKS Plastic"
+                alt="Kerala local bodies showing waste management models"
+                loading="lazy"
                 className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
               />
             </div>

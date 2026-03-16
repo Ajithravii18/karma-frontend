@@ -8,8 +8,8 @@ const Footer = () => {
         
         {/* About */}
         <div className="flex flex-col">
-          <h3 className="text-2xl font-bold mb-1">E - Karma</h3>
-          <h1 className="text-xl font-bold mb-4">Waste Management System</h1>
+          <h2 className="text-2xl font-bold mb-1">E - Karma</h2>
+          <span className="text-xl font-bold mb-4">Waste Management System</span>
           <p className="text-gray-300 text-sm leading-relaxed">
             Dedicated to sustainable waste management, recycling initiatives,
             and community cleanliness programs across Kerala. Together we
