@@ -12,9 +12,9 @@ import toast from "react-hot-toast";
 const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGalleryClick }) => {
   const nav = useNavigate();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState(null);
-  const [userRole, setUserRole] = useState("user");
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("authToken"));
+  const [userName, setUserName] = useState(localStorage.getItem("userName"));
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole") || "user");
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -75,7 +75,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         const res = await api.get("/me");
 
         if (res.data) {
-          const freshRole = res.data.role?.toLowerCase().trim() || "user";
+          const freshRole = (res.data.role || "user").toLowerCase().trim();
           setUserName(res.data.name);
           setUserRole(freshRole);
 
@@ -119,6 +119,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
     syncUser();
     const handleStorageUpdate = () => syncUser();
     window.addEventListener("storage", handleStorageUpdate);
+    window.addEventListener("local-auth-update", handleStorageUpdate);
 
     const token = localStorage.getItem("authToken") || localStorage.getItem("token");
     let interval;
@@ -128,6 +129,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
     return () => {
       window.removeEventListener("storage", handleStorageUpdate);
+      window.removeEventListener("local-auth-update", handleStorageUpdate);
       if (interval) clearInterval(interval);
     };
   }, [location.pathname, syncUser, fetchNotifications]);
@@ -153,8 +155,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const goToDashboard = () => {
     setShowDropdown(false);
     setIsMenuOpen(false);
-    if (userRole === 'admin') nav('/admin-dashboard');
-    else if (userRole === 'volunteer') nav('/volunteer-portal');
+    const role = (userRole || "").toLowerCase().trim();
+    if (role === 'admin') nav('/admin-dashboard');
+    else if (role === 'volunteer') nav('/volunteer-portal');
     else nav('/dashboard');
   };
 

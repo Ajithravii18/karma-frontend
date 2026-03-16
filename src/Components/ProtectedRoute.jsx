@@ -13,10 +13,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   // Role-based protection
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
+  const lowerUserRole = (userRole || "user").toLowerCase().trim();
+  const lowerAllowedRoles = (allowedRoles || []).map(r => r.toLowerCase().trim());
+
+  if (allowedRoles && !lowerAllowedRoles.includes(lowerUserRole)) {
     // Role not authorized → redirect to their specific dashboard or home
-    if (userRole === "admin") return <Navigate to="/admin-dashboard" replace />;
-    if (userRole === "volunteer") return <Navigate to="/volunteer-portal" replace />;
+    if (lowerUserRole === "admin") return <Navigate to="/admin-dashboard" replace />;
+    if (lowerUserRole === "volunteer") return <Navigate to="/volunteer-portal" replace />;
     return <Navigate to="/dashboard" replace />;
   }
 
