@@ -10,7 +10,7 @@ import Contact from "./Contact.jsx";
 import Gallery from "./Gallery.jsx";
 import Footer from "../Components/Footer.jsx";
 import Chatbot from "../Components/Chatbot.jsx";
-import { FaArrowUp, FaChevronLeft, FaChevronRight, FaQuoteLeft } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast"
 
@@ -124,40 +124,6 @@ const Main = forwardRef((props, ref) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  // --- HKS CAROUSEL DATA ---
-  const [activeSlide, setActiveSlide] = useState(0);
-  const hksSlides = [
-    {
-      title: "Empowering Waste Warriors",
-      desc: "The Haritha Karma Sena (HKS) are frontline waste management workers actively engaged in scientific waste collection and segregation across Kerala.",
-      detail: "Supported by local self-government initiatives, these dedicated teams ensure door-to-door waste collection while creating livelihood opportunities.",
-      img: "https://haritham.kerala.gov.in/upload/news/1718772802-hks.jpg",
-      color: "green"
-    },
-    {
-      title: "Economic Empowerment",
-      desc: "In Amballur Panchayat, improved plastic waste segregation has significantly enhanced the earning potential of Haritha Karma Sena volunteers.",
-      detail: "By ensuring cleaner and better-sorted materials, workers sell recyclables at higher values, strengthening both the environment and the economy.",
-      img: "https://th-i.thgim.com/public/news/national/kerala/waqs07/article68560214.ece/alternates/LANDSCAPE_1200/Haritha%20Karma%20Sena.jpg",
-      color: "yellow"
-    },
-    {
-      title: "Scientific Disposal",
-      desc: "HKS focuses on non-biodegradable waste management through Resource Recovery Facilities (RRF) and Material Collection Facilities (MCF).",
-      detail: "Proper shredding and processing of plastic waste even contributes to sustainable road construction across the state.",
-      img: "https://haritham.kerala.gov.in/upload/news/1628157792-hks-plastic.jpg",
-      color: "emerald"
-    }
-  ];
-
-  const nextSlide = () => setActiveSlide((prev) => (prev + 1) % hksSlides.length);
-  const prevSlide = () => setActiveSlide((prev) => (prev - 1 + hksSlides.length) % hksSlides.length);
-
-  useEffect(() => {
-    const timer = setInterval(nextSlide, 8000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <div className="bg-slate-50 overflow-x-hidden">
@@ -402,86 +368,51 @@ const Main = forwardRef((props, ref) => {
         </div>
       </section>
 
-      {/* --- HKS CAROUSEL SECTION --- */}
-      <section className="py-20 md:py-32 px-6 md:px-20 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 md:mb-20" data-aos="fade-up">
-            <span className="text-green-600 font-bold tracking-[0.3em] uppercase text-xs">Field Operations</span>
-            <h2 className="text-3xl md:text-5xl font-black text-green-900 mt-4 leading-tight uppercase tracking-tighter">
-              Highlights of <span className="text-green-600 italic font-light">Haritha Karma Sena</span> in Action
-            </h2>
-          </div>
-
-          <div className="relative group">
-            <div className="overflow-hidden rounded-[2.5rem] md:rounded-[4rem] bg-slate-50 border border-slate-100 shadow-2xl">
-              <div className="flex flex-col md:flex-row min-h-[500px] transition-all duration-700">
-                
-                {/* Image side - changes with activeSlide */}
-                <div className="w-full md:w-1/2 relative h-[300px] md:h-auto overflow-hidden">
-                  {hksSlides.map((slide, idx) => (
-                    <div
-                      key={idx}
-                      className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${idx === activeSlide ? 'opacity-100 scale-105' : 'opacity-0 scale-100 pointer-events-none'}`}
-                    >
-                      <img
-                        src={slide.img}
-                        alt={slide.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/40 to-transparent"></div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Content side - changes with activeSlide */}
-                <div className="w-full md:w-1/2 p-10 md:p-20 flex flex-col justify-center relative">
-                  {hksSlides.map((slide, idx) => (
-                    <div
-                      key={idx}
-                      className={`transition-all duration-700 delay-300 ${idx === activeSlide ? 'opacity-100 translate-y-0' : 'absolute inset-x-10 md:inset-x-20 opacity-0 translate-y-10 pointer-events-none'}`}
-                    >
-                      <FaQuoteLeft className={`text-4xl md:text-6xl ${slide.color === 'yellow' ? 'text-yellow-100' : 'text-green-100'} mb-8`} />
-                      <h3 className="text-2xl md:text-4xl font-black text-green-900 mb-6 leading-tight">
-                        {slide.title}
-                      </h3>
-                      <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6 font-medium">
-                        {slide.desc}
-                      </p>
-                      <p className="text-gray-400 text-sm md:text-base leading-relaxed italic">
-                        {slide.detail}
-                      </p>
-                    </div>
-                  ))}
-
-                  {/* Indicators and Controls */}
-                  <div className="mt-12 md:mt-16 flex items-center gap-6">
-                    <div className="flex gap-2">
-                      {hksSlides.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setActiveSlide(idx)}
-                          className={`h-1.5 transition-all duration-500 rounded-full ${idx === activeSlide ? 'w-10 bg-green-600' : 'w-2 bg-slate-200 hover:bg-slate-300'}`}
-                        />
-                      ))}
-                    </div>
-                    <div className="flex gap-3 ml-auto">
-                      <button
-                        onClick={prevSlide}
-                        className="w-12 h-12 rounded-2xl border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all active:scale-90"
-                      >
-                        <FaChevronLeft size={16} />
-                      </button>
-                      <button
-                        onClick={nextSlide}
-                        className="w-12 h-12 rounded-2xl border border-slate-100 flex items-center justify-center text-slate-400 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all active:scale-90"
-                      >
-                        <FaChevronRight size={16} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* --- FEATURE SECTIONS (HKS) --- */}
+      <section className="py-16 md:py-24 px-6 md:px-20 space-y-20 md:space-y-32">
+        {/* Section 1 */}
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+          <div className="w-full md:w-1/2" data-aos="fade-right">
+            <div className="relative group">
+              <div className="absolute -inset-4 bg-green-100 rounded-3xl group-hover:bg-green-200 transition-all"></div>
+              <img
+                src="https://haritham.kerala.gov.in/upload/news/1718772802-hks.jpg"
+                alt="HKS"
+                className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
+              />
             </div>
+          </div>
+          <div className="w-full md:w-1/2" data-aos="fade-left">
+            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Empowering Waste Warriors</h3>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
+              The Haritha Karma Sena (HKS) are frontline waste management workers actively engaged in scientific waste collection and segregation across Kerala.
+            </p>
+            <p className="mt-4 text-gray-600 text-base md:text-lg leading-relaxed">
+              Supported by local self-government initiatives, these dedicated teams ensure door-to-door waste collection while creating livelihood opportunities.
+            </p>
+          </div>
+        </div>
+
+        {/* Section 2 */}
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
+          <div className="w-full md:w-1/2" data-aos="fade-left">
+            <div className="relative group">
+              <div className="absolute -inset-4 bg-yellow-100 rounded-3xl group-hover:bg-yellow-200 transition-all"></div>
+              <img
+                src="https://th-i.thgim.com/public/news/national/kerala/waqs07/article68560214.ece/alternates/LANDSCAPE_1200/Haritha%20Karma%20Sena.jpg"
+                alt="HKS Plastic"
+                className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
+              />
+            </div>
+          </div>
+          <div className="w-full md:w-1/2" data-aos="fade-right">
+            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Economic Empowerment</h3>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
+              In Amballur Panchayat, improved plastic waste segregation has significantly enhanced the earning potential of Haritha Karma Sena volunteers.
+            </p>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
+              By ensuring cleaner and better-sorted materials, workers sell recyclables at higher values, strengthening both the environment and the economy.
+            </p>
           </div>
         </div>
       </section>
