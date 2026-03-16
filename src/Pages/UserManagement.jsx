@@ -18,7 +18,6 @@ const UserManagement = () => {
   const [availabilityFilter, setAvailabilityFilter] = useState("all"); // New Availability Filter
   const navigate = useNavigate();
 
-  const ADMIN_PHONE = "+918888855555";
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -31,7 +30,7 @@ const UserManagement = () => {
     try {
       setLoading(true);
       const res = await api.get(`/api/users?search=${query}`);
-      const filtered = res.data.filter((u) => u.phone !== ADMIN_PHONE);
+      const filtered = res.data.filter((u) => u.role !== "admin");
       setUsers(filtered);
     } catch (err) {
       toast.error("Systems Offline: Access Denied");
