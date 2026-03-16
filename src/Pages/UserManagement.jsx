@@ -9,7 +9,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Nav from "../Components/Nav";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -90,8 +89,7 @@ const UserManagement = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
-      <AdminSidebar />
-      <div className="flex-1 ml-72 pb-20">
+      <div className="flex-1 pb-20">
         <Nav />
         <div className="max-w-[1400px] mx-auto pt-32 px-8">
 

@@ -6,7 +6,6 @@ import {
   FaMoneyBillWave, FaLeaf, FaCheckCircle, FaClock, FaIdBadge
 } from 'react-icons/fa';
 import Nav from '../Components/Nav';
-import AdminSidebar from '../Components/Admin/AdminSidebar';
 
 const ReportDetails = () => {
   const { type, id } = useParams();
@@ -65,8 +64,7 @@ const ReportDetails = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAF9] font-sans text-slate-900 flex">
-      <AdminSidebar />
-      <div className="flex-1 ml-72 pb-20">
+      <div className="flex-1 pb-20">
         <Nav />
         <div className="max-w-7xl mx-auto pt-32 px-6">
         {/* TOP NAV BAR */}

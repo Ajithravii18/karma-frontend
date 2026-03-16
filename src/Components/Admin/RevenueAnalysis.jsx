@@ -7,7 +7,6 @@ import {
 } from "react-icons/fa";
 import Nav from "../../Components/Nav";
 import MonthlyRevenue from "../Admin/MonthlyRevenue";
-import AdminSidebar from "../Admin/AdminSidebar";
 
 const RevenueAnalysisPage = () => {
   const location = useLocation();
@@ -63,8 +62,7 @@ const RevenueAnalysisPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
-      <AdminSidebar />
-      <div className="flex-1 ml-72 pb-20">
+      <div className="flex-1 pb-20">
         <Nav />
         <div className="max-w-[1200px] mx-auto pt-32 px-8">
 
