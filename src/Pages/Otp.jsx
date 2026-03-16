@@ -133,7 +133,7 @@ const OTPPage = () => {
                     value={digit}
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-full h-14 text-center text-xl font-black bg-gray-100/50 border-2 border-transparent rounded-2xl focus:border-green-500 focus:bg-white outline-none transition-all text-gray-800"
+                    className="w-12 sm:w-14 h-12 sm:h-14 text-center text-xl font-black bg-white border-2 border-gray-200 rounded-2xl shadow-sm outline-none transition-all text-gray-900 focus:border-green-500 focus:ring-4 focus:ring-green-500/15"
                   />
                 ))}
               </div>
