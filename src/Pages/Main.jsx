@@ -326,8 +326,21 @@ const Main = forwardRef((props, ref) => {
       </section>
 
       {/* --- IMPACT COUNTER SECTION --- */}
-      <section className="bg-green-900 py-16 md:py-24 text-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="relative bg-green-950 py-16 md:py-24 text-white overflow-hidden">
+        {/* Background Image integration */}
+        <div
+          className="absolute inset-0 z-0 opacity-40"
+          style={{
+            backgroundImage: `url(${hero})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        ></div>
+
+        {/* Hero-style Gradient Overlay */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-green-950/90 via-green-900/80 to-green-950/90"></div>
+
+        <div className="relative z-20 max-w-7xl mx-auto px-6">
           <div className="text-center mb-12 md:text-center md:mb-16">
             <h2 className="text-3xl md:text-5xl font-bold">Our Environmental Impact</h2>
             <p className="text-green-200 mt-4 text-base md:text-lg">Measuring our commitment towards sustainability.</p>
@@ -340,7 +353,7 @@ const Main = forwardRef((props, ref) => {
               { icon: "🌍", label: "CO₂ Reduced", end: 5200 },
               { icon: "🏘️", label: "Communities", end: 120 }
             ].map((item, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-sm p-6 md:p-10 rounded-2xl md:rounded-3xl border border-white/10 text-center">
+              <div key={i} className="bg-white/10 backdrop-blur-md p-6 md:p-10 rounded-2xl md:rounded-3xl border border-white/10 text-center">
                 <div className="text-3xl md:text-4xl mb-3 md:mb-4">{item.icon}</div>
                 <h3 className="text-2xl md:text-4xl font-black"><Counter end={item.end} suffix="+" /></h3>
                 <p className="text-green-300 text-xs md:text-lg font-medium mt-2">{item.label}</p>
