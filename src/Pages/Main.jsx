@@ -138,7 +138,7 @@ const Main = forwardRef((props, ref) => {
       {/* --- HERO SECTION --- */}
       <section
         ref={homeRef}
-        className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-green-950 pt-32 pb-20"
+        className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-green-950 pt-24 md:pt-32 pb-12 md:pb-20"
       >
         {/* Background Image with improved visibility */}
         <div
@@ -163,12 +163,12 @@ const Main = forwardRef((props, ref) => {
               Sustainable Future Initiative
             </div>
 
-            <h1 data-aos="fade-right" data-aos-delay="100" className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter">
+            <h1 data-aos="fade-right" data-aos-delay="100" className="text-3xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter">
               മാലിന്യം കുറയ്ക്കാം<br />
               <span className="text-green-500">പ്രകൃതിയെ സംരക്ഷിക്കാം.</span>
             </h1>
 
-            <p data-aos="fade-right" data-aos-delay="200" className="text-lg text-gray-300 max-w-xl leading-relaxed font-medium">
+            <p data-aos="fade-right" data-aos-delay="200" className="text-base md:text-lg text-gray-300 max-w-xl leading-relaxed font-medium">
               Building a cleaner, greener tomorrow through community-driven waste management. Our mission is to restore Kerala's natural beauty.
             </p>
 
@@ -224,16 +224,16 @@ const Main = forwardRef((props, ref) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 md:gap-4">
                   {[
                     { label: "Eco Points", end: 2400, suffix: "+", color: "text-green-600", bg: "bg-green-50" },
                     { label: "Volunteers", end: 850, suffix: "+", color: "text-emerald-600", bg: "bg-emerald-50" },
                     { label: "Trash Clear", end: 12, suffix: "t", color: "text-green-700", bg: "bg-green-50" },
                     { label: "Trees Saved", end: 420, suffix: "", color: "text-emerald-700", bg: "bg-emerald-50" }
                   ].map((stat, i) => (
-                    <div key={i} className={`${stat.bg} p-4 rounded-xl border border-transparent`}>
-                      <p className="text-gray-500 text-[9px] font-black mb-1 uppercase tracking-widest">{stat.label}</p>
-                      <h5 className={`text-lg font-black ${stat.color}`}>
+                    <div key={i} className={`${stat.bg} p-3 md:p-4 rounded-xl border border-transparent`}>
+                      <p className="text-gray-500 text-[8px] md:text-[9px] font-black mb-1 uppercase tracking-widest">{stat.label}</p>
+                      <h5 className={`text-base md:text-lg font-black ${stat.color}`}>
                         <Counter end={stat.end} suffix={stat.suffix} />
                       </h5>
                     </div>
@@ -293,32 +293,32 @@ const Main = forwardRef((props, ref) => {
       </section>
 
       {/* --- RESPONSIBILITY SECTION --- */}
-      <section className="py-24 px-6 md:px-20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+      <section className="py-16 md:py-24 px-6 md:px-20">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-20 items-center">
           <div data-aos="fade-right">
-            <span className="text-green-600 font-bold tracking-widest uppercase text-sm">Our Philosophy</span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-green-900 mt-4 mb-6 leading-tight">
+            <span className="text-green-600 font-bold tracking-widest uppercase text-xs md:text-sm">Our Philosophy</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-green-900 mt-4 mb-6 leading-tight">
               Waste Management is Not a Choice — It’s a Responsibility
             </h2>
-            <div className="w-20 h-1.5 bg-green-600 mb-8 rounded-full"></div>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            <div className="w-16 md:w-20 h-1.5 bg-green-600 mb-8 rounded-full"></div>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
               Effective waste management protects our environment, improves public health, and promotes sustainable development.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
               Proper segregation and recycling reduce landfill waste and create livelihood opportunities for communities.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4 md:gap-6">
             {[
               { val: "2.24B+", desc: "Annual Global Waste" },
               { val: "40%", desc: "Improperly Managed" },
               { val: "70%", desc: "Recyclable Potential" },
               { val: "100%", desc: "Cleaner Cities Goal" }
             ].map((stat, i) => (
-              <div key={i} data-aos="zoom-in" data-aos-delay={i * 100} className="bg-white p-8 rounded-3xl shadow-xl shadow-green-100/30 border border-gray-50 hover:-translate-y-2 transition-all">
-                <h3 className="text-2xl font-black text-green-600 mb-1">{stat.val}</h3>
-                <p className="text-gray-500 text-sm font-medium">{stat.desc}</p>
+              <div key={i} data-aos="zoom-in" data-aos-delay={i * 100} className="bg-white p-5 md:p-8 rounded-3xl shadow-xl shadow-green-100/30 border border-gray-50 hover:-translate-y-2 transition-all">
+                <h3 className="text-xl md:text-2xl font-black text-green-600 mb-1">{stat.val}</h3>
+                <p className="text-gray-500 text-[10px] md:text-sm font-medium">{stat.desc}</p>
               </div>
             ))}
           </div>
@@ -326,24 +326,24 @@ const Main = forwardRef((props, ref) => {
       </section>
 
       {/* --- IMPACT COUNTER SECTION --- */}
-      <section className="bg-green-900 py-24 text-white">
+      <section className="bg-green-900 py-16 md:py-24 text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold">Our Environmental Impact</h2>
-            <p className="text-green-200 mt-4 text-lg">Measuring our commitment towards sustainability.</p>
+          <div className="text-center mb-12 md:text-center md:mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold">Our Environmental Impact</h2>
+            <p className="text-green-200 mt-4 text-base md:text-lg">Measuring our commitment towards sustainability.</p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {[
               { icon: "♻️", label: "Waste Collected", end: 12450 },
               { icon: "🔄", label: "Waste Recycled", end: 8320 },
               { icon: "🌍", label: "CO₂ Reduced", end: 5200 },
               { icon: "🏘️", label: "Communities", end: 120 }
             ].map((item, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-sm p-10 rounded-3xl border border-white/10 text-center">
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-4xl font-black"><Counter end={item.end} suffix="+" /></h3>
-                <p className="text-green-300 font-medium mt-2">{item.label}</p>
+              <div key={i} className="bg-white/10 backdrop-blur-sm p-6 md:p-10 rounded-2xl md:rounded-3xl border border-white/10 text-center">
+                <div className="text-3xl md:text-4xl mb-3 md:mb-4">{item.icon}</div>
+                <h3 className="text-2xl md:text-4xl font-black"><Counter end={item.end} suffix="+" /></h3>
+                <p className="text-green-300 text-xs md:text-lg font-medium mt-2">{item.label}</p>
               </div>
             ))}
           </div>
@@ -351,10 +351,10 @@ const Main = forwardRef((props, ref) => {
       </section>
 
       {/* --- FEATURE SECTIONS (HKS) --- */}
-      <section className="py-24 px-6 md:px-20 space-y-32">
+      <section className="py-16 md:py-24 px-6 md:px-20 space-y-20 md:space-y-32">
         {/* Section 1 */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
-          <div className="md:w-1/2" data-aos="fade-right">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+          <div className="w-full md:w-1/2" data-aos="fade-right">
             <div className="relative group">
               <div className="absolute -inset-4 bg-green-100 rounded-3xl group-hover:bg-green-200 transition-all"></div>
               <img
@@ -364,20 +364,20 @@ const Main = forwardRef((props, ref) => {
               />
             </div>
           </div>
-          <div className="md:w-1/2" data-aos="fade-left">
-            <h3 className="text-4xl font-bold text-green-900 mb-6">Empowering Waste Warriors</h3>
-            <p className="text-gray-600 text-lg leading-relaxed">
+          <div className="w-full md:w-1/2" data-aos="fade-left">
+            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Empowering Waste Warriors</h3>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
               The Haritha Karma Sena (HKS) are frontline waste management workers actively engaged in scientific waste collection and segregation across Kerala.
             </p>
-            <p className="mt-4 text-gray-600 text-lg leading-relaxed">
+            <p className="mt-4 text-gray-600 text-base md:text-lg leading-relaxed">
               Supported by local self-government initiatives, these dedicated teams ensure door-to-door waste collection while creating livelihood opportunities.
             </p>
           </div>
         </div>
 
         {/* Section 2 */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse items-center gap-16">
-          <div className="md:w-1/2" data-aos="fade-left">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
+          <div className="w-full md:w-1/2" data-aos="fade-left">
             <div className="relative group">
               <div className="absolute -inset-4 bg-yellow-100 rounded-3xl group-hover:bg-yellow-200 transition-all"></div>
               <img
@@ -387,12 +387,12 @@ const Main = forwardRef((props, ref) => {
               />
             </div>
           </div>
-          <div className="md:w-1/2" data-aos="fade-right">
-            <h3 className="text-4xl font-bold text-green-900 mb-6">Economic Empowerment</h3>
-            <p className="text-gray-600 text-lg leading-relaxed mb-4">
+          <div className="w-full md:w-1/2" data-aos="fade-right">
+            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Economic Empowerment</h3>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
               In Amballur Panchayat, improved plastic waste segregation has significantly enhanced the earning potential of Haritha Karma Sena volunteers.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
               By ensuring cleaner and better-sorted materials, workers sell recyclables at higher values, strengthening both the environment and the economy.
             </p>
           </div>
