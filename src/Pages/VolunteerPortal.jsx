@@ -148,12 +148,16 @@ const VolunteerPortal = () => {
   const handleAction = async (taskId, actionType, extraData = {}) => {
     let endpoint = "";
     const task = tasks.find(t => t._id === taskId);
+    let payload = {};
 
     switch (actionType) {
       case 'arrival':
         endpoint = task.isPollution ? `pollution/arrival/${taskId}` : `confirm-arrival/${taskId}`;
         break;
       case 'complete':
+        const recordedWeight = window.prompt("⚖️ MISSION DEBRIEF: Enter the total weight of waste collected (KG):", "0");
+        if (recordedWeight === null) return; // Cancelled
+        payload.weight = parseFloat(recordedWeight) || 0;
         endpoint = `complete-collection/${taskId}`;
         break;
       case 'resolve':
@@ -171,7 +175,7 @@ const VolunteerPortal = () => {
       case 'deliver_food':
         // Route is: PATCH /api/food/complete/:id (different base path)
         try {
-          const payload = { deliveryPhoto: extraData.photoUrl };
+          payload.deliveryPhoto = extraData.photoUrl;
           await api.patch(`/api/food/complete/${taskId}`, payload);
           toast.success("Delivery Confirmed! 🎉");
           fetchTasks(false);
@@ -184,7 +188,6 @@ const VolunteerPortal = () => {
     }
 
     try {
-      const payload = actionType === 'deliver_food' ? { deliveryPhoto: extraData.photoUrl } : {};
       await api.patch(`/api/volunteer/${endpoint}`, payload);
       toast.success("Impact Recorded!");
       fetchTasks(false);
