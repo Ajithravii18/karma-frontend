@@ -19,9 +19,9 @@ const WasteAnalysis = ({ reports }) => {
   const maxWeight = Math.max(...Object.values(stats.breakdown), 10);
 
   return (
-    <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden relative">
+    <div className="bg-white p-6 md:p-8 rounded-3xl md:rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden relative">
       {/* Header Info */}
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
         <div>
           <h3 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2">Collection Volume</h3>
           <div className="flex items-baseline gap-2">
@@ -73,7 +73,7 @@ const WasteAnalysis = ({ reports }) => {
       </div>
 
       {/* Bottom Footer Stats */}
-      <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+      <div className="mt-8 pt-6 border-t border-slate-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase">
           <FaWeightHanging size={12} className="text-indigo-400" />
           Avg: {(stats.totalWeight / (stats.count || 1)).toFixed(1)} KG/Pick

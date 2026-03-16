@@ -194,39 +194,40 @@ const AdminDashboard = () => {
     return (
         <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
             <Nav />
-            <div className="max-w-[1440px] mx-auto pt-32 px-8">
+            <div className="max-w-[1440px] mx-auto pt-24 md:pt-32 px-4 md:px-8">
                 {/* HEADER */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-6 w-full">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
                             <FaCircle className="text-emerald-500 animate-pulse" size={8} />
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">System Overseer Mode</p>
                         </div>
-                        <h1 className="text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
+                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => navigate("/admin/users")} className="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-slate-50 transition-all">
+                    <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+                        <button onClick={() => navigate("/admin/users")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-slate-50 transition-all">
                             <FaUsersCog className="text-indigo-600" /> Users
                         </button>
-                        <button onClick={() => navigate("/admin/deletion-logs")} className="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 transition-all">
+                        <button onClick={() => navigate("/admin/deletion-logs")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 transition-all">
                             <FaUserTimes className="text-rose-500" /> Archives
                         </button>
-                        <button onClick={() => navigate("/admin/revenue-analysis")} className="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-all">
+                        <button onClick={() => navigate("/admin/revenue-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-all">
                             <FaChartLine className="text-indigo-500" /> Revenue
                         </button>
-                        <button onClick={() => navigate("/admin/waste-analysis")} className="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 transition-all">
+                        <button onClick={() => navigate("/admin/waste-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 transition-all">
                             <FaRecycle className="text-emerald-500" /> Waste
                         </button>
-                        <button onClick={() => navigate("/admin/food-analysis")} className="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600 transition-all">
+                        <button onClick={() => navigate("/admin/food-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600 transition-all">
                             <FaUtensils className="text-amber-500" /> Food
                         </button>
-                        <button onClick={() => fetchAdminData()} className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                        <button onClick={() => fetchAdminData()} className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all shrink-0">
                             <FaSyncAlt size={15} className={loading ? "animate-spin" : ""} />
                         </button>
                     </div>
                 </div>
 
                 {/* ANALYTICS SECTION — Clickable cards */}
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                     <div className="bg-white p-6 rounded-[3rem] shadow-xl border border-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all group" onClick={() => navigate("/admin/revenue-analysis")}>
                         <MonthlyRevenue reports={reports} />
@@ -249,45 +250,45 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* FILTERS & SEARCH */}
-                <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8 flex flex-col md:flex-row gap-6 items-center justify-between">
-                    <div className="flex flex-wrap gap-4">
-                        <div className="flex bg-slate-100 p-1.5 rounded-2xl">
+                <div className="bg-white p-4 md:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8 flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between">
+                    <div className="flex flex-wrap gap-4 w-full xl:w-auto">
+                        <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
                             {["all", "pickup", "pollution", "food"].map((t) => (
-                                <button key={t} onClick={() => setFilter(t)} className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${filter === t ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}>
+                                <button key={t} onClick={() => setFilter(t)} className={`flex-1 sm:flex-none px-4 md:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${filter === t ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}>
                                     {t === 'pickup' ? 'Waste' : t}
                                 </button>
                             ))}
                         </div>
-                        <div className="flex bg-slate-100 p-1.5 rounded-2xl">
+                        <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
                             {["all", "pending", "active", "completed"].map((s) => (
-                                <button key={s} onClick={() => setStatusFilter(s)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${statusFilter === s ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400"}`}>
+                                <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${statusFilter === s ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400"}`}>
                                     {s}
                                 </button>
                             ))}
                         </div>
-                        <div className="flex bg-slate-100 p-1.5 rounded-2xl items-center">
-                            <input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-[11px] font-black uppercase text-slate-500 outline-none px-4 py-1.5 border-none w-[130px] cursor-pointer" />
+                        <div className="flex bg-slate-100 p-1.5 rounded-2xl items-center w-full sm:w-auto">
+                            <input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-[11px] font-black uppercase text-slate-500 outline-none px-4 py-1.5 border-none w-full sm:w-[130px] cursor-pointer" />
                             {dateFilter && (
-                                <button onClick={() => setDateFilter("")} className="px-3 py-1.5 rounded-xl text-rose-500 hover:text-white hover:bg-rose-500 transition-all">
+                                <button onClick={() => setDateFilter("")} className="px-3 py-1.5 rounded-xl text-rose-500 hover:text-white hover:bg-rose-500 transition-all shrink-0">
                                     <FaTrash size={10} />
                                 </button>
                             )}
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 w-full md:w-auto">
-                        <div className="relative w-full md:w-72">
+                    <div className="flex items-center gap-4 w-full xl:w-auto">
+                        <div className="relative w-full xl:w-72">
                             <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
                             <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search records..." className="w-full pl-16 pr-8 py-4 bg-slate-50 border-none rounded-[1.2rem] text-[11px] font-bold uppercase outline-none focus:ring-2 ring-indigo-100" />
                         </div>
-                        <button onClick={downloadCSV} className="bg-slate-900 text-white p-4 rounded-[1.2rem] hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center min-w-[50px]" title="Download CSV Report">
+                        <button onClick={downloadCSV} className="bg-slate-900 text-white p-4 rounded-[1.2rem] hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center min-w-[50px] shrink-0" title="Download CSV Report">
                             <FaDownload size={14} />
                         </button>
                     </div>
                 </div>
 
                 {/* DATA TABLE */}
-                <div className="bg-white border border-slate-100 rounded-[3.5rem] overflow-hidden shadow-2xl">
-                    <table className="w-full text-left">
+                <div className="bg-white border border-slate-100 rounded-3xl md:rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto">
+                    <table className="w-full text-left min-w-[800px]">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100">
                                 <th className="p-10 text-[10px] font-black uppercase text-slate-400">Mission Content</th>
@@ -436,11 +437,11 @@ const AdminDashboard = () => {
                                         {/* ── EXPANDED DETAIL PANEL ── */}
                                         {isExpanded && (
                                             <tr className="bg-indigo-50/30 border-t-0 border-b-0">
-                                                <td colSpan="5" className="px-8 pb-6">
-                                                    <div className={`rounded-[2rem] border p-6 ${serviceConfig.accent}`}>
+                                                <td colSpan="5" className="px-4 md:px-8 pb-6">
+                                                    <div className={`rounded-3xl md:rounded-[2rem] border p-4 md:p-6 mb-4 md:mb-0 ${serviceConfig.accent}`}>
                                                         {/* === FOOD DETAILS === */}
                                                         {report.type === 'food' && (
-                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                                                 <div className="bg-white rounded-2xl p-4 shadow-sm">
                                                                     <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaMapMarkerAlt size={8} /> Location</p>
                                                                     <p className="text-sm font-bold text-slate-800">{report.placeName}</p>
@@ -461,7 +462,7 @@ const AdminDashboard = () => {
                                                                     <p className="text-[11px] text-slate-700 leading-relaxed">{report.notes || "No additional notes."}</p>
                                                                 </div>
                                                                 {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex items-center gap-4">
+                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                                                         <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
                                                                             <FaInfoCircle size={14} />
                                                                         </div>
@@ -472,14 +473,14 @@ const AdminDashboard = () => {
                                                                     </div>
                                                                 )}
                                                                 {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex justify-between items-center">
+                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                                                         <div>
                                                                             <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
                                                                             <p className="text-sm font-black text-rose-700">
                                                                                 {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
                                                                             </p>
                                                                         </div>
-                                                                        <div className="flex items-center gap-2">
+                                                                        <div className="flex flex-wrap items-center gap-2">
                                                                             <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
                                                                                 Unflag
                                                                             </button>
@@ -490,7 +491,7 @@ const AdminDashboard = () => {
                                                                     </div>
                                                                 )}
                                                                 {report.deliveryPhoto && (
-                                                                    <div className="col-span-2 md:col-span-4">
+                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
                                                                         <p className="text-[8px] font-black text-emerald-600 uppercase mb-2 flex items-center gap-1"><FaCamera size={8} /> Delivery Proof</p>
                                                                         <img src={report.deliveryPhoto} alt="Delivery proof" className="h-40 rounded-2xl object-cover border-4 border-emerald-100 shadow-md" />
                                                                     </div>
@@ -499,7 +500,7 @@ const AdminDashboard = () => {
                                                         )}
                                                         {/* === WASTE / PICKUP DETAILS === */}
                                                         {report.type === 'pickup' && (
-                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                                                 <div className="bg-white rounded-2xl p-4 shadow-sm">
                                                                     <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaMapMarkerAlt size={8} /> Address</p>
                                                                     <p className="text-[11px] font-bold text-slate-800 leading-snug">{report.address || "—"}</p>
@@ -523,7 +524,7 @@ const AdminDashboard = () => {
                                                                     <p className="text-[9px] text-slate-400 mt-1">Impact metric</p>
                                                                 </div>
                                                                 {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex items-center gap-4">
+                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                                                         <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
                                                                             <FaInfoCircle size={14} />
                                                                         </div>
@@ -534,14 +535,14 @@ const AdminDashboard = () => {
                                                                     </div>
                                                                 )}
                                                                 {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex justify-between items-center">
+                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                                                         <div>
                                                                             <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
                                                                             <p className="text-sm font-black text-rose-700">
                                                                                 {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
                                                                             </p>
                                                                         </div>
-                                                                        <div className="flex items-center gap-2">
+                                                                        <div className="flex flex-wrap items-center gap-2">
                                                                             <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
                                                                                 Unflag
                                                                             </button>
@@ -569,17 +570,17 @@ const AdminDashboard = () => {
                                                         )}
                                                         {/* === POLLUTION DETAILS === */}
                                                         {report.type === 'pollution' && (
-                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                                                 <div className="bg-white rounded-2xl p-4 shadow-sm">
                                                                     <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> Type</p>
                                                                     <p className="text-sm font-bold text-slate-800">{report.pollutionType || "—"}</p>
                                                                 </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm col-span-2">
+                                                                <div className="bg-white rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2">
                                                                     <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaStickyNote size={8} /> Description</p>
                                                                     <p className="text-[11px] text-slate-700 leading-relaxed">{report.description || "No description."}</p>
                                                                 </div>
                                                                 {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex items-center gap-4">
+                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                                                         <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
                                                                             <FaInfoCircle size={14} />
                                                                         </div>
@@ -590,14 +591,14 @@ const AdminDashboard = () => {
                                                                     </div>
                                                                 )}
                                                                 {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-2 md:col-span-4 flex justify-between items-center">
+                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                                                         <div>
                                                                             <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
                                                                             <p className="text-sm font-black text-rose-700">
                                                                                 {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
                                                                             </p>
                                                                         </div>
-                                                                        <div className="flex items-center gap-2">
+                                                                        <div className="flex flex-wrap items-center gap-2">
                                                                             <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
                                                                                 Unflag
                                                                             </button>
@@ -614,7 +615,7 @@ const AdminDashboard = () => {
                                                                     ) : <p className="text-[10px] text-slate-400">No GPS data</p>}
                                                                 </div>
                                                                 {report.photos && report.photos.length > 0 && (
-                                                                    <div className="col-span-2 md:col-span-4">
+                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
                                                                         <p className="text-[8px] font-black text-rose-500 uppercase mb-2 flex items-center gap-1"><FaCamera size={8} /> Evidence Photos</p>
                                                                         <div className="flex gap-3 flex-wrap">
                                                                             {report.photos.map((photo, i) => (
@@ -624,13 +625,13 @@ const AdminDashboard = () => {
                                                                     </div>
                                                                 )}
                                                                 {report.type === 'food' && report.deliveryPhoto && (
-                                                                    <div className="col-span-2 md:col-span-4">
+                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
                                                                         <p className="text-[8px] font-black text-green-600 uppercase mb-2 flex items-center gap-1"><FaCheckCircle size={8} /> Delivery Proof</p>
                                                                         <img src={`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`} alt="Delivery Proof" className="h-28 w-28 object-cover rounded-2xl border-4 border-green-100 shadow-md cursor-pointer hover:scale-105 transition-transform" onClick={() => window.open(`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`, '_blank')} />
                                                                     </div>
                                                                 )}
                                                                 {/* Admin Status Control */}
-                                                                <div className="col-span-2 md:col-span-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                                                                <div className="col-span-1 sm:col-span-2 lg:col-span-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
                                                                     <p className="text-[8px] font-black text-slate-400 uppercase w-full">Update Status:</p>
                                                                     {["Reported", "Verified", "Claimed", "Resolved"].map(s => (
                                                                         <button key={s} onClick={(e) => updatePollutionStatus(e, report._id, s)} className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${report.status === s ? 'bg-rose-600 text-white shadow-lg' : 'bg-white border border-slate-200 text-slate-500 hover:border-rose-300 hover:text-rose-600'}`}>{s}</button>

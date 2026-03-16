@@ -32,11 +32,11 @@ const FoodAnalysis = ({ reports }) => {
     : 0;
 
   return (
-    <div className="bg-slate-900 p-8 rounded-[3rem] shadow-2xl text-white border border-white/5 relative overflow-hidden">
+    <div className="bg-slate-900 p-6 md:p-8 rounded-3xl md:rounded-[3rem] shadow-2xl text-white border border-white/5 relative overflow-hidden">
       {/* Decorative Glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 blur-[100px] rounded-full"></div>
 
-      <div className="flex justify-between items-start mb-8 relative z-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0 relative z-10">
         <div>
           <h3 className="text-[11px] font-black uppercase text-slate-500 tracking-[0.2em] mb-2">Food Impact Radar</h3>
           <div className="flex items-baseline gap-2">
@@ -69,7 +69,7 @@ const FoodAnalysis = ({ reports }) => {
 
       {/* Progress & Efficiency */}
       <div className="space-y-4 relative z-10">
-        <div className="flex justify-between items-end">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2 sm:gap-0">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black uppercase text-slate-400">Rescue Efficiency</span>
             <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">

@@ -15,10 +15,11 @@ const MonthlyRevenue = ({ reports }) => {
   });
 
   return (
-    <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+    <div className="bg-white p-5 md:p-6 rounded-3xl md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden transform h-full flex flex-col">
       <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">Monthly Revenue</h3>
-      <div className="flex items-end gap-3 h-32">
-        {monthlyData.map(([month, value]) => {
+      <div className="overflow-x-auto pb-4 flex-grow hide-scrollbar">
+        <div className="flex items-end gap-2 md:gap-3 h-32 min-w-[300px]">
+          {monthlyData.map(([month, value]) => {
           // calculate dynamic height properly
           const maxVal = Math.max(...monthlyData.map(d => d[1]), 100);
           const heightPercent = value > 0 ? (value / maxVal) * 100 : 0;
@@ -28,14 +29,15 @@ const MonthlyRevenue = ({ reports }) => {
               <span className="text-[9px] font-black text-slate-500 uppercase">{value > 0 ? `₹${value}` : ''}</span>
               <div
                 className="w-full bg-gradient-to-t from-indigo-500 to-indigo-400 rounded-t-xl transition-all duration-1000"
-                style={{ height: `${Math.max(heightPercent, value > 0 ? 10 : 2)}%` }}
+                style={{ height: `${Math.max(heightPercent, value > 0 ? 10 : 0)}%` }}
               ></div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase">{month}</span>
+              <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase">{month}</span>
             </div>
           );
         })}
+        </div>
       </div>
-      <div className="mt-4 pt-4 border-t border-slate-50">
+      <div className="mt-auto pt-4 border-t border-slate-50">
         <p className="text-xl font-black text-slate-800">₹{monthlyData.reduce((sum, [, val]) => sum + val, 0).toLocaleString()}</p>
         <p className="text-[9px] text-emerald-500 font-bold uppercase tracking-widest mt-1">Total System Earnings</p>
       </div>
