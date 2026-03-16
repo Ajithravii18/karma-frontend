@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   FaCheckCircle, FaHistory, FaCalendarCheck, FaLeaf, FaTrashAlt,
-  FaArrowLeft, FaFileDownload, FaSearch, FaChartLine
+  FaArrowLeft, FaFileDownload, FaSearch, FaChartLine, FaCircle
 } from "react-icons/fa";
 import api from "../utils/api";
 import { jwtDecode } from "jwt-decode";
