@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa";
 import api from "../utils/api";
 import Nav from "../Components/Nav";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const MONTH_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -72,9 +73,11 @@ const FoodAnalysisPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
-            <Nav />
-            <div className="max-w-[1200px] mx-auto pt-32 px-8">
+        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+            <AdminSidebar />
+            <div className="flex-1 ml-72 pb-20">
+                <Nav />
+                <div className="max-w-[1200px] mx-auto pt-32 px-8">
 
                 {/* HEADER */}
                 <div className="flex items-center justify-between mb-10">
@@ -227,6 +230,7 @@ const FoodAnalysisPage = () => {
 
             </div>
         </div>
+    </div>
     );
 };
 

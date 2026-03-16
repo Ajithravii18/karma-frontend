@@ -6,6 +6,7 @@ import {
   FaMoneyBillWave, FaLeaf, FaCheckCircle, FaClock, FaIdBadge
 } from 'react-icons/fa';
 import Nav from '../Components/Nav';
+import AdminSidebar from '../Components/Admin/AdminSidebar';
 
 const ReportDetails = () => {
   const { type, id } = useParams();
@@ -63,10 +64,11 @@ const ReportDetails = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#F8FAF9] font-sans text-slate-900 pb-20">
-      <Nav />
-
-      <div className="max-w-7xl mx-auto pt-32 px-6">
+    <div className="min-h-screen bg-[#F8FAF9] font-sans text-slate-900 flex">
+      <AdminSidebar />
+      <div className="flex-1 ml-72 pb-20">
+        <Nav />
+        <div className="max-w-7xl mx-auto pt-32 px-6">
         {/* TOP NAV BAR */}
         <div className="flex justify-between items-center mb-10">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-emerald-700/50 hover:text-emerald-700 font-black text-[10px] uppercase transition-all group">
@@ -228,6 +230,7 @@ const ReportDetails = () => {
             </div>
 
           </div>
+        </div>
         </div>
       </div>
     </div>

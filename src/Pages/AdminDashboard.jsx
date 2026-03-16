@@ -16,6 +16,7 @@ import Nav from "../Components/Nav";
 import MonthlyRevenue from "../Components/Admin/MonthlyRevenue";
 import WasteAnalysis from "../Components/Admin/WasteAnalysis";
 import FoodAnalysis from "../Components/Admin/FoodAnalysis";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -255,9 +256,11 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
-      <Nav />
-      <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-12 px-4 md:px-6">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+      <AdminSidebar />
+      <div className="flex-1 ml-72">
+        <Nav />
+        <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-12 px-4 md:px-6">
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
           <div data-aos="fade-right">
@@ -372,45 +375,98 @@ const AdminDashboard = () => {
                   {filteredReports.map((report) => {
                     const status = report.status?.toLowerCase();
                     const isResolved = ['completed', 'resolved', 'delivered'].includes(status);
+                    const isExpanded = expandedId === report._id;
                     return (
-                      <tr key={report._id} className="hover:bg-slate-50/50 transition-colors group">
-                        <td className="p-8">
-                          <div className="flex items-center gap-4">
-                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${report.type === 'food' ? 'bg-amber-50 text-amber-500' : report.type === 'pollution' ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-500'}`}>
-                               {report.type === 'food' ? <FaUtensils /> : report.type === 'pollution' ? <FaExclamationTriangle /> : <FaRecycle />}
-                             </div>
-                             <div>
-                               <p className="text-sm font-black text-slate-900">{report.pollutionType || report.wasteType || report.placeName}</p>
-                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID: #{report._id?.slice(-8)}</p>
-                             </div>
-                          </div>
-                        </td>
-                        <td className="p-8">
-                           <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2 w-fit ${isResolved ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
-                             <div className={`w-1 h-1 rounded-full ${isResolved ? 'bg-green-600' : 'bg-amber-600 animate-pulse'}`}></div>
-                             {report.status}
-                           </span>
-                        </td>
-                        <td className="p-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                          {new Date(report.createdAt).toLocaleDateString()}<br/>
-                          <span className="text-slate-300 font-medium">{new Date(report.createdAt).toLocaleTimeString()}</span>
-                        </td>
-                        <td className="p-8 text-right">
-                          <div className="flex justify-end gap-2">
-                             <button onClick={() => setExpandedId(expandedId === report._id ? null : report._id)} className="p-3 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-900 hover:text-white transition-all">
-                               <FaEye size={12} />
-                             </button>
-                             {!isResolved && (
-                               <button onClick={() => handleResolve(report._id)} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-600 hover:text-white transition-all">
-                                 <FaCheck size={12} />
+                      <React.Fragment key={report._id}>
+                        <tr className={`hover:bg-slate-50/50 transition-colors group ${isExpanded ? 'bg-slate-50/80' : ''}`}>
+                          <td className="p-8">
+                            <div className="flex items-center gap-4">
+                               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${report.type === 'food' ? 'bg-amber-50 text-amber-500' : report.type === 'pollution' ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-500'}`}>
+                                 {report.type === 'food' ? <FaUtensils /> : report.type === 'pollution' ? <FaExclamationTriangle /> : <FaRecycle />}
+                               </div>
+                               <div>
+                                 <p className="text-sm font-black text-slate-900">{report.pollutionType || report.wasteType || report.placeName}</p>
+                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID: #{report._id?.slice(-8)}</p>
+                               </div>
+                            </div>
+                          </td>
+                          <td className="p-8">
+                             <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2 w-fit ${isResolved ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
+                               <div className={`w-1 h-1 rounded-full ${isResolved ? 'bg-green-600' : 'bg-amber-600 animate-pulse'}`}></div>
+                               {report.status}
+                             </span>
+                          </td>
+                          <td className="p-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            {new Date(report.createdAt).toLocaleDateString()}<br/>
+                            <span className="text-slate-300 font-medium">{new Date(report.createdAt).toLocaleTimeString()}</span>
+                          </td>
+                          <td className="p-8 text-right">
+                            <div className="flex justify-end gap-2">
+                               <button onClick={() => setExpandedId(isExpanded ? null : report._id)} className={`p-3 rounded-xl transition-all ${isExpanded ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-900 hover:text-white'}`}>
+                                 <FaEye size={12} />
                                </button>
-                             )}
-                             <button onClick={(e) => deleteReport(e, report._id, report.type)} className="p-3 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-600 hover:text-white transition-all">
-                               <FaTrash size={12} />
-                             </button>
-                          </div>
-                        </td>
-                      </tr>
+                               <button onClick={() => navigate(`/admin/report/${report.type}/${report._id}`)} className="p-3 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition-all">
+                                 <FaExternalLinkAlt size={12} />
+                               </button>
+                               {!isResolved && (
+                                 <button onClick={() => handleResolve(report._id)} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-600 hover:text-white transition-all">
+                                   <FaCheck size={12} />
+                                 </button>
+                               )}
+                               <button onClick={(e) => deleteReport(e, report._id, report.type)} className="p-3 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-600 hover:text-white transition-all">
+                                 <FaTrash size={12} />
+                               </button>
+                            </div>
+                          </td>
+                        </tr>
+                        {isExpanded && (
+                          <tr className="bg-slate-50/30">
+                            <td colSpan="4" className="p-8">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="space-y-4">
+                                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Location Data</h5>
+                                  <div className="flex items-center gap-3 text-slate-700">
+                                    <FaMapMarkerAlt className="text-emerald-500" />
+                                    <span className="text-xs font-bold">{report.address || report.placeName || "Coordinates Only"}</span>
+                                  </div>
+                                  <div className="bg-white p-4 rounded-2xl border border-slate-100 text-[10px] font-mono text-slate-500">
+                                    LAT: {report.location?.lat || "N/A"}<br/>
+                                    LNG: {report.location?.lng || "N/A"}
+                                  </div>
+                                </div>
+                                <div className="space-y-4">
+                                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Asset Agent</h5>
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-xs">
+                                      {report.volunteerName?.charAt(0) || "A"}
+                                    </div>
+                                    <div>
+                                      <p className="text-xs font-black text-slate-800">{report.volunteerName || "Unassigned"}</p>
+                                      <p className="text-[9px] font-bold text-slate-400 uppercase">{report.volunteerPhone || "No contact logged"}</p>
+                                    </div>
+                                  </div>
+                                  <button onClick={(e) => handleAdminReset(e, report._id, report.type)} className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl text-[9px] font-black uppercase border border-amber-100 flex items-center justify-center gap-2 hover:bg-amber-100 transition-all">
+                                    <FaSyncAlt size={10} /> Force Unassign Agent
+                                  </button>
+                                </div>
+                                <div className="space-y-4">
+                                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Security Protocol</h5>
+                                  <div className="flex flex-col gap-2">
+                                    <button onClick={(e) => handleFreezeUser(e, report.userId?._id || report.userId)} className="w-full py-3 bg-red-600 text-white rounded-xl text-[9px] font-black uppercase flex items-center justify-center gap-2 shadow-lg shadow-red-200">
+                                      <FaLock size={10} /> Freeze User Node
+                                    </button>
+                                    {report.isFlagged && (
+                                      <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="w-full py-3 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-black uppercase border border-blue-100 flex items-center justify-center gap-2">
+                                        <FaCheckDouble size={10} /> Dismiss Flag Alert
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     );
                   })}
                 </tbody>
@@ -425,7 +481,8 @@ const AdminDashboard = () => {
         )}
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default AdminDashboard;

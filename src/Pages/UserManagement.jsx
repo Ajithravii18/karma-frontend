@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Nav from "../Components/Nav";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -88,9 +89,11 @@ const UserManagement = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
-      <Nav />
-      <div className="max-w-[1400px] mx-auto pt-32 px-8">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+      <AdminSidebar />
+      <div className="flex-1 ml-72 pb-20">
+        <Nav />
+        <div className="max-w-[1400px] mx-auto pt-32 px-8">
 
         {/* --- SYSTEM HEADER --- */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12 border-b border-slate-200 pb-10">
@@ -266,6 +269,7 @@ const UserManagement = () => {
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import toast from "react-hot-toast";
 import Nav from "../Components/Nav";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 const DeletionLogs = () => {
     const navigate = useNavigate();
@@ -44,9 +45,11 @@ const DeletionLogs = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] pb-20">
-            <Nav />
-            <div className="max-w-4xl mx-auto pt-32 px-6">
+        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+            <AdminSidebar />
+            <div className="flex-1 ml-72 pb-20">
+                <Nav />
+                <div className="max-w-4xl mx-auto pt-32 px-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-10">
                     <div className="flex items-center gap-5">
@@ -186,6 +189,7 @@ const DeletionLogs = () => {
                 )}
             </div>
         </div>
+    </div>
     );
 };
 
