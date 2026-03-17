@@ -26,10 +26,15 @@ How can I assist?`
   const generateGroqResponse = async (userPrompt) => {
     try {
       const response = await api.post(
-        '/api/chatbot/gemini', // Keep route same for frontend compatibility
+        '/api/chatbot/gemini',
         {
-          prompt: userPrompt,
-          history: messages.slice(1)
+          messages: [
+            ...messages.map(msg => ({
+              role: msg.type === 'bot' ? 'assistant' : 'user',
+              content: msg.text
+            })),
+            { role: 'user', content: userPrompt }
+          ]
         },
         {
           headers: {
