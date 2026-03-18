@@ -264,11 +264,19 @@ const AdminDashboard = () => {
                             ))}
                         </div>
                         <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
-                            {["all", "pending", "active", "completed", "support"].map((s) => (
-                                <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${statusFilter === s ? (s === 'support' ? "bg-sky-600 text-white shadow-lg" : "bg-indigo-600 text-white shadow-lg") : "text-slate-400"}`}>
-                                    {s === 'support' ? '🆘 SOS' : s}
-                                </button>
-                            ))}
+                            {["all", "pending", "active", "completed", "support"].map((s) => {
+                                const sosCount = s === 'support' ? reports.filter(r => r.helpRequested).length : 0;
+                                return (
+                                    <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all flex items-center gap-2 ${statusFilter === s ? (s === 'support' ? "bg-sky-600 text-white shadow-lg" : "bg-indigo-600 text-white shadow-lg") : "text-slate-400"}`}>
+                                        {s === 'support' ? '🆘 SOS' : s}
+                                        {s === 'support' && sosCount > 0 && (
+                                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] ${statusFilter === s ? "bg-white text-sky-600" : "bg-sky-500 text-white"}`}>
+                                                {sosCount}
+                                            </span>
+                                        )}
+                                    </button>
+                                );
+                            })}
                         </div>
                         <div className="flex bg-slate-100 p-1.5 rounded-2xl items-center w-full sm:w-auto">
                             <input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-[11px] font-black uppercase text-slate-500 outline-none px-4 py-1.5 border-none w-full sm:w-[130px] cursor-pointer" />
@@ -318,7 +326,7 @@ const AdminDashboard = () => {
                                 return (
                                     <React.Fragment key={report._id}>
                                         {/* ── MAIN SUMMARY ROW ── */}
-                                        <tr className={`group transition-all cursor-pointer relative ${report.isFlagged ? 'bg-rose-50 shadow-[inset_4px_0_0_0_#f43f5e] z-10 scale-[1.01]' : report.volFlaggedByCitizen ? 'bg-amber-50 shadow-[inset_4px_0_0_0_#f59e0b]' : hasMisconductReport ? 'bg-amber-50/70 shadow-[inset_4px_0_0_0_#f59e0b]' : isExpanded ? 'bg-white z-[10]' : isFinished ? 'opacity-50 grayscale-[0.2]' : 'bg-white hover:bg-slate-50'} transform transition-all duration-300`} onClick={() => setExpandedId(isExpanded ? null : report._id)}>
+                                        <tr className={`group transition-all cursor-pointer relative ${report.isFlagged ? 'bg-rose-50 shadow-[inset_4px_0_0_0_#f43f5e] z-10 scale-[1.01]' : report.volFlaggedByCitizen ? 'bg-amber-50 shadow-[inset_4px_0_0_0_#f59e0b]' : hasMisconductReport ? 'bg-amber-50/70 shadow-[inset_4px_0_0_0_#f59e0b]' : report.helpRequested ? 'bg-sky-50 shadow-[inset_4px_0_0_0_#0ea5e9]' : isExpanded ? 'bg-white z-[10]' : isFinished ? 'opacity-50 grayscale-[0.2]' : 'bg-white hover:bg-slate-50'} transform transition-all duration-300`} onClick={() => setExpandedId(isExpanded ? null : report._id)}>
                                             {/* COLUMN 1: SERVICE TYPE + TITLE */}
                                             <td className={`p-8 first:rounded-l-[3.5rem] transition-all ${report.isFlagged ? 'bg-rose-50/30' : report.volFlaggedByCitizen || hasMisconductReport ? 'bg-amber-50/40' : isExpanded ? 'bg-indigo-50/80' : ''}`}>
                                                 <div className="flex items-center gap-4 relative">
