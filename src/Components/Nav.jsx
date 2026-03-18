@@ -385,11 +385,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <div className="p-6 border-b border-gray-100 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <img src={logo} className="w-10" alt="Logo" />
-                <h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2>
+                <h2 className="font-black text-xl text-slate-900 tracking-tighter uppercase">E-Karma</h2>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-green-600 rounded-lg"
+                className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg"
               >
                 <FaTimes size={24} />
               </button>
@@ -402,7 +402,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <div key={idx} className="space-y-2">
                     <button
                       onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-green-50 text-green-700" : "hover:bg-gray-50 text-gray-700"
+                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-indigo-50 text-indigo-700" : "hover:bg-gray-50 text-gray-700"
                         }`}
                     >
                       <div className="flex items-center gap-4">
@@ -429,7 +429,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                                 setIsMenuOpen(false);
                               }
                             }}
-                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-green-600 hover:bg-green-50/50 transition-all flex items-center gap-3"
+                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-amber-600 hover:bg-amber-50/50 transition-all flex items-center gap-3"
                           >
                             <span className="text-lg">{service.icon}</span>
                             {service.label}
@@ -472,7 +472,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               ) : (
                 <button
                   onClick={() => { nav("/login"); setIsMenuOpen(false); }}
-                  className="w-full py-4 px-6 bg-green-600 text-white rounded-2xl font-black shadow-lg hover:bg-green-700 transition-all active:scale-95"
+                  className="w-full py-4 px-6 bg-amber-600 text-white rounded-2xl font-black shadow-lg hover:bg-amber-700 transition-all active:scale-95"
                 >
                   Sign In to Account
                 </button>
