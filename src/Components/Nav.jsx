@@ -199,16 +199,28 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 bg-black border-b border-white/20 py-4 font-sans`}>
-      <div className="mx-auto max-w-7xl px-4 md:px-6 flex justify-between items-center">
+  return (
+    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled
+      ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] py-3"
+      : isDarkNav
+        ? "bg-white border-b border-gray-100 py-4"
+        : "bg-green-950/20 backdrop-blur-[1px] py-5"
+      } font-sans`}>
+      {/* Bottom Gradient for Scrolled State */}
+      {isScrolled && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-green-600/20 to-transparent"></div>}
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
 
           {/* Logo Section */}
           <div
             onClick={handleHome}
-            className="flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95"
+            className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 ${isScrolled || location.pathname !== "/"
+              ? "bg-transparent border border-transparent hover:bg-green-50/50"
+              : "bg-white shadow-lg border border-white/20 hover:shadow-xl"
+              }`}
           >
             <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-lg font-black tracking-tighter uppercase text-white">
+            <span className="text-lg font-black tracking-tighter uppercase text-green-900">
               E-Karma
             </span>
           </div>
@@ -219,7 +231,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <button
                 key={idx}
                 onClick={item.onClick}
-                className="font-bold transition-all duration-300 py-2 text-sm relative group text-white hover:text-amber-400"
+              className={`font-bold transition-all duration-300 py-2 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+                }`}
               >
                 {item.label}
                 <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isScrolled || location.pathname !== "/" ? "bg-green-600" : "bg-white"
@@ -229,7 +242,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
             {/* Services Dropdown */}
             <div className="relative group">
-              <button className="font-bold transition-all duration-300 py-2 text-sm flex items-center gap-1 text-white hover:text-amber-400">
+            <button className={`font-bold transition-all duration-300 py-2 text-sm flex items-center gap-1 ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+              }`}>
                 Services <FaChevronDown className="text-[10px]" />
               </button>
 
@@ -331,12 +345,15 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <div className="relative group/profile" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-3 pl-2 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer bg-white/10 border border-white/10 hover:bg-white/20"
+                  className={`flex items-center gap-3 pl-2 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${isScrolled || location.pathname !== "/"
+                    ? "bg-transparent border border-transparent hover:bg-green-50/50"
+                    : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-300"
+                    }`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
                       {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                     </div>
-                    <span className="font-black text-sm hidden lg:inline text-white">{userName}</span>
+                    <span className={`font-black text-sm hidden lg:inline ${isScrolled || location.pathname !== "/" ? "text-gray-700" : "text-green-900"}`}>{userName}</span>
                     <FaChevronDown className={`text-[10px] text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                   </button>
 
@@ -354,7 +371,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 </div>
               </>
             ) : (
-              <button onClick={() => nav("/login")} className="bg-amber-600 text-white px-4 md:px-8 py-2 md:py-2.5 rounded-xl font-black text-xs md:text-sm hover:bg-amber-700 transition shadow-lg active:scale-95 cursor-pointer">
+            <button onClick={() => nav("/login")} className="bg-green-600 text-white px-4 md:px-8 py-2 md:py-2.5 rounded-xl font-black text-xs md:text-sm hover:bg-green-700 transition shadow-lg active:scale-95 cursor-pointer">
                 Sign In
               </button>
             )}
@@ -362,7 +379,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle text-white hover:bg-white/10"
+            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:bg-gray-100" : "text-white/90 hover:bg-white/10"
+              }`}
             >
               {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
@@ -377,19 +395,19 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         >
           <div
             ref={menuRef}
-            className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-neutral-900 shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+          className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Mobile Menu Header */}
-            <div className="p-6 border-b border-white/10 flex justify-between items-center">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <img src={logo} className="w-10" alt="Logo" />
-                <h2 className="font-black text-xl text-white tracking-tighter uppercase">E-Karma</h2>
+                <h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-amber-400 rounded-lg"
+                className="p-2 text-gray-400 hover:text-green-600 rounded-lg"
               >
                 <FaTimes size={24} />
               </button>
@@ -402,7 +420,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <div key={idx} className="space-y-2">
                     <button
                       onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-amber-500/10 text-amber-500" : "hover:bg-white/5 text-gray-300 hover:text-white"
+                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-green-50 text-green-700" : "hover:bg-gray-50 text-gray-700"
                         }`}
                     >
                       <div className="flex items-center gap-4">
@@ -429,7 +447,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                                 setIsMenuOpen(false);
                               }
                             }}
-                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-400 hover:text-amber-400 hover:bg-white/5 transition-all flex items-center gap-3"
+                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-green-600 hover:bg-green-50/50 transition-all flex items-center gap-3"
                           >
                             <span className="text-lg">{service.icon}</span>
                             {service.label}
@@ -443,7 +461,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             </div>
 
             {/* User Section in Mobile Menu */}
-            <div className="p-6 border-t border-white/10 bg-white/5">
+            <div className="p-6 border-t border-gray-100 bg-gray-50/50">
               {isLoggedIn ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 px-2">
@@ -451,13 +469,13 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                       {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                     </div>
                     <div>
-                      <h4 className="font-black text-white leading-none">{userName}</h4>
-                    <span className="text-[10px] font-black uppercase text-gray-500 tracking-widest">{userRole} account</span>
+                      <h4 className="font-black text-gray-900 leading-none">{userName}</h4>
+                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{userRole} account</span>
                     </div>
                   </div>
                   <button
                     onClick={goToDashboard}
-                    className="w-full py-4 px-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-3 font-bold text-white shadow-sm hover:bg-white/10 transition-all"
+                    className="w-full py-4 px-6 bg-white border border-gray-100 rounded-2xl flex items-center gap-3 font-bold text-gray-700 shadow-sm hover:shadow-md transition-all"
                   >
                     <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
                     {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
@@ -472,7 +490,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               ) : (
                 <button
                   onClick={() => { nav("/login"); setIsMenuOpen(false); }}
-                  className="w-full py-4 px-6 bg-amber-600 text-white rounded-2xl font-black shadow-lg hover:bg-amber-700 transition-all active:scale-95"
+                  className="w-full py-4 px-6 bg-green-600 text-white rounded-2xl font-black shadow-lg hover:bg-green-700 transition-all active:scale-95"
                 >
                   Sign In to Account
                 </button>
