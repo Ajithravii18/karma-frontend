@@ -147,7 +147,7 @@ const AdminDashboard = () => {
         .filter(r => {
             const matchesCategory = filter === "all" || r.type === filter;
             const currentStatus = (r.status || "pending").toLowerCase();
-            const matchesStatus = statusFilter === "all" ||
+            const matchesStatus = statusFilter === "all" || statusFilter === "support" ||
                 (statusFilter === "pending" && ["pending", "reported", "available"].includes(currentStatus)) ||
                 (statusFilter === "active" && ["verified", "claimed", "arrived", "collected"].includes(currentStatus)) ||
                 (statusFilter === "completed" && ["completed", "resolved", "delivered"].includes(currentStatus));

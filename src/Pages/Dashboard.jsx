@@ -369,7 +369,7 @@ const Dashboard = () => {
     const startDateTime = new Date(item.createdAt || item.reportedAt);
 
     return (
-      <div key={item._id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm mb-4">
+      <div key={item._id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm mb-4">
         <div className="flex justify-between items-start mb-4">
           <div className={getStatusStyle(item.status || "Pending")}>
              {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
@@ -380,7 +380,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <h4 className="text-lg font-black text-gray-900 mb-1">
+        <h4 className="text-base font-black text-gray-900 mb-1">
           {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
         </h4>
         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
@@ -437,12 +437,12 @@ const Dashboard = () => {
     return (
       <>
         <div className="hidden md:block overflow-x-auto custom-scrollbar">
-          <table className="w-full text-left border-separate border-spacing-y-3">
+          <table className="w-full text-left border-separate border-spacing-y-2">
             <thead>
               <tr className="text-[11px] uppercase text-gray-400 font-black tracking-[0.2em] px-4">
-                {columns.map(col => <th key={col} className="px-6 py-4">{col}</th>)}
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-center">Action</th>
+                {columns.map(col => <th key={col} className="px-5 py-3">{col}</th>)}
+                <th className="px-5 py-3">Status</th>
+                <th className="px-5 py-3 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -455,9 +455,9 @@ const Dashboard = () => {
                 const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
 
                 return (
-                  <tr key={item._id || idx} className="bg-white group hover:bg-green-50/20 transition-all duration-300 shadow-sm border border-gray-100 rounded-3xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
+                  <tr key={item._id || idx} className="bg-white group hover:bg-green-50/20 transition-all duration-300 shadow-sm border border-gray-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
                     {/* TIME SECTION (START & END) */}
-                    <td className="px-6 py-6 text-sm font-bold text-gray-500 first:rounded-l-[2rem]">
+                    <td className="px-5 py-4 text-sm font-bold text-gray-500 first:rounded-l-2xl">
                       <div className="space-y-2 min-w-[180px]">
                         {/* Start Time Row */}
                         <div className="flex items-center gap-3">
@@ -488,7 +488,7 @@ const Dashboard = () => {
                     </td>
 
                     {/* DESCRIPTION */}
-                    <td className="px-6 py-6 border-l border-gray-50">
+                    <td className="px-5 py-4 border-l border-gray-50">
                       <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
                         {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
                       </p>
@@ -498,13 +498,13 @@ const Dashboard = () => {
                       </p>
                     </td>
 
-                    <td className="px-6 py-6">
+                    <td className="px-5 py-4">
                       <span className={getStatusStyle(item.status || "Pending")}>
                         {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
                         {item.status || "Pending"}
                       </span>
                     </td>
-                    <td className="px-6 py-6 last:rounded-r-[2rem]">
+                    <td className="px-5 py-4 last:rounded-r-2xl">
                       <div className="flex flex-col items-center gap-2">
                         {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
                           <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
@@ -573,10 +573,10 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-green-100">
       <Nav />
-      <div className="max-w-6xl mx-auto pt-24 md:pt-32 pb-12 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+      <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
         {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
         <div className="lg:col-span-1 space-y-4 md:space-y-6">
-          <div className="bg-white p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm border border-gray-100 text-center group">
+          <div className="bg-white p-5 md:p-6 rounded-3xl md:rounded-[2rem] shadow-sm border border-gray-100 text-center group">
             <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
               <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse group-hover:scale-110 transition-transform duration-500"></div>
               <div className="relative w-full h-full bg-green-600 rounded-full flex items-center justify-center text-2xl md:text-4xl text-white font-black shadow-xl shadow-green-900/20 transform group-hover:rotate-12 transition-transform">
@@ -598,9 +598,9 @@ const Dashboard = () => {
 
         {/* RIGHT COLUMN: Tab Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-[48px] shadow-2xl border border-gray-100 overflow-hidden min-h-[600px]">
+          <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden min-h-[500px]">
             {activeTab === "profile" ? (
-              <div className="p-8 md:p-12 animate-in fade-in duration-500">
+               <div className="p-6 md:p-8 animate-in fade-in duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
                   <div>
                     <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Main Workspace</h3>
@@ -612,7 +612,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="p-8 bg-slate-50/50 rounded-3xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:shadow-gray-100/50">
+                  <div className="p-6 bg-slate-50/50 rounded-2xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:shadow-gray-100/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaUser size={14} />
@@ -626,7 +626,7 @@ const Dashboard = () => {
                       </div>
                     ) : <p className="text-xl font-black text-gray-800 tracking-tight ml-1">{currentName}</p>}
                   </div>
-                  <div className="p-8 bg-slate-50/50 rounded-3xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:shadow-gray-100/50">
+                  <div className="p-6 bg-slate-50/50 rounded-2xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:shadow-gray-100/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-blue-100 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaClock size={14} />
@@ -772,7 +772,7 @@ const Dashboard = () => {
                 )}
 
                 {/* 🌈 THE IMPACT CARD */}
-                <div className="bg-gradient-to-br from-green-700 via-green-800 to-green-950 p-12 rounded-[48px] text-white shadow-3xl relative overflow-hidden group border border-white/5">
+                <div className="bg-gradient-to-br from-green-700 via-green-800 to-green-950 p-8 md:p-10 rounded-[2.5rem] text-white shadow-3xl relative overflow-hidden group border border-white/5">
                   <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-150"></div>
                   <FaLeaf className="absolute right-10 bottom-10 text-[180px] opacity-10 group-hover:rotate-12 group-hover:scale-125 transition-all duration-1000" />
 
