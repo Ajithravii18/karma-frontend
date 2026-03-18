@@ -347,10 +347,10 @@ const Dashboard = () => {
   const TabButton = ({ id, icon: Icon, label }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-2 p-3 md:p-4 md:px-6 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap ${activeTab === id
+      className={`flex items-center gap-2 p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap ${activeTab === id
         ? "bg-green-600 text-white shadow-lg md:shadow-xl md:shadow-green-900/10 md:translate-x-1"
         : "bg-white md:bg-white text-gray-500 hover:bg-green-50 hover:text-green-700"
-        } ${id === 'profile' ? 'md:w-full' : 'md:w-full'}`}
+        } ${id === 'profile' ? 'sm:w-full' : 'sm:w-full'}`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
         <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/20" : "bg-gray-50 group-hover:bg-green-100"}`}>
@@ -588,7 +588,7 @@ const Dashboard = () => {
               Citizen ID: <span className="ml-1 opacity-70">#{user._id?.slice(-6) || 'N/A'}</span>
             </div>
           </div>
-          <nav className="flex md:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+          <nav className="flex sm:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
             <TabButton id="profile" icon={FaUser} label="Profile" />
             <TabButton id="pickups" icon={FaRecycle} label="Waste" />
             <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution" />
