@@ -199,7 +199,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 bg-slate-900 border-b border-white/10 py-4 font-sans`}>
+    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 bg-black border-b border-white/20 py-4 font-sans`}>
       <div className="mx-auto max-w-7xl px-4 md:px-6 flex justify-between items-center">
 
           {/* Logo Section */}
@@ -377,19 +377,19 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         >
           <div
             ref={menuRef}
-            className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"
-              }`}
+            className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-neutral-900 shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Mobile Menu Header */}
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+            <div className="p-6 border-b border-white/10 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <img src={logo} className="w-10" alt="Logo" />
-                <h2 className="font-black text-xl text-slate-900 tracking-tighter uppercase">E-Karma</h2>
+                <h2 className="font-black text-xl text-white tracking-tighter uppercase">E-Karma</h2>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg"
+                className="p-2 text-gray-400 hover:text-amber-400 rounded-lg"
               >
                 <FaTimes size={24} />
               </button>
@@ -402,7 +402,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <div key={idx} className="space-y-2">
                     <button
                       onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-indigo-50 text-indigo-700" : "hover:bg-gray-50 text-gray-700"
+                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-amber-500/10 text-amber-500" : "hover:bg-white/5 text-gray-300 hover:text-white"
                         }`}
                     >
                       <div className="flex items-center gap-4">
@@ -429,7 +429,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                                 setIsMenuOpen(false);
                               }
                             }}
-                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-amber-600 hover:bg-amber-50/50 transition-all flex items-center gap-3"
+                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-400 hover:text-amber-400 hover:bg-white/5 transition-all flex items-center gap-3"
                           >
                             <span className="text-lg">{service.icon}</span>
                             {service.label}
@@ -443,7 +443,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             </div>
 
             {/* User Section in Mobile Menu */}
-            <div className="p-6 border-t border-gray-100 bg-gray-50/50">
+            <div className="p-6 border-t border-white/10 bg-white/5">
               {isLoggedIn ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 px-2">
@@ -451,13 +451,13 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                       {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                     </div>
                     <div>
-                      <h4 className="font-black text-gray-900 leading-none">{userName}</h4>
-                      <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{userRole} account</span>
+                      <h4 className="font-black text-white leading-none">{userName}</h4>
+                    <span className="text-[10px] font-black uppercase text-gray-500 tracking-widest">{userRole} account</span>
                     </div>
                   </div>
                   <button
                     onClick={goToDashboard}
-                    className="w-full py-4 px-6 bg-white border border-gray-100 rounded-2xl flex items-center gap-3 font-bold text-gray-700 shadow-sm hover:shadow-md transition-all"
+                    className="w-full py-4 px-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-3 font-bold text-white shadow-sm hover:bg-white/10 transition-all"
                   >
                     <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
                     {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
