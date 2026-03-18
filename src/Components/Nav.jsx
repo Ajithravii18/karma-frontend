@@ -205,24 +205,29 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         ? "bg-white border-b border-gray-100 py-4"
         : "bg-transparent py-5"
       } font-sans`}>
+      {/* Visual Separation Gradient for Scrolled State */}
+      {isScrolled && (
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+      )}
+      
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
         
-          {/* Logo Section - Individual Pill */}
+          {/* Logo Section - Individual Pill with Subtle Gradient */}
           <div
             onClick={handleHome}
-            className="flex items-center gap-2 cursor-pointer pl-2 pr-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md"
+            className="flex items-center gap-2 cursor-pointer pl-2 pr-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-green-100"
           >
             <img src={logo} className="w-8" alt="E-Karma Logo" />
             <span className="text-lg font-black tracking-tighter uppercase text-green-900">
               E-Karma
             </span>
           {/* Desktop Navigation - Absolute Centered & Transparent */}
-          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap z-20">
             {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
               <button
                 key={idx}
                 onClick={item.onClick}
-                className={`font-black transition-all duration-300 px-2 py-1 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
+                className={`font-black transition-all duration-300 px-2 py-1 text-sm relative group transform hover:scale-110 active:scale-95 ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
                   }`}
               >
                 {item.label}
@@ -342,7 +347,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <div className="relative group/profile" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-3 pl-2 pr-2 md:pr-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md"
+                    className="flex items-center gap-3 pl-2 pr-2 md:pr-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md"
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
                       {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
@@ -367,7 +372,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             ) : (
             <button 
               onClick={() => nav("/login")} 
-              className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md font-black text-sm text-green-900 border-green-50"
+              className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md font-black text-sm text-green-900 border-green-50"
             >
               Sign In
             </button>
