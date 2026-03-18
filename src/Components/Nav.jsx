@@ -216,24 +216,25 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <span className="text-lg font-black tracking-tighter uppercase text-green-900">
               E-Karma
             </span>
-          </div>
-
-          {/* Desktop Navigation - Central Pill */}
-          <div className="hidden lg:flex items-center gap-1 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] px-6 py-2.5 rounded-full">
+                    {/* Desktop Navigation - Transparent Center */}
+          <div className="hidden lg:flex items-center gap-6">
             {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
               <button
                 key={idx}
                 onClick={item.onClick}
-                className="font-black transition-all duration-300 px-4 py-1 text-sm relative group text-gray-800 hover:text-green-600"
+                className={`font-black transition-all duration-300 px-2 py-1 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
+                  }`}
               >
                 {item.label}
-                <span className="absolute bottom-0 left-4 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-[calc(100%-32px)]"></span>
+                <span className={`absolute bottom-0 left-2 w-0 h-0.5 transition-all duration-300 group-hover:w-[calc(100%-16px)] ${isScrolled || location.pathname !== "/" ? "bg-green-600" : "bg-white"
+                  }`}></span>
               </button>
             ))}
 
             {/* Services Dropdown */}
             <div className="relative group">
-              <button className="font-black transition-all duration-300 px-4 py-1 text-sm flex items-center gap-1 text-gray-800 hover:text-green-600">
+              <button className={`font-black transition-all duration-300 px-2 py-1 text-sm flex items-center gap-1 ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
+                }`}>
                 Services <FaChevronDown className="text-[10px]" />
               </button>
 
@@ -363,7 +364,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 </div>
               </>
             ) : (
-            <button onClick={() => nav("/login")} className="bg-green-600 text-white px-4 md:px-8 py-2 md:py-2.5 rounded-xl font-black text-xs md:text-sm hover:bg-green-700 transition shadow-lg active:scale-95 cursor-pointer">
+            <button 
+              onClick={() => nav("/login")} 
+              className="bg-green-700 text-white px-6 md:px-10 py-2.5 md:py-3 rounded-full font-black text-xs md:text-sm hover:bg-green-800 transition-all shadow-[0_8px_20px_-4px_rgba(21,128,61,0.4)] hover:shadow-[0_12px_25px_-4px_rgba(21,128,61,0.5)] active:scale-95 transform hover:-translate-y-0.5"
+            >
+              Sign In
+            </button>
                 Sign In
               </button>
             )}
