@@ -199,7 +199,6 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   ];
 
   return (
-  return (
     <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled
       ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] py-3"
       : isDarkNav
