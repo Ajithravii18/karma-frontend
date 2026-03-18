@@ -199,307 +199,303 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${isScrolled
-      ? "bg-white/95 shadow-lg py-3"
+    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled
+      ? "bg-white shadow-md border-b border-gray-100 py-3"
       : isDarkNav
         ? "bg-white border-b border-gray-100 py-4"
-        : "bg-transparent py-5"
+        : "bg-green-950/20 py-5"
       } font-sans`}>
-      {/* Visual Separation Gradient for Scrolled State */}
-      {isScrolled && (
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-      )}
-      
-      <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
-        
-          {/* Logo Section - Individual Pill with Subtle Gradient */}
-          <div
-            onClick={handleHome}
-            className="flex items-center gap-2 cursor-pointer pl-2 pr-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-green-100"
-          >
-            <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-lg font-black tracking-tighter uppercase text-green-900">
-              E-Karma
-            </span>
-          {/* Desktop Navigation - Absolute Centered & Transparent */}
-          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap z-20">
-            {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
-              <button
-                key={idx}
-                onClick={item.onClick}
-                className={`font-black transition-all duration-300 px-2 py-1 text-sm relative group transform hover:scale-110 active:scale-95 ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
-                  }`}
-              >
-                {item.label}
-                <span className={`absolute bottom-0 left-2 w-0 h-0.5 transition-all duration-300 group-hover:w-[calc(100%-16px)] ${isScrolled || location.pathname !== "/" ? "bg-green-600" : "bg-white"
-                  }`}></span>
-              </button>
-            ))}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
 
-            {/* Services Dropdown - Part of Center Group */}
-            <div className="relative group">
-              <button className={`font-black transition-all duration-300 px-2 py-1 text-sm flex items-center gap-1 ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
-                }`}>
-                Services <FaChevronDown className="text-[10px]" />
-              </button>
+        {/* Logo Section */}
+        <div
+          onClick={handleHome}
+          className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 ${isScrolled || location.pathname !== "/"
+            ? "bg-transparent border border-transparent hover:bg-green-50/50"
+            : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-200"
+            }`}
+        >
+          <img src={logo} className="w-8" alt="E-Karma Logo" />
+          <span className="text-lg font-black tracking-tighter uppercase text-green-900">
+            E-Karma
+          </span>
+        </div>
 
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 bg-white rounded-3xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
-                <div className="p-3 grid gap-1">
-                  {services.map((service, sIdx) => (
-                    <button
-                      key={sIdx}
-                      onClick={() => {
-                        if (!isLoggedIn) {
-                          toast.error("Please login to continue");
-                        } else if (freshUserRoleCheck(userRole)) {
-                          toast.error("This service is only available for Regular Users");
-                        } else {
-                          nav(service.path);
-                        }
-                      }}
-                      className="flex items-center gap-4 p-3.5 rounded-2xl hover:bg-green-50 text-gray-700 hover:text-green-700 transition-all text-left"
-                    >
-                      <span className="text-xl opacity-80">{service.icon}</span>
-                      <div className="flex flex-col">
-                        <span className="font-bold text-sm leading-tight text-green-950">{service.label}</span>
-                        <span className="text-[10px] text-gray-400 font-medium">{service.desc}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center space-x-8">
+          {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
+            <button
+              key={idx}
+              onClick={item.onClick}
+              className={`font-bold transition-all duration-300 py-2 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+                }`}
+            >
+              {item.label}
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isScrolled || location.pathname !== "/" ? "bg-green-600" : "bg-white"
+                }`}></span>
+            </button>
+          ))}
+
+          {/* Services Dropdown */}
+          <div className="relative group">
+            <button className={`font-bold transition-all duration-300 py-2 text-sm flex items-center gap-1 ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+              }`}>
+              Services <FaChevronDown className="text-[10px]" />
+            </button>
+
+            <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
+              {services.map((service, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      toast.error("Please login to continue");
+                    } else if (freshUserRoleCheck(userRole)) {
+                      toast.error("This service is only available for Regular Users");
+                    } else {
+                      nav(service.path);
+                    }
+                  }}
+                  className="flex items-center gap-4 w-full text-left px-6 py-4 hover:bg-green-50 text-gray-700 font-bold border-b border-gray-50 last:border-0"
+                >
+                  <span className={`${service.color} p-2 rounded-lg text-lg`}>{service.icon}</span>
+                  {service.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-          {/* User Actions */}
-          <div className="flex items-center gap-2 md:gap-4">
-            {isLoggedIn ? (
-              <>
+        {/* User Actions */}
+        <div className="flex items-center gap-2 md:gap-4">
+          {isLoggedIn ? (
+            <>
+              
+          {/* Notification Bell */}
+<div className="relative" ref={notifRef}>
+  <button
+    onClick={() => setShowNotifications(!showNotifications)}
+    className="relative p-2.5 rounded-full bg-gray-50 text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all cursor-pointer"
+  >
+    <FaBell size={18} />
+    {unreadCount > 0 && (
+      <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
+        {unreadCount}
+      </span>
+    )}
+  </button>
 
-                {/* Notification Bell */}
-                <div className="relative" ref={notifRef}>
-                  <button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    className="relative p-2.5 rounded-full bg-gray-50 text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all cursor-pointer"
-                  >
-                    <FaBell size={18} />
-                    {unreadCount > 0 && (
-                      <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
+  {showNotifications && (
+    /* Changed: Added fixed positioning for mobile and absolute for desktop */
+    <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+        <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">Alerts Hub</h3>
+        <div className="flex items-center gap-3">
+            {unreadCount > 0 && <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">{unreadCount} New</span>}
+            {/* Added a close button for mobile convenience */}
+            <button onClick={() => setShowNotifications(false)} className="md:hidden text-gray-400 p-1">
+                <FaTimes size={14} />
+            </button>
+        </div>
+      </div>
+      
+      <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto custom-scrollbar">
+        {notifications.length > 0 ? notifications.map(n => {
+          let Icon = FaInfoCircle;
+          let iconBg = "bg-blue-100 text-blue-600";
+          if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
+          else if (n.type === 'PAYMENT_SUCCESS' || n.type === 'PAYMENT_RECEIVED') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
+          else if (n.type === 'PICKUP_FINISHED') { Icon = FaCheckCircle; iconBg = "bg-green-100 text-green-600"; }
+          else if (n.type === 'POLLUTION_ALERT') { Icon = FaExclamationCircle; iconBg = "bg-red-100 text-red-600"; }
 
-                  {showNotifications && (
-                    <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
-                      <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-                        <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">Alerts Hub</h3>
-                        <div className="flex items-center gap-3">
-                          {unreadCount > 0 && <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">{unreadCount} New</span>}
-                          <button onClick={() => setShowNotifications(false)} className="md:hidden text-gray-400 p-1">
-                            <FaTimes size={14} />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto custom-scrollbar">
-                        {notifications.length > 0 ? notifications.map(n => {
-                          let Icon = FaInfoCircle;
-                          let iconBg = "bg-blue-100 text-blue-600";
-                          if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
-                          else if (n.type === 'PAYMENT_SUCCESS' || n.type === 'PAYMENT_RECEIVED') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
-                          else if (n.type === 'PICKUP_FINISHED') { Icon = FaCheckCircle; iconBg = "bg-green-100 text-green-600"; }
-                          else if (n.type === 'POLLUTION_ALERT') { Icon = FaExclamationCircle; iconBg = "bg-red-100 text-red-600"; }
-
-                          return (
-                            <div
-                              key={n._id}
-                              onClick={() => { markAsRead(n._id); setShowNotifications(false); }}
-                              className={`p-5 border-b border-gray-50 flex gap-4 items-start hover:bg-gray-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-green-50/40' : ''}`}
-                            >
-                              <div className={`${iconBg} p-2 rounded-xl text-sm shrink-0`}>
-                                <Icon />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <p className="text-xs font-bold text-gray-800 leading-relaxed">{n.message}</p>
-                                <div className="flex items-center gap-2 mt-2">
-                                  <FaClock className="text-[9px] text-gray-300" />
-                                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter">
-                                    {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.createdAt).toLocaleDateString()}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        }) : (
-                          <div className="p-12 text-center">
-                            <FaInfoCircle className="mx-auto text-gray-200 text-3xl mb-3" />
-                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">No Alerts Yet</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Profile Dropdown */}
-                <div className="relative group/profile" ref={dropdownRef}>
-                  <button
-                    onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-3 pl-2 pr-2 md:pr-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md"
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
-                      {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
-                    </div>
-                    <span className={`font-black text-sm hidden lg:inline ${isScrolled || location.pathname !== "/" ? "text-gray-700" : "text-green-900"}`}>{userName}</span>
-                    <FaChevronDown className={`text-[10px] text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {showDropdown && (
-                    <div className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                      <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-6 py-4 hover:bg-gray-50 text-gray-700 font-bold text-sm transition">
-                        <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
-                        {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
-                      </button>
-                      <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-6 py-4 hover:bg-red-50 text-red-600 font-bold text-sm transition border-t border-gray-50">
-                        <FaSignOutAlt /> Sign Out
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-            <button 
-              onClick={() => nav("/login")} 
-              className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md font-black text-sm text-green-900 border-green-50"
+          return (
+            <div
+              key={n._id}
+              onClick={() => { markAsRead(n._id); setShowNotifications(false); }}
+              className={`p-5 border-b border-gray-50 flex gap-4 items-start hover:bg-gray-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-green-50/40' : ''}`}
             >
+              <div className={`${iconBg} p-2 rounded-xl text-sm shrink-0`}>
+                <Icon />
+              </div>
+              <div className="flex-1 text-left">
+                <p className="text-xs font-bold text-gray-800 leading-relaxed">{n.message}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <FaClock className="text-[9px] text-gray-300" />
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter">
+                    {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        }) : (
+          <div className="p-12 text-center">
+            <FaInfoCircle className="mx-auto text-gray-200 text-3xl mb-3" />
+            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">No Alerts Yet</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+</div>
+
+              {/* Profile Dropdown */}
+              <div className="relative group/profile" ref={dropdownRef}>
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className={`flex items-center gap-3 pl-2 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${isScrolled || location.pathname !== "/"
+                    ? "bg-transparent border border-transparent hover:bg-green-50/50"
+                    : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-300"
+                    }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
+                    {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
+                  </div>
+                  <span className={`font-black text-sm hidden lg:inline ${isScrolled || location.pathname !== "/" ? "text-gray-700" : "text-green-900"}`}>{userName}</span>
+                  <FaChevronDown className={`text-[10px] text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showDropdown && (
+                  <div className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                    <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-6 py-4 hover:bg-gray-50 text-gray-700 font-bold text-sm transition">
+                      <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
+                      {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
+                    </button>
+                    <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-6 py-4 hover:bg-red-50 text-red-600 font-bold text-sm transition border-t border-gray-50">
+                      <FaSignOutAlt /> Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <button onClick={() => nav("/login")} className="bg-green-600 text-white px-4 md:px-8 py-2 md:py-2.5 rounded-xl font-black text-xs md:text-sm hover:bg-green-700 transition shadow-lg active:scale-95 cursor-pointer">
               Sign In
             </button>
-            )}
+          )}
 
-            {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`lg:hidden p-2.5 rounded-full transition-all duration-300 menu-toggle bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] ${isScrolled || location.pathname !== "/" ? "text-gray-800" : "text-green-900"
-                  }`}
-              >
-              {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-            </button>
-          </div>
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:bg-gray-100" : "text-white/90 hover:bg-white/10"
+              }`}
+          >
+            {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation Drawer */}
+      {/* Mobile Navigation Drawer */}
+      <div
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        onClick={() => setIsMenuOpen(false)}
+      >
         <div
-          className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-            }`}
-          onClick={() => setIsMenuOpen(false)}
-        >
-          <div
-            ref={menuRef}
+          ref={menuRef}
           className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Mobile Menu Header */}
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <img src={logo} className="w-10" alt="Logo" />
-                <h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2>
-              </div>
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 text-gray-400 hover:text-green-600 rounded-lg"
-              >
-                <FaTimes size={24} />
-              </button>
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Mobile Menu Header */}
+          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <img src={logo} className="w-10" alt="Logo" />
+              <h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2>
             </div>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="p-2 text-gray-400 hover:text-green-600 rounded-lg"
+            >
+              <FaTimes size={24} />
+            </button>
+          </div>
 
-            {/* Mobile Menu Items */}
-            <div className="flex-1 overflow-y-auto py-6">
-              <div className="px-6 space-y-2">
-                {menuItems.map((item, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <button
-                      onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-green-50 text-green-700" : "hover:bg-gray-50 text-gray-700"
-                        }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className="text-xl opacity-70">{item.icon}</span>
-                        <span>{item.label}</span>
-                      </div>
-                      {item.isAccordion && (
-                        <FaChevronDown className={`text-xs transition-transform ${activeAccordion === idx ? 'rotate-180' : ''}`} />
-                      )}
-                    </button>
-
-                    {item.isAccordion && activeAccordion === idx && (
-                      <div className="pl-14 pr-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
-                        {services.map((service, sIdx) => (
-                          <button
-                            key={sIdx}
-                            onClick={() => {
-                              if (!isLoggedIn) {
-                                toast.error("Please login to continue");
-                              } else if (freshUserRoleCheck(userRole)) {
-                                toast.error("This service is only available for Regular Users");
-                              } else {
-                                nav(service.path);
-                                setIsMenuOpen(false);
-                              }
-                            }}
-                            className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-green-600 hover:bg-green-50/50 transition-all flex items-center gap-3"
-                          >
-                            <span className="text-lg">{service.icon}</span>
-                            {service.label}
-                          </button>
-                        ))}
-                      </div>
+          {/* Mobile Menu Items */}
+          <div className="flex-1 overflow-y-auto py-6">
+            <div className="px-6 space-y-2">
+              {menuItems.map((item, idx) => (
+                <div key={idx} className="space-y-2">
+                  <button
+                    onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl font-bold transition-all ${activeAccordion === idx ? "bg-green-50 text-green-700" : "hover:bg-gray-50 text-gray-700"
+                      }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-xl opacity-70">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
+                    {item.isAccordion && (
+                      <FaChevronDown className={`text-xs transition-transform ${activeAccordion === idx ? 'rotate-180' : ''}`} />
                     )}
-                  </div>
-                ))}
-              </div>
-            </div>
+                  </button>
 
-            {/* User Section in Mobile Menu */}
-            <div className="p-6 border-t border-gray-100 bg-gray-50/50">
-              {isLoggedIn ? (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 px-2">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-lg shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
-                      {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
+                  {item.isAccordion && activeAccordion === idx && (
+                    <div className="pl-14 pr-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
+                      {services.map((service, sIdx) => (
+                        <button
+                          key={sIdx}
+                          onClick={() => {
+                            if (!isLoggedIn) {
+                              toast.error("Please login to continue");
+                            } else if (freshUserRoleCheck(userRole)) {
+                              toast.error("This service is only available for Regular Users");
+                            } else {
+                              nav(service.path);
+                              setIsMenuOpen(false);
+                            }
+                          }}
+                          className="w-full text-left p-3 rounded-lg text-sm font-bold text-gray-500 hover:text-green-600 hover:bg-green-50/50 transition-all flex items-center gap-3"
+                        >
+                          <span className="text-lg">{service.icon}</span>
+                          {service.label}
+                        </button>
+                      ))}
                     </div>
-                    <div>
-                      <h4 className="font-black text-gray-900 leading-none">{userName}</h4>
-                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{userRole} account</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={goToDashboard}
-                    className="w-full py-4 px-6 bg-white border border-gray-100 rounded-2xl flex items-center gap-3 font-bold text-gray-700 shadow-sm hover:shadow-md transition-all"
-                  >
-                    <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
-                    {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
-                  </button>
-                  <button
-                    onClick={() => handleLogout(true)}
-                    className="w-full py-4 px-6 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center gap-2 font-black text-sm hover:bg-red-100 transition-all"
-                  >
-                    <FaSignOutAlt /> Sign Out
-                  </button>
+                  )}
                 </div>
-              ) : (
-                <button
-                  onClick={() => { nav("/login"); setIsMenuOpen(false); }}
-                  className="w-full py-4 px-6 bg-green-600 text-white rounded-2xl font-black shadow-lg hover:bg-green-700 transition-all active:scale-95"
-                >
-                  Sign In to Account
-                </button>
-              )}
+              ))}
             </div>
           </div>
+
+          {/* User Section in Mobile Menu */}
+          <div className="p-6 border-t border-gray-100 bg-gray-50/50">
+            {isLoggedIn ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 px-2">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-lg shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
+                    {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
+                  </div>
+                  <div>
+                    <h4 className="font-black text-gray-900 leading-none">{userName}</h4>
+                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{userRole} account</span>
+                  </div>
+                </div>
+                <button
+                  onClick={goToDashboard}
+                  className="w-full py-4 px-6 bg-white border border-gray-100 rounded-2xl flex items-center gap-3 font-bold text-gray-700 shadow-sm hover:shadow-md transition-all"
+                >
+                  <FaColumns className={userRole === 'admin' ? "text-purple-600" : userRole === 'volunteer' ? "text-blue-600" : "text-green-600"} />
+                  {userRole === 'admin' ? "Admin Console" : userRole === 'volunteer' ? "Volunteer Hub" : "User Dashboard"}
+                </button>
+                <button
+                  onClick={() => handleLogout(true)}
+                  className="w-full py-4 px-6 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center gap-2 font-black text-sm hover:bg-red-100 transition-all"
+                >
+                  <FaSignOutAlt /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { nav("/login"); setIsMenuOpen(false); }}
+                className="w-full py-4 px-6 bg-green-600 text-white rounded-2xl font-black shadow-lg hover:bg-green-700 transition-all active:scale-95"
+              >
+                Sign In to Account
+              </button>
+            )}
+          </div>
         </div>
+      </div>
     </nav>
   );
 };
