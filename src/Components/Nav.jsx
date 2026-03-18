@@ -367,7 +367,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             ) : (
             <button 
               onClick={() => nav("/login")} 
-              className="bg-green-700 text-white px-6 md:px-10 py-2.5 md:py-3 rounded-full font-black text-xs md:text-sm hover:bg-green-800 transition-all shadow-[0_8px_20px_-4px_rgba(21,128,61,0.4)] hover:shadow-[0_12px_25px_-4px_rgba(21,128,61,0.5)] active:scale-95 transform hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md font-black text-sm text-green-900 border-green-50"
             >
               Sign In
             </button>
