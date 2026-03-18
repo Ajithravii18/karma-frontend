@@ -199,26 +199,23 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled
-      ? "bg-white/95 backdrop-blur-md shadow-md py-3"
+    <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${isScrolled
+      ? "bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] py-3"
       : isDarkNav
         ? "bg-white border-b border-gray-100 py-4"
-        : "bg-green-950/20 backdrop-blur-[1px] py-5"
+        : "bg-green-950/10 backdrop-blur-[2px] py-6"
       } font-sans`}>
-      {/* Bottom Gradient for Scrolled State */}
+      {/* Enhanced Bottom Edge Contrast */}
       {isScrolled && (
-        <div className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-b from-black/5 to-transparent pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-full h-[6px] bg-gradient-to-b from-black/10 to-transparent opacity-100 pointer-events-none"></div>
       )}
       
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
-
-          {/* Logo Section */}
+        
+          {/* Logo Section - Professional White Pill */}
           <div
             onClick={handleHome}
-            className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 ${isScrolled || location.pathname !== "/"
-              ? "bg-white border border-gray-200 shadow-sm hover:border-green-300"
-              : "bg-white/40 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl"
-              }`}
+            className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:border-green-200`}
           >
             <img src={logo} className="w-8" alt="E-Karma Logo" />
             <span className="text-lg font-black tracking-tighter uppercase text-green-900">
@@ -232,7 +229,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <button
                 key={idx}
                 onClick={item.onClick}
-              className={`font-bold transition-all duration-300 py-2 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+              className={`font-black transition-all duration-300 py-2 text-sm relative group ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
                 }`}
               >
                 {item.label}
@@ -346,10 +343,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <div className="relative group/profile" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                  className={`flex items-center gap-3 pl-2 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${isScrolled || location.pathname !== "/"
-                    ? "bg-white border border-gray-200 shadow-sm hover:border-green-300"
-                    : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-300"
-                    }`}
+                    className={`flex items-center gap-3 pl-2 pr-2 md:pr-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:border-green-200`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
                       {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
