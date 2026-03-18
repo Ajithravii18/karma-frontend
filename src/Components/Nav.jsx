@@ -213,6 +213,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             className="flex items-center gap-2 cursor-pointer pl-2 pr-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 bg-white border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md"
           >
             <img src={logo} className="w-8" alt="E-Karma Logo" />
+            <span className="text-lg font-black tracking-tighter uppercase text-green-900">
+              E-Karma
+            </span>
           </div>
 
           {/* Desktop Navigation - Central Pill */}
