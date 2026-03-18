@@ -265,6 +265,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               </div>
             </div>
           </div>
+        </div>
 
           {/* User Actions */}
           <div className="flex items-center gap-2 md:gap-4">
@@ -370,8 +371,6 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             >
               Sign In
             </button>
-                Sign In
-              </button>
             )}
 
             {/* Mobile Menu Toggle */}
