@@ -200,22 +200,24 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled
-      ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] py-3"
+      ? "bg-white/95 backdrop-blur-md shadow-md py-3"
       : isDarkNav
         ? "bg-white border-b border-gray-100 py-4"
         : "bg-green-950/20 backdrop-blur-[1px] py-5"
       } font-sans`}>
       {/* Bottom Gradient for Scrolled State */}
-      {isScrolled && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-green-600/20 to-transparent"></div>}
+      {isScrolled && (
+        <div className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-b from-black/5 to-transparent pointer-events-none"></div>
+      )}
       
-      <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
 
           {/* Logo Section */}
           <div
             onClick={handleHome}
             className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 ${isScrolled || location.pathname !== "/"
-              ? "bg-transparent border border-transparent hover:bg-green-50/50"
-              : "bg-white shadow-lg border border-white/20 hover:shadow-xl"
+              ? "bg-white border border-gray-200 shadow-sm hover:border-green-300"
+              : "bg-white/40 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl"
               }`}
           >
             <img src={logo} className="w-8" alt="E-Karma Logo" />
@@ -345,7 +347,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
                   className={`flex items-center gap-3 pl-2 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${isScrolled || location.pathname !== "/"
-                    ? "bg-transparent border border-transparent hover:bg-green-50/50"
+                    ? "bg-white border border-gray-200 shadow-sm hover:border-green-300"
                     : "bg-white shadow-lg border border-white/20 hover:shadow-xl hover:border-green-300"
                     }`}
                   >
