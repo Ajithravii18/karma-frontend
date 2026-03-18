@@ -216,8 +216,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <span className="text-lg font-black tracking-tighter uppercase text-green-900">
               E-Karma
             </span>
-                    {/* Desktop Navigation - Transparent Center */}
-          <div className="hidden lg:flex items-center gap-6">
+          {/* Desktop Navigation - Absolute Centered & Transparent */}
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
             {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
               <button
                 key={idx}
@@ -231,7 +231,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               </button>
             ))}
 
-            {/* Services Dropdown */}
+            {/* Services Dropdown - Part of Center Group */}
             <div className="relative group">
               <button className={`font-black transition-all duration-300 px-2 py-1 text-sm flex items-center gap-1 ${isScrolled || location.pathname !== "/" ? "text-gray-800 hover:text-green-600" : "text-white hover:text-green-300"
                 }`}>
