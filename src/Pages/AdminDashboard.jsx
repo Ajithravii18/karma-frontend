@@ -161,7 +161,11 @@ const AdminDashboard = () => {
                 const reportMonth = new Date(r.createdAt).toISOString().slice(0, 7);
                 matchesDate = reportMonth === dateFilter;
             }
-            return matchesCategory && matchesStatus && matchesSearch && matchesDate;
+
+            // 🔥 NEW: SOS / Help Filter
+            const matchesSupport = statusFilter !== "support" || r.helpRequested === true;
+
+            return matchesCategory && matchesStatus && matchesSearch && matchesDate && matchesSupport;
         })
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -260,9 +264,9 @@ const AdminDashboard = () => {
                             ))}
                         </div>
                         <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
-                            {["all", "pending", "active", "completed"].map((s) => (
-                                <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${statusFilter === s ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400"}`}>
-                                    {s}
+                            {["all", "pending", "active", "completed", "support"].map((s) => (
+                                <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${statusFilter === s ? (s === 'support' ? "bg-sky-600 text-white shadow-lg" : "bg-indigo-600 text-white shadow-lg") : "text-slate-400"}`}>
+                                    {s === 'support' ? '🆘 SOS' : s}
                                 </button>
                             ))}
                         </div>
@@ -359,13 +363,16 @@ const AdminDashboard = () => {
                                                             </div>
                                                         )}
                                                         {report.helpRequested && (
-                                                            <div className="flex flex-col gap-1 mt-1 bg-sky-600 text-white px-2 py-1.5 rounded border border-sky-600 animate-bounce-subtle w-fit shadow-lg">
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <FaInfoCircle size={8} />
-                                                                    <span className="text-[8px] font-black uppercase tracking-widest">LIVE HELP NEEDED</span>
-                                                                </div>
-                                                            </div>
-                                                        )}
+                                                             <div className="flex flex-col gap-1 mt-1 bg-sky-600 text-white px-2 py-1.5 rounded border border-sky-600 animate-bounce-subtle w-fit shadow-lg max-w-[180px]">
+                                                                 <div className="flex items-center gap-1.5">
+                                                                     <FaInfoCircle size={8} />
+                                                                     <span className="text-[8px] font-black uppercase tracking-widest">LIVE HELP NEEDED</span>
+                                                                 </div>
+                                                                 {report.helpMessage && (
+                                                                     <p className="text-[7px] font-bold italic opacity-90 line-clamp-1">"{report.helpMessage}"</p>
+                                                                 )}
+                                                             </div>
+                                                         )}
                                                     </div>
                                                 </div>
                                             </td>
