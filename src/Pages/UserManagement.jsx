@@ -3,7 +3,7 @@ import api from "../utils/api";
 import {
   FaArrowLeft, FaExchangeAlt, FaSearch, FaUserShield,
   FaUser, FaCircle, FaDatabase, FaShieldAlt, FaUsers, FaUserTie,
-  FaSnowflake, FaUnlock
+  FaSnowflake, FaUnlock, FaStar, FaInfoCircle, FaCalendarAlt
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
@@ -126,12 +126,12 @@ const UserManagement = () => {
               />
             </div>
             {roleFilter === "volunteers" && (
-              <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-inner">
+              <div className="flex w-full sm:w-auto bg-slate-100 p-1 rounded-2xl border border-slate-200 shadow-inner overflow-x-auto no-scrollbar">
                 {["all", "free", "busy"].map((type) => (
                   <button
                     key={type}
                     onClick={() => setAvailabilityFilter(type)}
-                    className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${availabilityFilter === type ? 'bg-white text-indigo-600 shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${availabilityFilter === type ? 'bg-white text-indigo-600 shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     {type}
                   </button>
@@ -178,12 +178,13 @@ const UserManagement = () => {
 
         {/* --- USER LEDGER --- */}
         <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-300/20 border border-slate-200 overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* DESKTOP TABLE */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Identity Node</th>
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Role Status</th>
+                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Rating / Status</th>
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Occupancy</th>
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Security State</th>
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] text-center">Protocol Management</th>
@@ -207,11 +208,20 @@ const UserManagement = () => {
                         </div>
                       </td>
                       <td className="px-10 py-8">
-                        <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl border-2 transition-all ${u.role === 'volunteer'
-                          ? 'bg-indigo-50 border-indigo-100 text-indigo-700'
-                          : 'bg-emerald-50 border-emerald-100 text-emerald-700'
-                          }`}>
-                          <span className="text-[10px] font-black uppercase tracking-[0.15em]">{u.role}</span>
+                        <div className="space-y-2">
+                          <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl border-2 transition-all ${u.role === 'volunteer'
+                            ? 'bg-indigo-50 border-indigo-100 text-indigo-700'
+                            : 'bg-emerald-50 border-emerald-100 text-emerald-700'
+                            }`}>
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em]">{u.role}</span>
+                          </div>
+                          {u.role === 'volunteer' && (
+                            <div className="flex items-center gap-1.5 ml-1">
+                              <FaStar className="text-amber-500" size={10} />
+                              <span className="text-[11px] font-black text-slate-700">{u.averageRating || "0.0"}</span>
+                              <span className="text-[9px] font-bold text-slate-400">({u.reviewCount || 0})</span>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-10 py-8">
@@ -266,6 +276,82 @@ const UserManagement = () => {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* MOBILE CARD VIEW */}
+          <div className="lg:hidden p-4 space-y-4">
+             {filteredUsers.length > 0 ? (
+               filteredUsers.map((u) => (
+                 <div key={u._id} className="bg-white rounded-3xl p-6 border-2 border-slate-50 shadow-sm hover:shadow-md transition-all">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${u.role === 'volunteer' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                           {u.role === 'volunteer' ? <FaShieldAlt size={18} /> : <FaUser size={18} />}
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-black uppercase text-slate-800">{u.name || "UNNAMED_NODE"}</h3>
+                          <p className="text-[9px] font-mono text-slate-400">{u.phone}</p>
+                        </div>
+                      </div>
+                      <div className={`px-3 py-1.5 rounded-xl border text-[8px] font-black uppercase tracking-widest ${u.isFrozen ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-green-50 border-green-100 text-green-500'}`}>
+                         {u.isFrozen ? "Frozen" : "Active"}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                       <div className="bg-slate-50 p-3 rounded-2xl">
+                          <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Role Type</p>
+                          <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? 'text-indigo-600' : 'text-emerald-600'}`}>{u.role}</p>
+                       </div>
+                       <div className="bg-slate-50 p-3 rounded-2xl">
+                          <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Availability</p>
+                          <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? (u.isBusy ? 'text-amber-500' : 'text-green-600') : 'text-slate-300'}`}>
+                             {u.role === 'volunteer' ? (u.isBusy ? "In Task" : "Free") : "N/A"}
+                          </p>
+                       </div>
+                       {u.role === 'volunteer' && (
+                         <div className="col-span-2 bg-indigo-50/50 p-3 rounded-2xl flex items-center justify-between">
+                            <div>
+                              <p className="text-[8px] font-black text-indigo-300 uppercase mb-1">Performance Rating</p>
+                              <div className="flex items-center gap-1.5">
+                                <FaStar className="text-amber-500" size={12} />
+                                <span className="text-sm font-black text-slate-700">{u.averageRating || "0.0"}</span>
+                                <span className="text-[10px] font-bold text-slate-400">({u.reviewCount || 0} reviews)</span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                               <p className="text-[8px] font-black text-indigo-300 uppercase mb-1">Status</p>
+                               <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${u.isBusy ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                  {u.isBusy ? "Busy" : "Ready"}
+                               </span>
+                            </div>
+                         </div>
+                       )}
+                    </div>
+
+                    <div className="flex gap-2">
+                       <button
+                         onClick={() => handleToggleRole(u._id, u.role)}
+                         className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-sm ${u.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-emerald-600 text-white'}`}
+                       >
+                         <FaExchangeAlt size={10} /> Role
+                       </button>
+                       <button
+                         onClick={() => handleToggleFreeze(u._id, u.isFrozen)}
+                         className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all border ${u.isFrozen ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-rose-600 border-rose-100'}`}
+                       >
+                         {u.isFrozen ? <FaUnlock size={10} /> : <FaSnowflake size={10} />}
+                         {u.isFrozen ? "Unfreeze" : "Freeze"}
+                       </button>
+                    </div>
+                 </div>
+               ))
+             ) : (
+               <div className="py-20 text-center">
+                 <FaDatabase className="mx-auto text-slate-100 mb-4" size={40} />
+                 <p className="text-[10px] font-black uppercase text-slate-300 tracking-[0.3em]">Empty Cluster Found</p>
+               </div>
+             )}
           </div>
         </div>
         </div>
