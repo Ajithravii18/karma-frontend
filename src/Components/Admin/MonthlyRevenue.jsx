@@ -2,7 +2,6 @@
 import React from 'react';
 
 const MonthlyRevenue = ({ reports }) => {
-  // Logic remains identical
   const monthlyData = Object.entries(reports.reduce((acc, report) => {
     const val = Number(report.paidAmount || report.amount || report.totalCost || report.price || 0);
     const month = new Date(report.createdAt).toLocaleString('default', { month: 'short' });
@@ -16,30 +15,36 @@ const MonthlyRevenue = ({ reports }) => {
   const maxVal = Math.max(...monthlyData.map(d => d[1]), 100);
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden transform h-full flex flex-col">
-      <h3 className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">
+    <div className="bg-white p-4 md:p-6 rounded-[2rem] border border-slate-100 shadow-sm h-full flex flex-col min-w-0">
+      <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">
         Monthly Revenue
       </h3>
 
-      {/* Scrollable container for the chart on small screens */}
-      <div className="overflow-x-auto pb-2 flex-grow scrollbar-hide">
-        <div className="flex items-end gap-1.5 md:gap-3 h-32 min-w-max px-1">
+      {/* The Scroll Container */}
+      <div className="flex-grow overflow-x-auto no-scrollbar select-none cursor-grab active:cursor-grabbing">
+        <div className="flex items-end h-32 pb-2 min-w-max">
           {monthlyData.map(([month, value]) => {
             const heightPercent = value > 0 ? (value / maxVal) * 100 : 0;
 
             return (
-              <div key={month} className="w-8 md:flex-1 flex flex-col items-center gap-2">
-                {/* Responsive text size */}
-                <span className="text-[7px] md:text-[9px] font-black text-slate-500 uppercase">
-                  {value > 0 ? `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}` : ''}
+              <div 
+                key={month} 
+                // flex-shrink-0 is the magic fix for mobile "squishing"
+                // w-12 ensures each bar has enough room for the label
+                className="flex-shrink-0 w-12 md:w-16 flex flex-col items-center gap-1.5"
+              >
+                <span className="text-[8px] font-black text-slate-500">
+                  {value > 0 ? `₹${value > 999 ? (value/1000).toFixed(1) + 'k' : value}` : ''}
                 </span>
                 
-                <div
-                  className="w-full bg-gradient-to-t from-indigo-500 to-indigo-400 rounded-t-lg md:rounded-t-xl transition-all duration-1000 ease-out"
-                  style={{ height: `${Math.max(heightPercent, value > 0 ? 8 : 0)}%` }}
-                ></div>
+                <div className="relative w-6 md:w-8 h-full flex items-end">
+                  <div
+                    className="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 rounded-t-lg transition-all duration-700 ease-out"
+                    style={{ height: `${Math.max(heightPercent, value > 0 ? 8 : 0)}%` }}
+                  ></div>
+                </div>
                 
-                <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase">
+                <span className="text-[9px] font-bold text-slate-400 uppercase">
                   {month}
                 </span>
               </div>
@@ -48,11 +53,11 @@ const MonthlyRevenue = ({ reports }) => {
         </div>
       </div>
 
-      <div className="mt-auto pt-4 border-t border-slate-50">
-        <p className="text-lg md:text-xl font-black text-slate-800">
+      <div className="mt-4 pt-4 border-t border-slate-50">
+        <p className="text-xl font-black text-slate-800">
           ₹{monthlyData.reduce((sum, [, val]) => sum + val, 0).toLocaleString()}
         </p>
-        <p className="text-[8px] md:text-[9px] text-emerald-500 font-bold uppercase tracking-widest mt-1">
+        <p className="text-[9px] text-emerald-500 font-bold uppercase tracking-widest mt-0.5">
           Total System Earnings
         </p>
       </div>
