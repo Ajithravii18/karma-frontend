@@ -20,6 +20,8 @@ import UserManagement from './Pages/UserManagement'; // 🔥 1. Add this import
 // Component Imports
 import ProtectedRoute from './Components/ProtectedRoute';
 import PaymentSuccess from './Pages/PaymentSuccess';
+import PaymentFailure from './Pages/PaymentFailure';
+
 import ReportDetails from './Pages/ReportDetails';
 import RevenueAnalysisPage from './Components/Admin/RevenueAnalysis';
 import WasteAnalysisPage from './Pages/WasteAnalysisPage';
@@ -71,6 +73,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/payment-failure"
+            element={
+              <ProtectedRoute allowedRoles={['user', 'admin', 'volunteer']}>
+                <PaymentFailure />
+              </ProtectedRoute>
+            }
+          />
+
 
           {/* Staff Routes */}
           <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
