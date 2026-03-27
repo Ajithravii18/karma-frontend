@@ -54,13 +54,6 @@ const UserReports = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken") || localStorage.getItem("token");
 
-  let currentUserId = null;
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      currentUserId = String(decoded.userID || decoded.id || decoded._id || decoded.userId);
-    } catch (e) { console.error("Token Error", e); }
-  }
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
@@ -90,18 +83,7 @@ const UserReports = () => {
         api.get("/api/my-food")
       ]);
 
-      console.log("API Responses:", {
-        pickups: pickupsRes.data,
-        pollution: pollutionRes.data,
-        food: foodRes.data
-      });
-      
-      // Debug: Check if data is array
-      console.log("Data types:", {
-        pickups: Array.isArray(pickupsRes.data),
-        pollution: Array.isArray(pollutionRes.data),
-        food: Array.isArray(foodRes.data)
-      });
+
 
       const formattedPickups = pickupsRes.data.map(p => ({
         ...p,
