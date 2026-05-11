@@ -110,6 +110,7 @@ const Dashboard = () => {
             currency: orderData.currency,
             name: "Karma",
             description: "Waste Pickup Fee",
+            image: "https://cdn-icons-png.flaticon.com/512/3299/3299935.png",
             order_id: orderData.orderId,
             handler: async function (response) {
               try {
