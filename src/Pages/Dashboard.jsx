@@ -92,19 +92,63 @@ const Dashboard = () => {
   const handlePayment = async (pickupId) => {
     setProcessingPayment(pickupId);
     try {
-      const response = await api.post("/api/payment/payu-order", { pickupId, amount: 50 });
-      const pd = response.data;
-      const form = document.createElement("form");
-      form.method = "POST"; form.action = pd.action;
-      Object.keys(pd).forEach(key => {
-        const input = document.createElement("input");
-        input.type = "hidden"; input.name = key; input.value = pd[key];
-        form.appendChild(input);
-      });
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err) { toast.error("Payment error"); }
-    finally { setProcessingPayment(null); }
+      // Dynamically load Razorpay SDK
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onerror = () => {
+        toast.error("Razorpay SDK failed to load. Are you online?");
+        setProcessingPayment(null);
+      };
+      script.onload = async () => {
+        try {
+          const res = await api.post("/api/payment/razorpay-order", { pickupId, amount: 50 });
+          const orderData = res.data;
+
+          const options = {
+            key: orderData.key,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: "Karma",
+            description: "Waste Pickup Fee",
+            order_id: orderData.orderId,
+            handler: async function (response) {
+              try {
+                await api.post("/api/payment/razorpay-verify", {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                });
+                toast.success("Payment Successful! The volunteer has been notified.");
+                fetchAllData();
+              } catch (verifyErr) {
+                toast.error("Payment verification failed");
+              }
+            },
+            prefill: {
+              name: currentName,
+              contact: user.phone || ""
+            },
+            theme: {
+              color: "#16a34a"
+            }
+          };
+
+          const rzp = new window.Razorpay(options);
+          rzp.on("payment.failed", function (response) {
+            toast.error(response.error.description || "Payment failed");
+          });
+          rzp.open();
+        } catch (apiErr) {
+          toast.error("Failed to initialize payment");
+        } finally {
+          setProcessingPayment(null);
+        }
+      };
+      document.body.appendChild(script);
+    } catch (err) {
+      toast.error("Payment error");
+      setProcessingPayment(null);
+    }
   };
 
   const handleConfirmCollection = async (foodId) => {
