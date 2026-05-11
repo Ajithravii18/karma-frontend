@@ -47,6 +47,15 @@ const Dashboard = () => {
       window.history.replaceState({}, document.title, "/dashboard");
       fetchAllData();
     }
+    
+    const retryId = params.get("retry");
+    if (retryId) {
+      window.history.replaceState({}, document.title, "/dashboard");
+      // Delay slightly to ensure component is mounted and data is fetched if needed
+      setTimeout(() => {
+        handlePayment(retryId);
+      }, 500);
+    }
   }, []);
 
   useEffect(() => {
@@ -121,7 +130,7 @@ const Dashboard = () => {
                 });
                 window.location.href = `/payment-success?txnid=${response.razorpay_payment_id}`;
               } catch (verifyErr) {
-                window.location.href = `/payment-failure?error=verification_failed`;
+                window.location.href = `/payment-failure?error=verification_failed&pickupId=${pickupId}`;
               }
             },
             prefill: {
@@ -135,18 +144,18 @@ const Dashboard = () => {
 
           const rzp = new window.Razorpay(options);
           rzp.on("payment.failed", function (response) {
-            window.location.href = `/payment-failure?error=${response.error.description || "payment_failed"}`;
+            window.location.href = `/payment-failure?error=${response.error.description || "payment_failed"}&pickupId=${pickupId}`;
           });
           rzp.open();
         } catch (apiErr) {
-          window.location.href = "/payment-failure?error=initialization_failed";
+          window.location.href = `/payment-failure?error=initialization_failed&pickupId=${pickupId}`;
         } finally {
           setProcessingPayment(null);
         }
       };
       document.body.appendChild(script);
     } catch (err) {
-      window.location.href = "/payment-failure?error=server_error";
+      window.location.href = `/payment-failure?error=server_error&pickupId=${pickupId}`;
       setProcessingPayment(null);
     }
   };

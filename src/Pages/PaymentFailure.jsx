@@ -7,6 +7,7 @@ const PaymentFailure = () => {
   const navigate = useNavigate();
   
   const error = searchParams.get("error") || "Transaction Failed";
+  const pickupId = searchParams.get("pickupId");
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -25,7 +26,7 @@ const PaymentFailure = () => {
 
         <div className="flex flex-col gap-3">
           <button 
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(pickupId ? `/dashboard?retry=${pickupId}` : "/dashboard")}
             className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg"
           >
             <FaRedo /> Retry Payment
