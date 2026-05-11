@@ -118,10 +118,9 @@ const Dashboard = () => {
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
                 });
-                toast.success("Payment Successful! The volunteer has been notified.");
-                fetchAllData();
+                navigate(`/payment-success?txnid=${response.razorpay_payment_id}`);
               } catch (verifyErr) {
-                toast.error("Payment verification failed");
+                navigate(`/payment-failure?error=verification_failed`);
               }
             },
             prefill: {
@@ -135,18 +134,18 @@ const Dashboard = () => {
 
           const rzp = new window.Razorpay(options);
           rzp.on("payment.failed", function (response) {
-            toast.error(response.error.description || "Payment failed");
+            navigate(`/payment-failure?error=${response.error.description || "payment_failed"}`);
           });
           rzp.open();
         } catch (apiErr) {
-          toast.error("Failed to initialize payment");
+          navigate("/payment-failure?error=initialization_failed");
         } finally {
           setProcessingPayment(null);
         }
       };
       document.body.appendChild(script);
     } catch (err) {
-      toast.error("Payment error");
+      navigate("/payment-failure?error=server_error");
       setProcessingPayment(null);
     }
   };
