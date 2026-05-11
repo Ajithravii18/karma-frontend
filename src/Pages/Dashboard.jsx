@@ -119,9 +119,9 @@ const Dashboard = () => {
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
                 });
-                navigate(`/payment-success?txnid=${response.razorpay_payment_id}`);
+                window.location.href = `/payment-success?txnid=${response.razorpay_payment_id}`;
               } catch (verifyErr) {
-                navigate(`/payment-failure?error=verification_failed`);
+                window.location.href = `/payment-failure?error=verification_failed`;
               }
             },
             prefill: {
@@ -135,18 +135,18 @@ const Dashboard = () => {
 
           const rzp = new window.Razorpay(options);
           rzp.on("payment.failed", function (response) {
-            navigate(`/payment-failure?error=${response.error.description || "payment_failed"}`);
+            window.location.href = `/payment-failure?error=${response.error.description || "payment_failed"}`;
           });
           rzp.open();
         } catch (apiErr) {
-          navigate("/payment-failure?error=initialization_failed");
+          window.location.href = "/payment-failure?error=initialization_failed";
         } finally {
           setProcessingPayment(null);
         }
       };
       document.body.appendChild(script);
     } catch (err) {
-      navigate("/payment-failure?error=server_error");
+      window.location.href = "/payment-failure?error=server_error";
       setProcessingPayment(null);
     }
   };
