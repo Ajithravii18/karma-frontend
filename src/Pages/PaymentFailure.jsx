@@ -28,7 +28,7 @@ const PaymentFailure = () => {
             onClick={() => navigate("/dashboard")}
             className="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg"
           >
-            <FaRedo /> Retry from Dashboard
+            <FaRedo /> Retry Payment
           </button>
 
 
