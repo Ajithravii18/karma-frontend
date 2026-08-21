@@ -161,7 +161,7 @@ const ResetPassword = () => {
             {/* OTP Code Input */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">6-Digit Code</label>
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between gap-1 sm:gap-2">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -171,7 +171,7 @@ const ResetPassword = () => {
                     ref={(el) => (inputRefs.current[index] = el)}
                     onChange={(e) => handleOtpChange(e.target.value, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="flex-1 h-10 md:h-12 text-center text-lg font-black bg-gray-50 border-2 border-gray-200 rounded-xl focus:bg-white focus:border-green-500 outline-none transition-all text-gray-800"
+                    className="w-full min-w-0 flex-1 h-10 md:h-12 text-center text-lg font-black bg-gray-50 border-2 border-gray-200 rounded-xl focus:bg-white focus:border-green-500 outline-none transition-all text-gray-800"
                   />
                 ))}
               </div>
