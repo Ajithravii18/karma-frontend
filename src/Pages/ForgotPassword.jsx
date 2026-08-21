@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaPhoneAlt, FaArrowLeft, FaUnlockAlt } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import hero from "../assets/hero.jpg";
 import api from "../utils/api";
 import toast from "react-hot-toast";
 import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../firebaseconfig";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const ForgotPassword = () => {
   const nav = useNavigate();
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
@@ -45,7 +51,6 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-slate-50/90 flex items-center justify-center relative overflow-hidden font-sans">
-      {/* Background Layer - Matches Login */}
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -57,73 +62,80 @@ const ForgotPassword = () => {
         <div className="absolute inset-0 bg-linear-to-r from-green-950/90 via-green-900/60 to-black/40"></div>
       </div>
 
-      {/* Solid Reset Card */}
-      <div className="relative z-10 max-w-md mx-auto w-full px-4">
-        <div className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20">
+      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center px-4 md:px-6 py-12 md:py-0">
+        
+        {/* LEFT SIDE Content */}
+        <div className="hidden md:block space-y-8">
+          <div data-aos="fade-right">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+              E-KARMA <br />
+              <span className="text-green-400">ECO-PORTAL</span>
+            </h1>
+            <div className="h-1.5 w-24 bg-green-500 mt-4 rounded-full"></div>
+          </div>
+
+          <p data-aos="fade-right" data-aos-delay="100" className="text-green-50 text-lg md:text-xl max-w-md leading-relaxed opacity-90 font-medium">
+            Secure your account. Verify your phone number to reset your password and continue your environmental journey.
+          </p>
+        </div>
+
+        {/* RIGHT SIDE Form */}
+        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
           <div className="md:hidden mb-8 text-center" data-aos="fade-down">
              <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
              <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Security Portal</p>
              <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
           </div>
-
-          <button
-            onClick={() => nav("/login")}
-            className="flex items-center gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-6"
-          >
-            <FaArrowLeft />
-            <span>Back to Login</span>
-          </button>
-
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-600 rounded-full mb-4">
-              <FaUnlockAlt size={28} />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800">Forgot Password?</h2>
-            <p className="text-gray-500 mt-2 text-sm">
-              Enter your number to receive an OTP code.
-            </p>
+          
+          <div className="mb-8 md:mb-10 text-center md:text-left">
+            <Link to="/login" className="inline-flex items-center gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-4">
+              <FaArrowLeft /> Back to Login
+            </Link>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Recover</h2>
+            <p className="text-gray-500 mt-2 font-semibold text-sm italic md:not-italic">Enter your number to receive an OTP</p>
           </div>
 
-          <form onSubmit={handleSendOTP} className="space-y-5">
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <FaPhoneAlt />
-              </span>
-              <input
-                type="text"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                maxLength="10"
-                className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all text-gray-700 font-medium"
-              />
+          <form onSubmit={handleSendOTP} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">+91</span>
+                <input
+                  type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                  placeholder="00000 00000"
+                  className="w-full pl-14 pr-5 py-4 bg-gray-100/50 border-2 border-transparent rounded-2xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800"
+                />
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-green-200 transition-all active:scale-[0.98] disabled:bg-gray-400"
+              className={`w-full py-5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black text-lg transition-all transform active:scale-95 shadow-xl shadow-green-200 flex items-center justify-center gap-3 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {loading ? (
-                <div className="flex items-center justify-center gap-2">
+                <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Sending OTP...</span>
-                </div>
-              ) : "Send Reset Code"}
+                </>
+              ) : (
+                "Send Reset Code"
+              )}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center text-sm text-gray-500">
-            Wait, I remember my password.{" "}
-            <button
-              onClick={() => nav("/login")}
-              className="text-green-600 font-bold hover:underline"
-            >
-              Log In
-            </button>
+          <div className="mt-10 pt-8 border-t border-gray-100">
+            <p className="text-center text-gray-500 font-bold text-sm">
+              Wait, I remember my password.{" "}
+              <Link to="/login" className="text-green-600 hover:underline underline-offset-4 decoration-2">Log In</Link>
+            </p>
           </div>
         </div>
       </div>
+      
+      {/* Firebase invisible recaptcha container */}
       <div id="recaptcha-container"></div>
     </div>
   );
