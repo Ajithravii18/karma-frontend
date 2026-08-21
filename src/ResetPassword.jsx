@@ -136,7 +136,7 @@ const ResetPassword = () => {
           </p>
         </div>
 
-        {/* RIGHT SIDE Form (Made more compact) */}
+        {/* RIGHT SIDE Form */}
         <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-6 md:p-8 rounded-3xl shadow-2xl border border-white/20 max-w-sm mx-auto w-full">
           <div className="md:hidden mb-6 text-center" data-aos="fade-down">
              <h1 className="text-3xl font-black text-green-950 leading-none">E-KARMA</h1>
@@ -161,7 +161,7 @@ const ResetPassword = () => {
             {/* OTP Code Input */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">6-Digit Code</label>
-              <div className="flex justify-between gap-1.5">
+              <div className="flex justify-between gap-2">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -171,7 +171,7 @@ const ResetPassword = () => {
                     ref={(el) => (inputRefs.current[index] = el)}
                     onChange={(e) => handleOtpChange(e.target.value, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="w-full h-10 md:h-12 text-center text-lg font-black bg-gray-100/60 border-2 border-transparent rounded-xl focus:bg-white focus:border-green-500 outline-none transition-all text-gray-800"
+                    className="flex-1 h-10 md:h-12 text-center text-lg font-black bg-gray-50 border-2 border-gray-200 rounded-xl focus:bg-white focus:border-green-500 outline-none transition-all text-gray-800"
                   />
                 ))}
               </div>
@@ -186,7 +186,7 @@ const ResetPassword = () => {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Create new password"
-                  className="w-full px-4 py-2.5 bg-gray-100/60 border-2 border-transparent rounded-xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800 text-sm"
+                  className="w-full px-4 py-2.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800 text-sm"
                 />
                 <button
                   type="button"
@@ -198,8 +198,8 @@ const ResetPassword = () => {
               </div>
             </div>
 
-            {/* Password Requirements Grid - Tighter padding */}
-            <div className="grid grid-cols-2 gap-2 bg-gray-100/60 p-3 rounded-xl border-2 border-transparent">
+            {/* Password Requirements Grid */}
+            <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl border-2 border-gray-200">
               <Requirement label="8+ Chars" valid={checks.length} />
               <Requirement label="Uppercase" valid={checks.uppercase} />
               <Requirement label="Lowercase" valid={checks.lowercase} />
@@ -216,12 +216,12 @@ const ResetPassword = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat new password"
-                  className="w-full px-4 py-2.5 bg-gray-100/60 border-2 border-transparent rounded-xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800 text-sm"
+                  className="w-full px-4 py-2.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800 text-sm"
                 />
               </div>
             </div>
 
-            {/* Submit Button - Reduced height */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
