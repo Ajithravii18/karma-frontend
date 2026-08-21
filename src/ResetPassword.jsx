@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaCheckCircle, FaCircle } from "react-icons/fa";
-import api from "../utils/api";
+import api from "./utils/api";
 import toast from "react-hot-toast";
-import hero from "../assets/hero.jpg";
+import hero from "./assets/hero.jpg";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
