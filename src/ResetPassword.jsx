@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaKey, FaShieldAlt, FaCheckCircle, FaCircle } from "react-icons/fa";
-import api from "./utils/api";
+import { FaArrowLeft, FaCheckCircle, FaCircle } from "react-icons/fa";
+import api from "../utils/api";
 import toast from "react-hot-toast";
-import hero from "./assets/hero.jpg";
+import hero from "../assets/hero.jpg";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const ResetPassword = () => {
   const location = useLocation();
@@ -13,11 +15,14 @@ const ResetPassword = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const inputRefs = useRef([]);
 
   useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+    
     if (!phone) {
       nav("/forgot-password");
     }
@@ -67,7 +72,6 @@ const ResetPassword = () => {
     try {
       setLoading(true);
 
-      // 1. Verify the Firebase OTP
       if (!window.confirmationResult) {
         toast.error("Session expired. Please request a new OTP.");
         nav("/forgot-password");
@@ -76,7 +80,6 @@ const ResetPassword = () => {
 
       await window.confirmationResult.confirm(finalOtp);
 
-      // 2. Firebase verification passed — now update the password in our backend
       await api.post("/reset-password", {
         phone,
         newPassword,
@@ -97,15 +100,14 @@ const ResetPassword = () => {
   };
 
   const Requirement = ({ label, valid }) => (
-    <div className={`flex items-center gap-2 text-[11px] font-semibold transition-colors ${valid ? "text-green-600" : "text-gray-400"}`}>
-      {valid ? <FaCheckCircle /> : <FaCircle className="text-[6px]" />}
+    <div className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-wider transition-colors ${valid ? "text-green-600" : "text-gray-400"}`}>
+      {valid ? <FaCheckCircle size={14} /> : <FaCircle size={10} className="ml-[2px] mr-[2px]" />}
       {label}
     </div>
   );
 
   return (
     <div className="min-h-screen bg-slate-50/90 flex items-center justify-center relative overflow-hidden font-sans">
-      {/* Background Layer - Matches Login */}
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -117,86 +119,125 @@ const ResetPassword = () => {
         <div className="absolute inset-0 bg-linear-to-r from-green-950/90 via-green-900/60 to-black/40"></div>
       </div>
 
-      <div className="relative z-10 max-w-md mx-auto w-full px-4 my-8">
-        <div className="bg-white/95 backdrop-blur-lg p-8 md:p-12 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20">
+      <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center px-4 md:px-6 py-12 md:py-0">
+        
+        {/* LEFT SIDE Content */}
+        <div className="hidden md:block space-y-8">
+          <div data-aos="fade-right">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+              E-KARMA <br />
+              <span className="text-green-400">ECO-PORTAL</span>
+            </h1>
+            <div className="h-1.5 w-24 bg-green-500 mt-4 rounded-full"></div>
+          </div>
+
+          <p data-aos="fade-right" data-aos-delay="100" className="text-green-50 text-lg md:text-xl max-w-md leading-relaxed opacity-90 font-medium">
+            Create a new secure password for your account. Protect your profile and continue contributing to a greener tomorrow.
+          </p>
+        </div>
+
+        {/* RIGHT SIDE Form */}
+        <div data-aos="zoom-in" className="bg-white/95 backdrop-blur-lg p-8 md:p-14 rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/20 max-w-md mx-auto w-full">
           <div className="md:hidden mb-8 text-center" data-aos="fade-down">
              <h1 className="text-4xl font-black text-green-950 leading-none">E-KARMA</h1>
-             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Access Recovery</p>
+             <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mt-2">Security Portal</p>
              <div className="h-1 w-12 bg-green-500 mx-auto mt-4 rounded-full"></div>
           </div>
 
-          <button
-            onClick={() => nav("/forgot-password")}
-            className="flex items-center gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-6 group"
-          >
-            <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-            <span>Back</span>
-          </button>
-
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-600 rounded-full mb-4">
-              <FaShieldAlt size={28} />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800">New Password</h2>
-            <p className="text-gray-500 mt-2 text-sm italic">
+          <div className="mb-8 md:mb-10 text-center md:text-left">
+            <button
+              onClick={() => nav("/forgot-password")}
+              className="flex items-center justify-center md:justify-start gap-2 text-[10px] font-black uppercase text-green-600 hover:text-green-700 transition mb-4 mx-auto md:mx-0 w-max"
+            >
+              <FaArrowLeft /> Cancel & Go Back
+            </button>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">New Password</h2>
+            <p className="text-gray-500 mt-2 font-semibold text-sm italic md:not-italic">
               Resetting for: <span className="text-green-600 font-bold">{phone}</span>
             </p>
           </div>
 
           <form onSubmit={handleReset} className="space-y-6">
-            <div className="flex justify-between gap-2">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  onChange={(e) => handleOtpChange(e.target.value, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-full h-12 text-center text-xl font-bold bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-green-500 outline-none transition-all"
-                />
-              ))}
+            
+            {/* OTP Code Input */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">6-Digit Code</label>
+              <div className="flex justify-between gap-2">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength="1"
+                    value={digit}
+                    ref={(el) => (inputRefs.current[index] = el)}
+                    onChange={(e) => handleOtpChange(e.target.value, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    className="w-full h-12 md:h-14 text-center text-xl font-black bg-gray-100/50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-green-500 outline-none transition-all text-gray-800"
+                  />
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-4">
+            {/* New Password Input */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">New Password</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                  <FaKey size={14} />
-                </span>
                 <input
-                  type="password"
-                  placeholder="New Password"
+                  type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-green-500 outline-none transition-all text-sm"
+                  placeholder="Create new password"
+                  className="w-full px-5 py-4 bg-gray-100/50 border-2 border-transparent rounded-2xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black uppercase text-gray-400 hover:text-green-600"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
               </div>
-
-              <div className="grid grid-cols-2 gap-2 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <Requirement label="8+ Chars" valid={checks.length} />
-                <Requirement label="Uppercase" valid={checks.uppercase} />
-                <Requirement label="Lowercase" valid={checks.lowercase} />
-                <Requirement label="Number" valid={checks.number} />
-                <div className="col-span-2"><Requirement label="Special Char" valid={checks.special} /></div>
-              </div>
-
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-green-500 outline-none transition-all text-sm"
-              />
             </div>
 
+            {/* Password Requirements Grid */}
+            <div className="grid grid-cols-2 gap-3 bg-gray-100/50 p-4 rounded-2xl border-2 border-transparent">
+              <Requirement label="8+ Chars" valid={checks.length} />
+              <Requirement label="Uppercase" valid={checks.uppercase} />
+              <Requirement label="Lowercase" valid={checks.lowercase} />
+              <Requirement label="Number" valid={checks.number} />
+              <div className="col-span-2"><Requirement label="Special Character" valid={checks.special} /></div>
+            </div>
+
+            {/* Confirm Password Input */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Confirm Password</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat new password"
+                  className="w-full px-5 py-4 bg-gray-100/50 border-2 border-transparent rounded-2xl focus:border-green-500 focus:bg-white outline-none transition-all font-bold text-gray-800"
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg"
+              className={`w-full py-5 mt-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black text-lg transition-all transform active:scale-95 shadow-xl shadow-green-200 flex items-center justify-center gap-3 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              {loading ? "Updating..." : "Reset Password"}
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Updating Security...</span>
+                </>
+              ) : (
+                "Reset Password"
+              )}
             </button>
+
           </form>
         </div>
       </div>
