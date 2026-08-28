@@ -100,18 +100,18 @@ function SchedulePickup() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 min-h-screen relative overflow-hidden">
+    <div className="bg-[#F3F4F6] min-h-screen relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none"></div>
       
       <Nav />
 
-      <section className="min-h-[90vh] pt-24 pb-12 px-6 flex items-center justify-center relative z-10">
+      <section className="min-h-[90vh] pt-20 pb-4 px-6 flex items-center justify-center relative z-10">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* LEFT CONTENT: Impact Messaging */}
-          <div className="lg:sticky lg:top-32 space-y-8">
+          <div className="lg:sticky lg:top-32 space-y-2">
             <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
               <span className="relative flex h-2 w-2 mr-0.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -120,8 +120,8 @@ function SchedulePickup() {
               Precision Logistics
             </div>
             
-            <div data-aos="fade-right" className="space-y-4">
-              <h1 className="text-6xl font-black text-slate-900 leading-[1.1]">
+            <div data-aos="fade-right" className="space-y-2">
+              <h1 className="text-4xl font-black text-slate-900 leading-[1.1]">
                 Schedule Your <br />
                 <span className="text-green-600 italic">Waste Pickup.</span>
               </h1>
@@ -131,12 +131,12 @@ function SchedulePickup() {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200" className="grid grid-cols-2 gap-6">
-              <div className="bg-white/50 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white/60">
+              <div className="bg-white shadow-sm border border-slate-100 p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaCrosshairs className="text-green-500 mb-3" size={24} />
                 <h4 className="font-bold text-slate-800">Pinpoint Accuracy</h4>
                 <p className="text-xs text-slate-400">Doorstep pickup with GPS routing.</p>
               </div>
-              <div className="bg-white/50 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white/60">
+              <div className="bg-white shadow-sm border border-slate-100 p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaMapMarkerAlt className="text-amber-500 mb-3" size={24} />
                 <h4 className="font-bold text-slate-800">Reliable Service</h4>
                 <p className="text-xs text-slate-400">Convenient slots that suit you.</p>
@@ -145,10 +145,10 @@ function SchedulePickup() {
           </div>
 
           {/* RIGHT CONTENT */}
-          <div data-aos="zoom-in" className="space-y-6">
+          <div data-aos="zoom-in" className="space-y-2">
             {/* The Power Form */}
-            <div className="bg-white/60 backdrop-blur-2xl p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
-              <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
+              <form onSubmit={handleSubmit} className="space-y-3">
 
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
@@ -160,20 +160,20 @@ function SchedulePickup() {
                     placeholder="Enter detailed address..."
                     value={form.address}
                     onChange={handleChange}
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
+                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
                     required
                   />
                 </div>
 
                 {/* Row: Waste Type & Pickup Date */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Waste Type</label>
                     <select
                       name="wasteType"
                       value={form.wasteType}
                       onChange={handleChange}
-                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                       required
                     >
                       <option value="">Select Type</option>
@@ -190,7 +190,7 @@ function SchedulePickup() {
                       min={today}
                       value={form.pickupDate}
                       onChange={handleChange}
-                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
+                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
                       required
                     />
                   </div>
@@ -202,7 +202,7 @@ function SchedulePickup() {
                     name="timeSlot"
                     value={form.timeSlot}
                     onChange={handleChange}
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                     required
                   >
                     <option value="">Select Time Slot</option>
@@ -220,16 +220,16 @@ function SchedulePickup() {
                     value={form.description}
                     onChange={handleChange}
                     rows="2"
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
+                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
                   />
                 </div>
 
                 {/* Location Status Button */}
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <button
                     type="button"
                     onClick={requestLocation}
-                    className={`w-full py-4 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
+                    className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
                         ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
                         : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
                       }`}
@@ -241,7 +241,7 @@ function SchedulePickup() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
+                  className="w-full py-3 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
                 >
                   {loading ? "Transmitting..." : "🚀 Confirm Schedule"}
                 </button>
