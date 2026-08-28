@@ -642,7 +642,7 @@ const Dashboard = () => {
         </aside>
 
         {/* ── MOBILE BOTTOM NAV ── */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A2332] border-t border-white/10 flex pb-safe">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A2332] border-t border-white/10 flex">
           {[
             { id: "profile", icon: FaUser, label: "Profile" },
             { id: "pickups", icon: FaRecycle, label: "Waste" },
@@ -660,54 +660,101 @@ const Dashboard = () => {
         {/* ── MAIN CONTENT ── */}
         <main className="flex-1 lg:ml-64 pb-24 lg:pb-8">
           {activeTab === "profile" ? (
-            <div className="p-6 md:p-10 max-w-5xl mx-auto">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                <div>
-                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">My Dashboard</h2>
-                  <p className="text-slate-400 text-sm font-medium mt-1">Manage your environmental footprint</p>
+            <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-5">
+
+              {/* ── HERO HEADER CARD ── */}
+              <div className="bg-[#1A2332] rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+                <div className="absolute right-0 top-0 w-64 h-full bg-green-500/5 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-green-500/30 shrink-0">
+                    {currentName.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-white font-black text-lg leading-tight">{currentName}</p>
+                    <p className="text-slate-400 text-xs font-medium mt-0.5">Eco Citizen · ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Active Member</span>
+                    </div>
+                  </div>
                 </div>
                 <button onClick={() => setIsEditing(!isEditing)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${isEditing ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm"}`}>
-                  {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
+                  className={`relative z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all shrink-0 ${
+                    isEditing ? "bg-red-500/20 text-red-400 hover:bg-red-500/30" : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
+                  }`}>
+                  {isEditing ? <><FaTimes size={12} /> Cancel</> : <><FaEdit size={12} /> Edit Profile</>}
                 </button>
               </div>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              {/* ── STATS STRIP ── */}
+              <div className="grid grid-cols-3 gap-3">
                 {[
-                  { icon: FaRecycle, label: "Waste", val: stats.breakdown?.pickups, color: "text-emerald-600", bg: "bg-emerald-50" },
-                  { icon: FaExclamationTriangle, label: "Pollution", val: stats.breakdown?.pollution, color: "text-rose-600", bg: "bg-rose-50" },
-                  { icon: FaUtensils, label: "Food", val: stats.breakdown?.food, color: "text-amber-600", bg: "bg-amber-50" },
+                  { icon: FaRecycle, label: "Waste Pickups", val: stats.breakdown?.pickups, accent: "border-l-emerald-500", num: "text-emerald-600" },
+                  { icon: FaExclamationTriangle, label: "Pollution Reports", val: stats.breakdown?.pollution, accent: "border-l-rose-500", num: "text-rose-600" },
+                  { icon: FaUtensils, label: "Food Shared", val: stats.breakdown?.food, accent: "border-l-amber-500", num: "text-amber-600" },
                 ].map((s, i) => (
-                  <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-                    <div className={`w-9 h-9 ${s.bg} ${s.color} rounded-xl flex items-center justify-center mb-3`}><s.icon size={15} /></div>
-                    <p className="text-2xl font-black text-slate-800"><Counter end={s.val || 0} /></p>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{s.label}</p>
+                  <div key={i} className={`bg-white rounded-xl p-4 shadow-sm border border-slate-100 border-l-4 ${s.accent}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <s.icon size={13} className="text-slate-400" />
+                    </div>
+                    <p className={`text-2xl font-black ${s.num}`}><Counter end={s.val || 0} /></p>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5">{s.label}</p>
                   </div>
                 ))}
               </div>
 
-              {/* Profile Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center"><FaUser size={13} /></div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Legal Name</p>
-                  </div>
-                  {isEditing ? (
-                    <div className="flex gap-2">
-                      <input value={newName} onChange={(e) => setNewName(e.target.value)}
-                        className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 w-full font-bold text-slate-700 outline-none focus:border-green-500 focus:bg-white transition-all text-sm" />
-                      <button onClick={handleUpdateName} className="bg-green-600 text-white px-5 rounded-xl hover:bg-green-700 transition-all font-black text-xs whitespace-nowrap">SAVE</button>
-                    </div>
-                  ) : <p className="text-xl font-black text-slate-800">{currentName}</p>}
+              {/* ── PROFILE INFO ── */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                  <p className="text-xs font-black text-slate-500 uppercase tracking-widest">Account Details</p>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center"><FaClock size={13} /></div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Contact</p>
+                <div className="divide-y divide-slate-100">
+                  {/* Name row */}
+                  <div className="px-6 py-4 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                        <FaUser size={12} className="text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Full Name</p>
+                        {isEditing ? (
+                          <div className="flex gap-2 mt-1">
+                            <input value={newName} onChange={(e) => setNewName(e.target.value)}
+                              className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 font-bold text-slate-700 outline-none focus:border-green-500 transition-all text-sm w-48" />
+                            <button onClick={handleUpdateName} className="bg-green-600 text-white px-3 py-1.5 rounded-lg font-black text-xs hover:bg-green-700 transition-all">Save</button>
+                          </div>
+                        ) : <p className="text-slate-800 font-bold text-sm mt-0.5">{currentName}</p>}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xl font-black text-slate-800">{user.phone || 'Not set'}</p>
+                  {/* Phone row */}
+                  <div className="px-6 py-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                      <FaClock size={12} className="text-slate-500" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Phone Number</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-slate-800 font-bold text-sm">{user.phone || 'Not set'}</p>
+                        <span className="px-1.5 py-0.5 bg-green-50 text-green-600 text-[9px] font-black uppercase rounded-full border border-green-100">Verified</span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Credits row */}
+                  <div className="px-6 py-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+                      <FaLeaf size={12} className="text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Impact Credits</p>
+                      <div className="flex items-center gap-3 mt-0.5">
+                        <p className="text-green-600 font-black text-xl"><Counter end={stats.totalImpact} /></p>
+                        <div className="flex-1 max-w-[120px] h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-green-500 w-3/4 rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
