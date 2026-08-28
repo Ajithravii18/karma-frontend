@@ -607,7 +607,7 @@ const Dashboard = () => {
       <div className="flex pt-[68px] min-h-screen">
 
         {/* ── DARK SIDEBAR ── */}
-        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-white/10 shadow-2xl">
+        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-white/10 shadow-2xl rounded-tr-[2rem] rounded-br-[2rem]">
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">
