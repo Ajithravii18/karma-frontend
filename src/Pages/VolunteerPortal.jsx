@@ -420,23 +420,7 @@ const VolunteerPortal = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] rounded-tr-[2rem] rounded-br-[2rem]">
-          <div className="p-6 border-b border-slate-100">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-indigo-500/30">
-                <FaUserShield />
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-slate-800 font-bold text-sm truncate">{volunteerInfo.name || "Agent"}</p>
-                <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest">Active Agent</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2">
-              <div className={`w-2 h-2 rounded-full animate-pulse ${isVolunteerBusy ? 'bg-amber-500' : 'bg-emerald-500'}`}></div>
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{isVolunteerBusy ? "In Mission" : "Standby"}</span>
-            </div>
-          </div>
-          
+        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto no-scrollbar z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] rounded-tr-[2rem] rounded-br-[2rem]">
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             {[
@@ -578,63 +562,13 @@ const VolunteerPortal = () => {
       )}
       <div className="max-w-[1400px] mx-auto pt-8 lg:pt-10 px-4 sm:px-6">
 
-        {/* STATS OVERVIEW (Mobile only now that Sidebar exists) */}
+        {/* MOBILE NAVIGATION LINKS */}
         <div className="flex lg:hidden flex-col gap-4 mb-8">
-          <div className="flex-1 bg-white border border-slate-200 p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] shadow-sm flex items-center gap-4 lg:gap-6">
-            <div className="w-14 h-14 lg:w-20 lg:h-20 bg-indigo-600 rounded-2xl lg:rounded-[2rem] flex items-center justify-center text-white text-xl lg:text-3xl shadow-lg shrink-0">
-              <FaUserShield />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[8px] lg:text-[10px] font-black text-indigo-50 uppercase tracking-widest mb-1 bg-indigo-600 w-fit px-2 py-0.5 rounded">Active Agent</p>
-              <h2 className="text-xl lg:text-3xl font-black text-slate-900 leading-none mb-1 truncate">{volunteerInfo.name || "Agent"}</h2>
-
-              <div className="flex flex-wrap items-center gap-2 mb-2 lg:mb-3 ml-0.5">
-                <div className="flex items-center gap-1 text-amber-500">
-                  <FaStar size={10} />
-                  <span className="text-xs lg:text-sm font-black text-slate-700">{volunteerInfo.averageRating || "0.0"}</span>
-                </div>
-                <div className="h-3 w-px bg-slate-200"></div>
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">({volunteerInfo.reviewCount || 0})</span>
-                <div className="h-3 w-px bg-slate-200 hidden sm:block"></div>
-                <span className="text-[9px] text-slate-400 font-bold tracking-tight uppercase truncate max-w-[120px]">{volunteerInfo.phone}</span>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`px-3 lg:px-4 py-1 rounded-full text-[8px] lg:text-[9px] font-black uppercase ${isVolunteerBusy ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                  {isVolunteerBusy ? "• In Mission" : "• Standby"}
-                </span>
-                <button
-                  onClick={() => setShowSecurity(!showSecurity)}
-                  className={`px-3 lg:px-4 py-1.5 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all flex items-center gap-2 ${showSecurity ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-                >
-                  <FaUserShield size={10} /> Account Security
-                </button>
-              </div>
-              {showSecurity && (
-                <div className="flex items-center gap-3 mt-3 animate-in fade-in slide-in-from-left-2 duration-300">
-                  <button
-                    onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                    className={`text-[8px] lg:text-[9px] font-black uppercase ${phoneState.show ? 'text-indigo-600 underline' : 'text-slate-400 hover:text-indigo-500'}`}
-                  >
-                    • Update Phone
-                  </button>
-                  <button
-                    onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                    className={`text-[8px] lg:text-[9px] font-black uppercase ${deleteState.show ? 'text-rose-600 underline' : 'text-slate-400 hover:text-rose-500'}`}
-                  >
-                    • Delete Mission
-                  </button>
-                </div>
-              )}
-
-            </div>
-          </div>
-
-          <div onClick={() => navigate("/volunteer-history")} className="cursor-pointer bg-slate-900 px-6 lg:px-10 py-6 lg:py-8 rounded-[2rem] lg:rounded-[3rem] shadow-xl flex items-center gap-4 lg:gap-8 group hover:bg-slate-800 transition-all text-white">
-            <div className="w-12 h-12 lg:w-14 lg:h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl lg:text-2xl shrink-0"><FaCheckCircle /></div>
+          <div onClick={() => navigate("/volunteer-history")} className="cursor-pointer bg-slate-900 px-6 py-5 rounded-[2rem] shadow-xl flex items-center gap-4 group hover:bg-slate-800 transition-all text-white">
+            <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shrink-0"><FaCheckCircle /></div>
             <div className="flex-1">
-              <p className="text-2xl lg:text-3xl font-black">{myCompletedCount}</p>
-              <p className="text-[8px] lg:text-[9px] font-black text-slate-400 uppercase tracking-widest">Successful Missions</p>
+              <p className="text-2xl font-black">{myCompletedCount}</p>
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Successful Missions Log</p>
             </div>
             <FaArrowRight className="ml-auto group-hover:translate-x-2 transition-transform" />
           </div>
@@ -750,16 +684,34 @@ const VolunteerPortal = () => {
         {/* MISSION CONTROL */}
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
           <div>
-            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
-            <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
-              {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
-            </p>
+            <div className="flex items-center gap-4 mb-2">
+              <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
+              <button
+                onClick={() => setShowSecurity(!showSecurity)}
+                className={`flex px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all items-center gap-2 ${showSecurity ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+              >
+                <FaUserShield size={10} /> Security
+              </button>
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="text-slate-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest flex items-center gap-2">
+                {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
+              </p>
+              {showSecurity && (
+                <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-300">
+                  <div className="h-3 w-px bg-slate-300"></div>
+                  <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className={`text-[9px] font-black uppercase ${phoneState.show ? 'text-indigo-600 underline' : 'text-slate-400 hover:text-indigo-500'}`}>• Update Phone</button>
+                  <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className={`text-[9px] font-black uppercase ${deleteState.show ? 'text-rose-600 underline' : 'text-slate-400 hover:text-rose-500'}`}>• Delete Mission</button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
-            <div className="flex bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
+            {/* Mobile Only Sector Filters */}
+            <div className="flex lg:hidden bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
               {["All Sectors", "Food Only", "Waste Only", "Pollution Only"].map(s => (
-                <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
+                <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
               ))}
             </div>
             <div className="flex bg-slate-100 p-1 rounded-xl justify-between sm:justify-start">
