@@ -397,13 +397,17 @@ const Dashboard = () => {
   const TabButton = ({ id, icon: Icon, label }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-sm ${
+      className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
         activeTab === id
-          ? "bg-green-500 text-white shadow-lg shadow-green-500/30"
-          : "text-slate-400 hover:bg-white/10 hover:text-white"
+          ? "bg-green-500 text-white shadow-lg shadow-green-500/20"
+          : "text-slate-500 hover:bg-slate-50 hover:text-green-600 border border-transparent"
       }`}
     >
-      <div className={`p-2 rounded-lg ${activeTab === id ? "bg-green-200/50 text-green-600" : "bg-slate-100 text-slate-400"}`}>
+      <div className={`p-2 rounded-lg transition-colors duration-200 ${
+        activeTab === id 
+          ? "bg-white/20 text-white" 
+          : "bg-slate-100 text-slate-400 group-hover:bg-green-100/50 group-hover:text-green-500"
+      }`}>
         <Icon size={14} />
       </div>
       {label}
