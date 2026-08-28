@@ -655,9 +655,9 @@ const Dashboard = () => {
   return (
         <div className="min-h-screen bg-[#F0F5F2] font-sans text-slate-900 pb-20 relative overflow-hidden">
       {/* Unsplash Background Image with Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2000&auto=format&fit=crop" alt="Nature Background" className="w-full h-full object-cover opacity-30 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 via-white/90 to-emerald-100/80 backdrop-blur-[4px]"></div>
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" alt="Nature Background" className="w-full h-full object-cover opacity-90" />
+        <div className="absolute inset-0 bg-emerald-900/10 backdrop-blur-[8px]"></div>
       </div>
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
@@ -1048,4 +1048,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+
 
