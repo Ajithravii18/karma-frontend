@@ -607,11 +607,7 @@ const Dashboard = () => {
       <div className="flex pt-[68px] min-h-screen">
 
         {/* ── DARK SIDEBAR ── */}
-        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-0 left-0 h-screen overflow-y-auto z-[110] border-r border-white/10 shadow-2xl">
-          <div className="h-[68px] flex items-center gap-2 px-6 border-b border-white/10 shrink-0 cursor-pointer" onClick={() => window.location.href = '/'}>
-            <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-white font-black tracking-tighter uppercase text-lg">E-Karma</span>
-          </div>
+        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-white/10 shadow-2xl">
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">

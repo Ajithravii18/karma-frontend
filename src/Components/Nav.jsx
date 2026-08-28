@@ -191,20 +191,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const isDashboard = location.pathname === "/dashboard";
 
   return (
-    <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
+    <nav className={`fixed top-0 w-full left-0 z-[100] transition-all duration-500 ${
       location.pathname === "/"
         ? isScrolled
-          ? "bg-white shadow-sm border-b border-slate-100 py-3 left-0"
-          : "bg-transparent py-5 left-0"
-        : `bg-[#1A2332] border-b border-white/10 py-3 ${isDashboard ? 'lg:w-[calc(100%-16rem)] lg:left-64' : 'left-0'}`
+          ? "bg-white shadow-sm border-b border-slate-100 py-3"
+          : "bg-transparent py-5"
+        : "bg-[#1A2332] border-b border-white/10 py-3"
     } font-sans`}>
 
-      <div className={`mx-auto px-4 md:px-6 flex justify-between items-center relative z-10 ${
-        location.pathname === "/" ? "max-w-7xl" : "w-full"
-      }`}>
+      <div className="w-full px-6 lg:px-8 flex justify-between items-center relative z-10">
 
         {/* Logo */}
-        <div onClick={handleHome} className={`flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity active:scale-95 ${isDashboard ? 'lg:hidden' : ''}`}>
+        <div onClick={handleHome} className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity active:scale-95">
           <img src={logo} className="w-8" alt="E-Karma Logo" />
           <span className={`text-base font-black tracking-tighter uppercase ${
             location.pathname !== "/" || isScrolled ? "text-white" : "text-green-900"
