@@ -456,6 +456,20 @@ const VolunteerPortal = () => {
               </div>
               Completed Log
             </button>
+
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-4">Account Settings</p>
+            <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent">
+              <div className="p-2 rounded-lg transition-colors duration-200 bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600">
+                <FaUserShield size={14} />
+              </div>
+              Update Phone
+            </button>
+            <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-rose-50 hover:text-rose-600 border border-transparent">
+              <div className="p-2 rounded-lg transition-colors duration-200 bg-slate-100 text-slate-400 group-hover:bg-rose-100/50 group-hover:text-rose-600">
+                <FaTrashAlt size={14} />
+              </div>
+              Delete Account
+            </button>
           </nav>
           
           <div className="p-4 border-t border-slate-100">
@@ -572,6 +586,16 @@ const VolunteerPortal = () => {
             </div>
             <FaArrowRight className="ml-auto group-hover:translate-x-2 transition-transform" />
           </div>
+          <div className="grid grid-cols-2 gap-4">
+            <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
+              <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg"><FaUserShield /></div>
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Update Phone</p>
+            </button>
+            <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className="bg-white border border-rose-100 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-rose-50 transition-all">
+              <div className="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-lg"><FaTrashAlt /></div>
+              <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest">Delete Account</p>
+            </button>
+          </div>
         </div>
 
         {/* 🔒 SECURITY MODALS (INLINE) */}
@@ -684,27 +708,10 @@ const VolunteerPortal = () => {
         {/* MISSION CONTROL */}
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
           <div>
-            <div className="flex items-center gap-4 mb-2">
-              <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
-              <button
-                onClick={() => setShowSecurity(!showSecurity)}
-                className={`flex px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all items-center gap-2 ${showSecurity ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
-              >
-                <FaUserShield size={10} /> Security
-              </button>
-            </div>
-            <div className="flex items-center gap-3">
-              <p className="text-slate-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest flex items-center gap-2">
-                {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
-              </p>
-              {showSecurity && (
-                <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-300">
-                  <div className="h-3 w-px bg-slate-300"></div>
-                  <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className={`text-[9px] font-black uppercase ${phoneState.show ? 'text-indigo-600 underline' : 'text-slate-400 hover:text-indigo-500'}`}>• Update Phone</button>
-                  <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className={`text-[9px] font-black uppercase ${deleteState.show ? 'text-rose-600 underline' : 'text-slate-400 hover:text-rose-500'}`}>• Delete Mission</button>
-                </div>
-              )}
-            </div>
+            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
+            <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
+              {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
+            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
