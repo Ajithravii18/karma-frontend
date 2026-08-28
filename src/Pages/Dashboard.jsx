@@ -406,10 +406,10 @@ const Dashboard = () => {
   const TabButton = ({ id, icon: Icon, label }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-2 p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border border-transparent ${activeTab === id
-        ? "bg-slate-900 text-white shadow-md md:translate-x-1"
-        : "bg-white text-slate-500 hover:border-slate-200 hover:text-slate-900"
-        } ${id === 'profile' ? 'sm:w-full' : 'sm:w-full'}`}
+      className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
+        ? "bg-indigo-600 text-white shadow-md border-indigo-600"
+        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm"
+        }`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
         <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/10" : "bg-slate-50 group-hover:bg-slate-100"}`}>
@@ -417,7 +417,7 @@ const Dashboard = () => {
         </div>
         {label}
       </div>
-      <FaChevronRight className={`hidden md:block text-xs transition-transform duration-300 ${activeTab === id ? "translate-x-1" : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
+      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`} />
     </button>
   );
 
@@ -669,11 +669,11 @@ const Dashboard = () => {
               Citizen ID: <span className="ml-1 opacity-70">#{user._id?.slice(-6) || 'N/A'}</span>
             </div>
           </div>
-          <nav className="flex sm:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 sm:pb-0">
-            <TabButton id="profile" icon={FaUser} label="Overview" />
-            <TabButton id="pickups" icon={FaRecycle} label="Waste" />
-            <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution" />
-            <TabButton id="food" icon={FaUtensils} label="Food" />
+          <nav className="flex lg:flex-col gap-3 overflow-x-auto hide-scrollbar pb-4 lg:pb-0 snap-x px-1 lg:px-0">
+            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="profile" icon={FaUser} label="Overview" /></div>
+            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="pickups" icon={FaRecycle} label="Waste" /></div>
+            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution" /></div>
+            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="food" icon={FaUtensils} label="Food" /></div>
           </nav>
         </div>
 
