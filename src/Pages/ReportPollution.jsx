@@ -122,6 +122,130 @@ function PollutionReport() {
       setPhotos([]);
       fetchPastPollution();
     } catch (err) {
+import React, { useState, useRef, useEffect } from "react";
+import api from "../utils/api";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import Nav from "../Components/Nav";
+import AOS from "aos";
+import { FaMapMarkerAlt, FaCrosshairs, FaCamera, FaExclamationTriangle, FaTrash } from "react-icons/fa";
+
+// Fix for Leaflet default marker icons
+const markerIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+function RecenterMap({ lat, lng }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([lat, lng], 16);
+  }, [lat, lng]);
+  return null;
+}
+
+function PollutionReport() {
+  const navigate = useNavigate();
+  const [pollutionType, setPollutionType] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState({ lat: 20.5937, lng: 78.9629 });
+  const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
+  const [photos, setPhotos] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef();
+
+  const [pastPollution, setPastPollution] = useState([]);
+  const [loadingPollution, setLoadingPollution] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const fetchPastPollution = async () => {
+    try {
+      setLoadingPollution(true);
+      const res = await api.get("/api/my-pollution");
+      setPastPollution(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingPollution(false);
+    }
+  };
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+    getLocation(); // Auto-request location on mount
+    fetchPastPollution();
+  }, []);
+
+  const getLocation = () => {
+    setLocationStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationStatus("success");
+        toast.success("Location Pinpoint Fixed");
+      },
+      () => {
+        setLocationStatus("error");
+        toast.error("Location access denied");
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
+  const handlePhotoChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (photos.length + files.length > 4) {
+      toast.error("Limit: 4 Evidence Images");
+      return;
+    }
+    setPhotos([...photos, ...files]);
+  };
+
+  const removePhoto = (index) => {
+    setPhotos(photos.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      toast.error("Authentication Required");
+      navigate("/login");
+      return;
+    }
+
+    if (locationStatus !== "success") {
+      toast.error("Please tag a precise location");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const formData = new FormData();
+      formData.append("pollutionType", pollutionType);
+      formData.append("description", description);
+      formData.append("lat", location.lat);
+      formData.append("lng", location.lng);
+      photos.forEach((photo) => formData.append("photos", photo));
+
+      await api.post("/report-pollution", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Environmental Report Transmitted");
+      setPollutionType("");
+      setDescription("");
+      setPhotos([]);
+      fetchPastPollution();
+    } catch (err) {
       toast.error(err.response?.data?.message || "Transmission failed");
     } finally {
       setSubmitting(false);
@@ -129,170 +253,161 @@ function PollutionReport() {
   };
 
   return (
-          <div className="min-h-screen bg-[#F0F5F2] font-sans text-slate-900 pb-20 relative overflow-hidden">
-        {/* Unsplash Background Image with Overlay */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2000&auto=format&fit=crop" alt="Nature Background" className="w-full h-full object-cover opacity-30 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 via-white/90 to-emerald-100/80 backdrop-blur-[4px]"></div>
-        </div>
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none"></div>
-      
+    <div className="min-h-screen bg-[#F2F5F4] font-sans text-slate-900 pb-10 relative">
       <Nav />
+      <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
+        <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <section className="min-h-[90vh] pt-20 pb-4 px-6 flex items-center justify-center relative z-10">
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-
-          {/* LEFT CONTENT: Impact Messaging */}
-          <div className="lg:sticky lg:top-32 space-y-6 bg-white/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
-            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
-              <span className="relative flex h-2 w-2 mr-0.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              Citizen Watch
-            </div>
-            
-            <div data-aos="fade-right" className="space-y-2">
-              <h1 className="text-4xl font-black text-slate-900 leading-[1.1]">
+          {/* LEFT PANE */}
+          <div className="flex flex-col justify-between bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-sm border border-gray-100 min-h-[680px]">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E9F5EC] rounded-full text-[#0B7A30] text-[10px] font-black tracking-widest uppercase mb-10">
+                <span className="w-2 h-2 rounded-full bg-[#09B948]"></span>
+                Citizen Watch
+              </div>
+              
+              <h1 className="text-5xl md:text-[4rem] font-black text-[#1A2530] leading-[1.05] tracking-tight mb-6">
                 Report <br />
-                <span className="text-emerald-600 italic">Pollution Spot.</span>
+                <span className="text-[#09B948] italic tracking-tighter">Pollution Spot.</span>
               </h1>
-              <p className="text-slate-500 text-xl max-w-lg leading-relaxed">
+              
+              <p className="text-gray-500 text-lg md:text-xl font-medium max-w-md leading-relaxed">
                 Help our volunteers find and verify environmental hazards. Upload photos and pin the exact coordinates of the issue.
               </p>
             </div>
 
-            <div data-aos="fade-up" data-aos-delay="200" className="grid grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <FaCrosshairs className="text-emerald-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Pinpoint Accuracy</h4>
-                <p className="text-xs text-slate-400">GPS location helps fast verification.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center min-h-[160px]">
+                <div className="w-10 h-10 rounded-full bg-[#E9F5EC] text-[#0B7A30] flex items-center justify-center mb-4">
+                  <FaCrosshairs size={16} />
+                </div>
+                <h4 className="font-black text-[#1A2530] text-lg mb-1">Pinpoint Accuracy</h4>
+                <p className="text-sm font-medium text-gray-500 leading-relaxed">GPS location helps fast verification.</p>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <FaCamera className="text-blue-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Visual Evidence</h4>
-                <p className="text-xs text-slate-400">Upload photos for quick assessment.</p>
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center min-h-[160px]">
+                <div className="w-10 h-10 rounded-full bg-[#FFF4ED] text-[#EA580C] flex items-center justify-center mb-4">
+                  <FaCamera size={16} />
+                </div>
+                <h4 className="font-black text-[#1A2530] text-lg mb-1">Visual Evidence</h4>
+                <p className="text-sm font-medium text-gray-500 leading-relaxed">Upload photos for quick assessment.</p>
               </div>
             </div>
           </div>
 
-          {/* RIGHT CONTENT */}
-          <div data-aos="zoom-in" className="space-y-2">
-            <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
-              <form onSubmit={handleSubmit} className="space-y-3">
+          {/* RIGHT PANE (FORM) */}
+          <div className="bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-sm border border-gray-100 min-h-[680px] flex flex-col justify-center">
+            <form onSubmit={handleSubmit} className="space-y-6">
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaExclamationTriangle /> Incident Category
-                  </label>
-                  <select
-                    value={pollutionType}
-                    onChange={(e) => setPollutionType(e.target.value)}
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
-                    required
-                  >
-                    <option value="">Select Category...</option>
-                    <option>Air Pollution</option>
-                    <option>Water Contamination</option>
-                    <option>Illegal Garbage Dump</option>
-                    <option>Chemical/Toxic Waste</option>
-                  </select>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                  <FaExclamationTriangle /> Incident Category
+                </label>
+                <select
+                  value={pollutionType}
+                  onChange={(e) => setPollutionType(e.target.value)}
+                  className="w-full bg-[#F1F3F2] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                  required
+                >
+                  <option value="">Select Category...</option>
+                  <option>Air Pollution</option>
+                  <option>Water Contamination</option>
+                  <option>Illegal Garbage Dump</option>
+                  <option>Chemical/Toxic Waste</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Description</label>
+                <textarea
+                  placeholder="Describe the environmental hazard..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full bg-[#F1F3F2] border-transparent rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
+                  required
+                />
+              </div>
+
+              {/* Enhanced Image Upload with Previews */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                  <FaCamera /> Evidence Photos
+                </label>
+                <div
+                  onClick={() => fileInputRef.current.click()}
+                  className="w-full bg-[#F1F3F2] border-2 border-dashed border-gray-300 rounded-3xl px-5 py-8 text-center cursor-pointer hover:bg-white hover:border-[#09B948] transition-all group flex flex-col items-center justify-center"
+                >
+                  <FaCamera className="text-gray-400 group-hover:text-[#09B948] mb-2 transition-colors" size={24} />
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">
+                    {photos.length >= 4 ? "Max Capacity Reached" : "Attach Evidence Photos (Max 4)"}
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Description</label>
-                  <textarea
-                    placeholder="Describe the environmental hazard..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows="2"
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-medium"
-                    required
-                  />
-                </div>
-
-                {/* Enhanced Image Upload with Previews */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaCamera /> Evidence Photos
-                  </label>
-                  <div
-                    onClick={() => fileInputRef.current.click()}
-                    className="border-2 border-dashed border-slate-200 p-6 rounded-2xl text-center cursor-pointer bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 transition-all group"
-                  >
-                    <FaCamera className="mx-auto text-slate-300 group-hover:text-emerald-500 mb-2 transition-colors" size={24} />
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">
-                      {photos.length >= 4 ? "Max Capacity Reached" : "Attach Evidence Photos (Max 4)"}
-                    </p>
+                {photos.length > 0 && (
+                  <div className="grid grid-cols-4 gap-3 mt-3">
+                    {photos.map((file, index) => (
+                      <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-sm group">
+                        <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); removePhoto(index); }}
+                          className="absolute top-1 right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
+                        >
+                          <FaTrash size={10} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
+                )}
 
-                  {photos.length > 0 && (
-                    <div className="grid grid-cols-4 gap-2 mt-3">
-                      {photos.map((file, index) => (
-                        <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
-                          <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); removePhoto(index); }}
-                            className="absolute top-1 right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
-                          >
-                            <FaTrash size={10} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  hidden
+                  ref={fileInputRef}
+                  onChange={handlePhotoChange}
+                />
+              </div>
 
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    hidden
-                    ref={fileInputRef}
-                    onChange={handlePhotoChange}
-                  />
-                </div>
+              {/* Location Selector */}
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={getLocation}
+                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
+                      ? "bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
+                      : "bg-[#FFF4ED] text-[#EA580C] border-[#EA580C]/30 hover:bg-[#FCE3D4]"
+                    }`}
+                >
+                  <FaCrosshairs size={14} /> {locationStatus === "success" ? "COORDINATES SECURED (RE-SYNC)" : "📍 Pin Current Location"}
+                </button>
 
-                {/* Location Selector */}
-                <div className="space-y-2">
-                  <button
-                    type="button"
-                    onClick={getLocation}
-                    className={`w-full py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
-                        ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                        : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
-                      }`}
+                <div className="rounded-3xl overflow-hidden h-[180px] w-full border-4 border-[#F1F3F2] relative z-0">
+                  <MapContainer
+                    center={[location.lat, location.lng]}
+                    zoom={location.lat === 20.5937 ? 5 : 16}
+                    className="h-full w-full z-0"
+                    zoomControl={false}
                   >
-                    <FaCrosshairs /> {locationStatus === "success" ? "COORDINATES SECURED (RE-SYNC)" : "📍 Pin Current Location"}
-                  </button>
-
-                  <div className="rounded-[2rem] overflow-hidden border-8 border-slate-50 h-40 shadow-inner relative group">
-                    <MapContainer
-                      center={[location.lat, location.lng]}
-                      zoom={location.lat === 20.5937 ? 5 : 16}
-                      className="h-full w-full z-0"
-                      zoomControl={false}
-                    >
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      <RecenterMap lat={location.lat} lng={location.lng} />
-                      <Marker position={[location.lat, location.lng]} icon={markerIcon} />
-                    </MapContainer>
-                    <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[1.5rem]" />
-                  </div>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                    <RecenterMap lat={location.lat} lng={location.lng} />
+                    <Marker position={[location.lat, location.lng]} icon={markerIcon} />
+                  </MapContainer>
                 </div>
+              </div>
 
-                {/* Submit */}
+              {/* Submit */}
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-3 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-emerald-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
+                  className="w-full bg-[#09B948] text-white py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-[#0B7A30] transition-all shadow-[0_6px_20px_rgb(9,185,72,0.4)] flex items-center justify-center gap-3 disabled:opacity-50"
                 >
                   {submitting ? "Transmitting Evidence..." : "🚀 Broadcast Report"}
                 </button>
-              </form>
-            </div>
+              </div>
+
+            </form>
           </div>
         </div>
       </section>
@@ -301,6 +416,3 @@ function PollutionReport() {
 }
 
 export default PollutionReport;
-
-
-

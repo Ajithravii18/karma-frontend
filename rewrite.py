@@ -1,242 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import api from "../utils/api";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import Nav from "../Components/Nav";
-import AOS from "aos";
-import { FaUtensils, FaClock, FaLayerGroup, FaMapMarkerAlt } from "react-icons/fa";
+import re
 
-// Fix for Leaflet marker icons in React
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+with open('src/Pages/ReportFood.jsx', 'r', encoding='utf-8') as f:
+    content = f.read()
 
-function MapUpdater({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center, 16);
-  }, [center]);
-  return null;
-}
+# 1. We replace from 'return (' to the end
+pattern = re.compile(r'return \(\s*<div className="min-h-screen(.*?)export default ReportLeftoverFood;', re.DOTALL)
 
-function ReportLeftoverFood() {
-  const navigate = useNavigate();
-  
-  // Form States
-  const [position, setPosition] = useState([10.7867, 76.6548]);
-  const [placeName, setPlaceName] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [foodType, setFoodType] = useState("Veg"); // New: Category
-  const [expiryTime, setExpiryTime] = useState(""); // New: Dedicated Expiry
-  const [notes, setNotes] = useState("");
-  
-  // UI States
-  const [loading, setLoading] = useState(false);
-  const [locationLoading, setLocationLoading] = useState(false);
-
-  const [pastFood, setPastFood] = useState([]);
-  const [loadingFood, setLoadingFood] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const fetchPastFood = async () => {
-    try {
-      setLoadingFood(true);
-      const res = await api.get("/api/my-food");
-      setPastFood(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingFood(false);
-    }
-  };
-
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-    fetchPastFood();
-  }, []);
-
-  const getCurrentLocation = () => {
-    setLocationLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
-        setLocationLoading(false);
-        toast.success("Location Synced");
-      },
-      () => {
-        toast.error("Location access denied");
-        setLocationLoading(false);
-      }
-    );
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      toast.error("Please login to report food");
-      return;
-    }
-
-    // Validation: Ensure expiry is in the future
-    if (new Date(expiryTime) <= new Date()) {
-      toast.error("Expiry time must be in the future!");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const payload = { 
-        placeName, 
-        latitude: position[0], 
-        longitude: position[1], 
-        quantity: parseInt(quantity), // Ensure number for analytics
-        foodType, 
-        expiryTime, 
-        notes 
-      };
-
-      await api.post("/report-leftover-food", payload);
-
-      toast.success("Mission Dispatched: Food Reported!");
-      setPlaceName("");
-      setQuantity("");
-      setFoodType("Veg");
-      setExpiryTime("");
-      setNotes("");
-      fetchPastFood();
-    } catch (err) {
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import api from "../utils/api";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import Nav from "../Components/Nav";
-import AOS from "aos";
-import { FaUtensils, FaClock, FaLayerGroup, FaMapMarkerAlt } from "react-icons/fa";
-
-// Fix for Leaflet marker icons in React
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-function MapUpdater({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center, 16);
-  }, [center]);
-  return null;
-}
-
-function ReportLeftoverFood() {
-  const navigate = useNavigate();
-  
-  // Form States
-  const [position, setPosition] = useState([10.7867, 76.6548]);
-  const [placeName, setPlaceName] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [foodType, setFoodType] = useState("Veg"); // New: Category
-  const [expiryTime, setExpiryTime] = useState(""); // New: Dedicated Expiry
-  const [notes, setNotes] = useState("");
-  
-  // UI States
-  const [loading, setLoading] = useState(false);
-  const [locationLoading, setLocationLoading] = useState(false);
-
-  const [pastFood, setPastFood] = useState([]);
-  const [loadingFood, setLoadingFood] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const fetchPastFood = async () => {
-    try {
-      setLoadingFood(true);
-      const res = await api.get("/api/my-food");
-      setPastFood(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingFood(false);
-    }
-  };
-
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-    fetchPastFood();
-  }, []);
-
-  const getCurrentLocation = () => {
-    setLocationLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
-        setLocationLoading(false);
-        toast.success("Location Synced");
-      },
-      () => {
-        toast.error("Location access denied");
-        setLocationLoading(false);
-      }
-    );
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      toast.error("Please login to report food");
-      return;
-    }
-
-    // Validation: Ensure expiry is in the future
-    if (new Date(expiryTime) <= new Date()) {
-      toast.error("Expiry time must be in the future!");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const payload = { 
-        placeName, 
-        latitude: position[0], 
-        longitude: position[1], 
-        quantity: parseInt(quantity), // Ensure number for analytics
-        foodType, 
-        expiryTime, 
-        notes 
-      };
-
-      await api.post("/report-leftover-food", payload);
-
-      toast.success("Mission Dispatched: Food Reported!");
-      setPlaceName("");
-      setQuantity("");
-      setFoodType("Veg");
-      setExpiryTime("");
-      setNotes("");
-      fetchPastFood();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Reporting Failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
+new_layout = '''return (
     <div className="min-h-screen bg-[#F2F5F4] font-sans text-slate-900 pb-10 relative">
       <Nav />
       <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
@@ -320,9 +90,9 @@ function ReportLeftoverFood() {
                     value={foodType} onChange={(e) => setFoodType(e.target.value)}
                     className="w-full bg-[#F1F3F2] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
                   >
-                    <option value="Veg">🥦 Veg Only</option>
-                    <option value="Non-Veg">🥩 Non-Veg</option>
-                    <option value="Mix">🍲 Mixed Items</option>
+                    <option value="Veg">?? Veg Only</option>
+                    <option value="Non-Veg">?? Non-Veg</option>
+                    <option value="Mix">?? Mixed Items</option>
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -344,7 +114,7 @@ function ReportLeftoverFood() {
                   type="button" onClick={getCurrentLocation} 
                   className="w-full py-4 bg-[#E9F5EC] text-[#0B7A30] font-black text-[11px] uppercase tracking-widest rounded-full border border-[#09B948]/30 hover:bg-[#D5EAD9] transition-all flex items-center justify-center gap-3"
                 >
-                  📍 Pin Current Location
+                  ?? Pin Current Location
                 </button>
                 <div className="rounded-3xl overflow-hidden h-[180px] w-full border-4 border-[#F1F3F2] relative z-0">
                   <MapContainer center={position} zoom={16} className="h-full w-full z-0">
@@ -371,7 +141,7 @@ function ReportLeftoverFood() {
                   type="submit" disabled={loading} 
                   className="w-full bg-[#09B948] text-white py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-[#0B7A30] transition-all shadow-[0_6px_20px_rgb(9,185,72,0.4)] flex items-center justify-center gap-3 disabled:opacity-50"
                 >
-                  {loading ? "Syncing with Cloud..." : "🚀 Dispatch Report"}
+                  {loading ? "Syncing with Cloud..." : "?? Dispatch Report"}
                 </button>
               </div>
             </form>
@@ -383,3 +153,9 @@ function ReportLeftoverFood() {
 }
 
 export default ReportLeftoverFood;
+'''
+
+content = pattern.sub(new_layout, content)
+
+with open('src/Pages/ReportFood.jsx', 'w', encoding='utf-8') as f:
+    f.write(content)
