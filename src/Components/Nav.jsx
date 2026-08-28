@@ -200,22 +200,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
 
         {/* Logo */}
-        <div
-          onClick={handleHome}
-          className="flex items-center gap-2.5 cursor-pointer"
-        >
-          <div className={`flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border ${
-            location.pathname === "/" && !isScrolled
-              ? "bg-white shadow-lg border-white/20"
-              : location.pathname !== "/"
-              ? "bg-white/10 border-white/10 hover:bg-white/20"
-              : "bg-white border-slate-200 shadow-sm"
-          }`}>
-            <img src={logo} className="w-7" alt="E-Karma Logo" />
-            <span className={`text-base font-black tracking-tighter uppercase ${
-              location.pathname !== "/" && !isScrolled ? "text-white" : "text-green-900"
-            }`}>E-Karma</span>
-          </div>
+        <div onClick={handleHome} className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity active:scale-95">
+          <img src={logo} className="w-8" alt="E-Karma Logo" />
+          <span className={`text-base font-black tracking-tighter uppercase ${
+            location.pathname !== "/" || isScrolled ? "text-white" : "text-green-900"
+          }`}>E-Karma</span>
         </div>
 
         {/* Desktop Nav Links */}
