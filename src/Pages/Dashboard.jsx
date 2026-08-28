@@ -180,7 +180,7 @@ const Dashboard = () => {
                     { icon: FaHeart, color: "text-rose-600", bg: "bg-rose-100", label: "Food Donations", val: stats.breakdown?.food, suffix: "" }
                   ].map((item, i) => (
                     <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 flex flex-col items-center justify-center text-center group cursor-default hover:border-gray-300 transition-colors min-h-[140px]">
-                      <div className={p-2 rounded-full   group-hover:scale-110 transition-transform mb-3}>
+                      <div className={`p-2 rounded-full ${item.bg} ${item.color} group-hover:scale-110 transition-transform mb-3`}>
                         <item.icon size={16} />
                       </div>
                       <div>
@@ -321,6 +321,8 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
 
 
 
