@@ -606,21 +606,21 @@ const Dashboard = () => {
       <Nav />
       <div className="flex pt-[68px] min-h-screen">
 
-        {/* ── DARK SIDEBAR ── */}
-        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-white/10 shadow-2xl rounded-tr-[2rem] rounded-br-[2rem]">
+        {/* ── LIGHT SIDEBAR ── */}
+        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] rounded-tr-[2rem] rounded-br-[2rem]">
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">
                 {currentName.charAt(0).toUpperCase()}
               </div>
               <div className="overflow-hidden">
-                <p className="text-white font-bold text-sm truncate">{currentName}</p>
-                <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest">Eco Citizen</p>
+                <p className="text-slate-800 font-bold text-sm truncate">{currentName}</p>
+                <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest">Eco Citizen</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
             </div>
           </div>
           <nav className="flex flex-col gap-1 p-4 flex-1">
@@ -630,13 +630,13 @@ const Dashboard = () => {
             <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution Reports" />
             <TabButton id="food" icon={FaUtensils} label="Food Sharing" />
           </nav>
-          <div className="p-4 border-t border-white/10">
-            <div className="bg-white/5 rounded-xl p-4">
+          <div className="p-4 border-t border-slate-100">
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3">Impact Score</p>
-              <p className="text-3xl font-black text-white"><Counter end={stats.totalImpact} /></p>
-              <p className="text-[10px] text-green-400 font-bold mt-1">Credits Earned</p>
-              <div className="w-full h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
-                <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+              <p className="text-3xl font-black text-slate-800"><Counter end={stats.totalImpact} /></p>
+              <p className="text-[10px] text-green-600 font-bold mt-1">Credits Earned</p>
+              <div className="w-full h-1.5 bg-slate-200 rounded-full mt-3 overflow-hidden">
+                <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
               </div>
             </div>
           </div>
@@ -661,21 +661,20 @@ const Dashboard = () => {
         {/* ── MAIN CONTENT ── */}
         <main className="flex-1 lg:ml-64 pb-24 lg:pb-8">
           {activeTab === "profile" ? (
-            <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-5">
+            <div className="p-6 md:p-8 xl:p-10 max-w-[1400px] mx-auto space-y-5 md:space-y-6">
 
               {/* ── HERO HEADER CARD ── */}
-              <div className="bg-[#1A2332] rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
-                <div className="absolute right-0 top-0 w-64 h-full bg-green-500/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
                 <div className="flex items-center gap-4 relative z-10">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-green-500/30 shrink-0">
                     {currentName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-white font-black text-lg leading-tight">{currentName}</p>
-                    <p className="text-slate-400 text-xs font-medium mt-0.5">Eco Citizen · ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</p>
+                    <p className="text-slate-800 font-black text-lg leading-tight">{currentName}</p>
+                    <p className="text-slate-500 text-xs font-medium mt-0.5">Eco Citizen · ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</p>
                     <div className="flex items-center gap-1.5 mt-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Active Member</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-green-600 text-[10px] font-bold uppercase tracking-widest">Active Member</span>
                     </div>
                   </div>
                 </div>
@@ -845,31 +844,30 @@ const Dashboard = () => {
               )}
 
               {/* Impact Banner */}
-              <div className="bg-[#1A2332] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-green-500/10 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 md:p-8 text-slate-800 relative overflow-hidden">
                 <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8">
                   <div className="flex-1 text-center md:text-left">
-                    <p className="text-green-400 text-[10px] font-black uppercase tracking-widest mb-3">Contribution Excellence</p>
+                    <p className="text-green-600 text-[10px] font-black uppercase tracking-widest mb-3">Contribution Excellence</p>
                     <div className="flex items-baseline gap-3 justify-center md:justify-start">
-                      <span className="text-6xl font-black text-white"><Counter end={stats.totalImpact} /></span>
-                      <span className="text-2xl font-black text-green-400">CREDITS</span>
+                      <span className="text-6xl font-black text-slate-800"><Counter end={stats.totalImpact} /></span>
+                      <span className="text-2xl font-black text-green-600">CREDITS</span>
                     </div>
-                    <p className="text-slate-400 text-xs font-medium mt-2">Total environmental impact score</p>
-                    <div className="w-full max-w-xs h-2 bg-white/10 rounded-full mt-4 overflow-hidden mx-auto md:mx-0">
-                      <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_12px_rgba(34,197,94,0.5)]"></div>
+                    <p className="text-slate-500 text-xs font-medium mt-2">Total environmental impact score</p>
+                    <div className="w-full max-w-xs h-2 bg-slate-100 rounded-full mt-4 overflow-hidden mx-auto md:mx-0">
+                      <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_12px_rgba(34,197,94,0.3)]"></div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-3 w-full md:w-64 shrink-0">
                     {[
-                      { icon: FaRecycle, label: "Waste Managed", val: stats.breakdown?.pickups, color: "text-emerald-400" },
-                      { icon: FaExclamationTriangle, label: "Pollution Cases", val: stats.breakdown?.pollution, color: "text-rose-400" },
-                      { icon: FaUtensils, label: "Food Donations", val: stats.breakdown?.food, color: "text-amber-400" },
+                      { icon: FaRecycle, label: "Waste Managed", val: stats.breakdown?.pickups, color: "text-emerald-600" },
+                      { icon: FaExclamationTriangle, label: "Pollution Cases", val: stats.breakdown?.pollution, color: "text-rose-600" },
+                      { icon: FaUtensils, label: "Food Donations", val: stats.breakdown?.food, color: "text-amber-600" },
                     ].map((s, i) => (
-                      <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl px-4 py-3 hover:bg-white/10 transition-all">
+                      <div key={i} className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 hover:bg-slate-100 transition-all">
                         <s.icon size={14} className={s.color} />
                         <div>
-                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</p>
-                          <p className="text-base font-black text-white"><Counter end={s.val || 0} /></p>
+                          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
+                          <p className="text-base font-black text-slate-800"><Counter end={s.val || 0} /></p>
                         </div>
                       </div>
                     ))}
