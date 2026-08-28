@@ -191,15 +191,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   return (
     <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${
       isScrolled
-        ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-green-100/50 py-3"
+        ? "bg-white shadow-sm border-b border-slate-200 py-3"
         : isDarkNav
-          ? "bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_4px_30px_rgb(0,0,0,0.05)] py-4"
+          ? "bg-white border-b border-slate-200 py-4"
           : "bg-transparent py-5"
     } font-sans`}>
       
-      {/* Dynamic Gradient Overlay for separation */}
-      {isScrolled && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-50/20 to-transparent pointer-events-none" />}
-
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
 
         {/* Logo Section Pill */}
@@ -207,7 +204,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           onClick={handleHome}
           className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 border ${
             isScrolled || location.pathname !== "/"
-              ? "bg-white/60 border-green-100 shadow-sm hover:border-green-300 hover:bg-white"
+              ? "bg-white border-slate-200 shadow-sm hover:border-slate-300"
               : "bg-white shadow-lg border-white/20 hover:shadow-xl hover:border-green-200"
           }`}
         >
@@ -311,7 +308,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   onClick={() => setShowDropdown(!showDropdown)}
                   className={`flex items-center gap-3 pl-1.5 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 border ${
                     isScrolled || location.pathname !== "/"
-                      ? "bg-white border-green-100 shadow-sm"
+                      ? "bg-white border-slate-200 shadow-sm"
                       : "bg-white shadow-lg border-white/20"
                   }`}
                 >
