@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  FaCheck, FaClock, FaPhoneAlt, FaLeaf, FaTrashAlt,
+  FaColumns, FaCheck, FaClock, FaPhoneAlt, FaLeaf, FaTrashAlt,
   FaDirections, FaHistory, FaCheckCircle, FaArrowRight,
   FaTruckLoading, FaSync, FaUserShield, FaMapMarkerAlt,
   FaExclamationTriangle, FaCamera, FaUtensils, FaImages, FaTimes, FaUpload,
