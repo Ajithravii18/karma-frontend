@@ -121,18 +121,27 @@ function ReportLeftoverFood() {
   };
 
   return (
-    <div className="bg-[#FDFDFD] min-h-screen">
+    <div className="bg-slate-50 min-h-screen relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none"></div>
+      
       <Nav />
       
-      <section className="min-h-[90vh] pt-24 pb-12 px-6 flex items-center justify-center">
+      <section className="min-h-[90vh] pt-24 pb-12 px-6 flex items-center justify-center relative z-10">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           
           {/* LEFT CONTENT: Impact Messaging */}
           <div className="lg:sticky lg:top-32 space-y-8">
-            <div data-aos="fade-right" className="space-y-4">
-              <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest">
-                Zero Waste Initiative
+            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
+              <span className="relative flex h-2 w-2 mr-0.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
+              Zero Hunger Initiative
+            </div>
+            
+            <div data-aos="fade-right" className="space-y-4">
               <h1 className="text-6xl font-black text-slate-900 leading-[1.1]">
                 Turn Surplus into <br />
                 <span className="text-green-600 italic">Sustainability.</span>

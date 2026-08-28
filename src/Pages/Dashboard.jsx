@@ -407,7 +407,7 @@ const Dashboard = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
-        ? "bg-indigo-600 text-white shadow-md border-indigo-600"
+        ? "bg-green-600 text-white shadow-md border-green-600"
         : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm"
         }`}
     >
@@ -520,7 +520,7 @@ const Dashboard = () => {
                       <div className="space-y-2 min-w-[180px]">
                         {/* Start Time Row */}
                         <div className="flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_5px_rgba(99,102,241,0.5)]"></div>
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(99,102,241,0.5)]"></div>
                           <div className="flex flex-col">
                             <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">Start Time</span>
                             <span className="text-[11px] text-gray-800 font-extrabold flex items-center gap-1.5">
@@ -632,17 +632,17 @@ const Dashboard = () => {
             <button 
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-indigo-200 hover:text-indigo-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
             >
               <span className="font-black">&lt;</span>
             </button>
             <span className="text-xs font-black uppercase tracking-widest text-slate-400">
-              Page <span className="text-indigo-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(list.length / itemsPerPage)}
+              Page <span className="text-green-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(list.length / itemsPerPage)}
             </span>
             <button 
               onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
               disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-indigo-200 hover:text-indigo-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
             >
               <span className="font-black">&gt;</span>
             </button>
@@ -653,11 +653,16 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
-      <Nav />
-      <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
-        {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
-        <div className="lg:col-span-1 space-y-4 md:space-y-6">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+      
+      <div className="relative z-10">
+        <Nav />
+        <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+          {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
+          <div className="lg:col-span-1 space-y-4 md:space-y-6">
           <div className="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
             <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
               <div className="relative w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-2xl md:text-4xl text-slate-400 font-black shadow-inner">
@@ -695,21 +700,21 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                   <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl group-hover:scale-110 transition-transform">
+                      <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaUser size={14} />
                       </div>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Legal Name</p>
                     </div>
                     {isEditing ? (
                       <div className="flex gap-2">
-                        <input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-white border border-slate-300 rounded-2xl px-5 py-3 w-full font-black text-slate-700 outline-none focus:border-indigo-500 shadow-sm" />
+                        <input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-white border border-slate-300 rounded-2xl px-5 py-3 w-full font-black text-slate-700 outline-none focus:border-green-500 shadow-sm" />
                         <button onClick={handleUpdateName} className="bg-slate-900 text-white px-5 rounded-2xl hover:bg-slate-800 transition-all font-black text-xs shadow-sm">SAVE</button>
                       </div>
                     ) : <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{currentName}</p>}
                   </div>
                   <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl group-hover:scale-110 transition-transform">
+                      <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaClock size={14} />
                       </div>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Contact</p>
@@ -743,20 +748,20 @@ const Dashboard = () => {
 
                     {/* Forms ... existing logic remains identical ... */}
                     {phoneState.show && (
-                      <div className="p-8 bg-indigo-50 border border-indigo-100 rounded-3xl shadow-inner animate-in slide-in-from-top-4 duration-300">
+                      <div className="p-8 bg-green-50 border border-green-100 rounded-3xl shadow-inner animate-in slide-in-from-top-4 duration-300">
                         {phoneState.step === 1 ? (
                           <div className="flex flex-wrap gap-4 items-end">
                             <div className="flex-1 min-w-[240px]">
-                              <label className="text-[10px] font-black text-indigo-700 uppercase mb-2 block tracking-widest ml-1">New Mobile Number</label>
+                              <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest ml-1">New Mobile Number</label>
                               <input
                                 type="tel" placeholder="+91..."
                                 value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                                className="w-full bg-white border border-indigo-200 rounded-2xl px-6 py-4 font-black text-slate-700 outline-none focus:border-indigo-600 transition-all shadow-sm"
+                                className="w-full bg-white border border-green-200 rounded-2xl px-6 py-4 font-black text-slate-700 outline-none focus:border-green-600 transition-all shadow-sm"
                               />
                             </div>
                             <button
                               onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                              className="bg-indigo-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-indigo-700 transition-all shadow-sm"
+                              className="bg-green-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-sm"
                             >
                               {phoneState.loading ? "Requesting..." : "Send Verification Code"}
                             </button>
@@ -764,7 +769,7 @@ const Dashboard = () => {
                         ) : (
                           <div className="flex flex-wrap gap-4 items-end">
                             <div className="flex-1 min-w-[240px]">
-                              <label className="text-[10px] font-black text-indigo-700 uppercase mb-2 block tracking-widest ml-1 text-center">Verification Code (Sent to {phoneState.newPhone})</label>
+                              <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest ml-1 text-center">Verification Code (Sent to {phoneState.newPhone})</label>
                               <div className="flex justify-between gap-2 max-w-[320px] mx-auto">
                                 {[0, 1, 2, 3, 4, 5].map((i) => (
                                   <input
@@ -779,7 +784,7 @@ const Dashboard = () => {
                                       setPhoneState({ ...phoneState, otp: newOtp.join("") });
                                       if (val && e.target.nextSibling) e.target.nextSibling.focus();
                                     }}
-                                    className="w-10 h-10 md:w-12 md:h-12 bg-white border border-indigo-200 rounded-xl font-black text-slate-700 text-center outline-none focus:border-indigo-600 transition-all shadow-sm text-lg"
+                                    className="w-10 h-10 md:w-12 md:h-12 bg-white border border-green-200 rounded-xl font-black text-slate-700 text-center outline-none focus:border-green-600 transition-all shadow-sm text-lg"
                                   />
                                 ))}
                               </div>
@@ -858,18 +863,18 @@ const Dashboard = () => {
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
                     <div className="md:col-span-3 text-center md:text-left">
-                      <h4 className="text-indigo-300 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
+                      <h4 className="text-green-300 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
                       <div className="flex flex-col md:flex-row items-center md:items-baseline gap-2 md:gap-4 mb-2">
                         <span className="text-6xl md:text-8xl font-black tracking-tighter text-white">
                           <Counter end={stats.totalImpact} />
                         </span>
                         <div className="space-y-0.5 md:space-y-1">
-                          <p className="text-xl md:text-2xl font-black text-indigo-400">CREDITS</p>
+                          <p className="text-xl md:text-2xl font-black text-green-400">CREDITS</p>
                           <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-300">Total Life Impact</p>
                         </div>
                       </div>
                       <div className="w-full h-1.5 md:h-2 bg-white/10 rounded-full mt-6 overflow-hidden">
-                        <div className="h-full bg-indigo-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
+                        <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
                       </div>
                     </div>
 
@@ -911,7 +916,7 @@ const Dashboard = () => {
                         <button
                           key={s}
                           onClick={() => setStatusFilter(s)}
-                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ? "bg-white text-green-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
                         >
                           {s}
                         </button>
@@ -1032,6 +1037,7 @@ const Dashboard = () => {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
       `}</style>
+      </div>
     </div>
   );
 };
