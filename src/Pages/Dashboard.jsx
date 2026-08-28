@@ -36,7 +36,11 @@ const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const currentName = localStorage.getItem("userName") || user.name || "User";
 
-  // --- FIXED LOGIC HOOKS ---
+
+
+
+
+    // --- FIXED LOGIC HOOKS ---
   useEffect(() => {
     setNewName(currentName);
     fetchAllData();
