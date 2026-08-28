@@ -374,50 +374,38 @@ const Dashboard = () => {
     });
   };
 
-  // --- STATUS THEMES ---
   const getStatusStyle = (status) => {
-    const base ="px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1.5 w-fit border";
+    const base = "px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1.5 w-fit border";
     const s = status?.toLowerCase();
     switch (s) {
-      case 'completed':
-      case 'resolved':
-      case 'collected':
+      case 'completed': case 'resolved': case 'collected':
         return `${base} bg-green-100 text-green-700 border-green-200`;
-
       case 'paid':
         return `${base} bg-blue-100 text-blue-700 border-blue-200`;
-
-      case 'arrived':
-      case 'awaiting payment':
+      case 'arrived': case 'awaiting payment':
         return `${base} bg-yellow-100 text-yellow-700 border-yellow-200 animate-pulse`;
-
       case 'claimed':
         return `${base} bg-sky-100 text-sky-700 border-sky-200`;
-
       case 'available':
-        return `${base} bg-emerald-100 text-emerald-700 border-emerald-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]`;
-
+        return `${base} bg-emerald-100 text-emerald-700 border-emerald-200`;
       default:
         return `${base} bg-orange-50 text-orange-600 border-orange-100`;
     }
   }
 
-  // --- UI COMPONENTS ---
   const TabButton = ({ id, icon: Icon, label }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
-        ?"bg-green-600 text-white shadow-md border-green-600"
-        :"bg-white text-slate-500 border-transparent hover:border-slate-300 hover:text-[#0A2F1D] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-        }`}
+      className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-sm ${
+        activeTab === id
+          ? "bg-green-500 text-white shadow-lg shadow-green-500/30"
+          : "text-slate-400 hover:bg-white/10 hover:text-white"
+      }`}
     >
-      <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
-        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white text-green-600" :"bg-[#F4F7F6] group-hover:bg-slate-100"}`}>
-          <Icon size={14} className="md:w-4.5 md:h-4.5" />
-        </div>
-        {label}
+      <div className={`p-2 rounded-lg ${activeTab === id ? "bg-white/20" : "bg-white/5"}`}>
+        <Icon size={14} />
       </div>
-      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ?"opacity-100" :"opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"}`} />
+      {label}
     </button>
   );
 
@@ -428,55 +416,43 @@ const Dashboard = () => {
     const startDateTime = new Date(item.createdAt || item.reportedAt);
 
     return (
-      <div key={item._id} className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent p-5 rounded-2xl border border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-4">
+      <div key={item._id} className="bg-white border border-slate-100 p-5 rounded-2xl mb-4 shadow-sm">
         <div className="flex justify-between items-start mb-4">
-          <div className={getStatusStyle(item.status ||"Pending")}>
+          <div className={getStatusStyle(item.status || "Pending")}>
              {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
-             {item.status ||"Pending"}
+             {item.status || "Pending"}
           </div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
             {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
           </p>
         </div>
-
-        <h4 className="text-base font-black text-[#0A2F1D] mb-1">
-          {item.placeName || item.wasteType || item.pollutionType ||"Service Request"}
+        <h4 className="text-base font-bold text-slate-800 mb-1">
+          {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
         </h4>
-        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
-           Mission ID: #{item._id?.slice(-8)}
-        </p>
-
-        <div className="flex flex-col gap-3">
-          {(status ==="arrived" || status ==="awaiting payment") && type ==="pickups" ? (
+        <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-widest mb-4">Mission ID: #{item._id?.slice(-8)}</p>
+        <div className="flex flex-col gap-2">
+          {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
             <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
-              <FaCreditCard /> Pay G�50
+              <FaCreditCard /> Pay ₹50
             </button>
-          ) : status ==="collected" && type ==="food" ? (
+          ) : status === "collected" && type === "food" ? (
              !item.donorConfirmedCollection && (
               <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
                 <FaCheck /> Confirm Collection
               </button>
              )
-          ) : status ==="completed" && type ==="pickups" ? (
-            <button onClick={() => generateReceipt(item)} className="w-full bg-[#0A2F1D] text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
+          ) : status === "completed" && type === "pickups" ? (
+            <button onClick={() => generateReceipt(item)} className="w-full bg-slate-800 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
               <FaDownload size={10} /> Get Receipt
             </button>
           ) : null}
-
           {hasVolunteer && !isFinished && (
-            <button
-              onClick={() => handleLiveHelp(item, type)}
-              className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100"
-            >
-              <FaInfoCircle /> {item.helpRequested ?"Signal Active" :"Request Help"}
+            <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100">
+              <FaInfoCircle /> {item.helpRequested ? "Signal Active" : "Request Help"}
             </button>
           )}
-
           {hasVolunteer && isFinished && !item.review && (
-            <button
-              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
-              className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2"
-            >
+            <button onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })} className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2">
               <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
             </button>
           )}
@@ -486,19 +462,21 @@ const Dashboard = () => {
   };
 
   const renderTable = (list, columns, type) => {
-    if (loading && list.length === 0) return <div className="p-10 text-center"><FaSpinner className="animate-spin text-green-600 text-2xl mx-auto" /></div>;
+    if (loading && list.length === 0) return <div className="p-16 text-center"><FaSpinner className="animate-spin text-green-500 text-2xl mx-auto" /></div>;
     if (!list || list.length === 0) return (
-      <div className="p-16 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-transparent">
-        <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">No {type} records found</p>
+      <div className="p-16 text-center rounded-2xl border-2 border-dashed border-slate-200">
+        <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <FaLeaf className="text-slate-400" />
+        </div>
+        <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">No {type} records found</p>
       </div>
     );
-
     return (
       <>
         <div className="hidden md:block overflow-x-auto custom-scrollbar">
-          <table className="w-full text-left border-separate border-spacing-y-2">
+          <table className="w-full text-left border-separate border-spacing-y-1.5">
             <thead>
-              <tr className="text-[11px] uppercase text-gray-400 font-black tracking-[0.2em] px-4">
+              <tr className="text-[10px] uppercase text-slate-400 font-bold tracking-widest">
                 {columns.map(col => <th key={col} className="px-5 py-3">{col}</th>)}
                 <th className="px-5 py-3">Status</th>
                 <th className="px-5 py-3 text-center">Action</th>
@@ -509,107 +487,89 @@ const Dashboard = () => {
                 const status = item.status?.toLowerCase();
                 const isFinished = ["completed","resolved","delivered","success","paid"].includes(status);
                 const hasVolunteer = item.assignedVolunteer || item.claimedBy;
-
                 const startDateTime = new Date(item.createdAt || item.reportedAt);
                 const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
-
                 return (
-                  <tr key={item._id || idx} className="bg-white group hover:bg-[#F4F7F6] transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
-                    {/* TIME SECTION (START & END) */}
-                    <td className="px-5 py-4 text-sm font-bold text-slate-500 first:rounded-l-2xl">
-                      <div className="space-y-2 min-w-[180px]">
-                        {/* Start Time Row */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(99,102,241,0.5)]"></div>
+                  <tr key={item._id || idx} className="bg-white hover:bg-slate-50 transition-all duration-200 border border-slate-100 rounded-xl">
+                    <td className="px-5 py-4 text-sm font-medium text-slate-500 first:rounded-l-xl">
+                      <div className="space-y-1.5 min-w-[180px]">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                           <div className="flex flex-col">
-                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">Start Time</span>
-                            <span className="text-[11px] text-gray-800 font-extrabold flex items-center gap-1.5">
+                            <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">Start</span>
+                            <span className="text-[11px] text-slate-700 font-bold">
                               {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {startDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
                         </div>
-
-                        {/* End Time Row */}
-                        <div className="flex items-center gap-3">
-                          <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-gray-200'}`}></div>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500' : 'bg-slate-200'}`}></div>
                           <div className="flex flex-col">
-                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">End Time</span>
+                            <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">End</span>
                             {endDateTime ? (
-                              <span className="text-[11px] text-emerald-600 font-extrabold">
+                              <span className="text-[11px] text-emerald-600 font-bold">
                                 {endDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {endDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
-                            ) : (
-                              <span className="text-[10px] text-gray-300 italic font-medium tracking-tight">Active Mission...</span>
-                            )}
+                            ) : <span className="text-[10px] text-slate-300 italic">In progress...</span>}
                           </div>
                         </div>
                       </div>
                     </td>
-
-                    {/* DESCRIPTION */}
-                    <td className="px-5 py-4 border-l border-gray-50">
-                      <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
-                        {item.placeName || item.wasteType || item.pollutionType ||"Service Request"}
+                    <td className="px-5 py-4 border-l border-slate-50">
+                      <p className="text-sm text-slate-800 font-bold line-clamp-1">
+                        {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
                       </p>
-                      <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
-                        <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
+                      <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-widest mt-1 flex items-center gap-3">
+                        <span className="flex items-center gap-1"><FaFlag size={8} /> ID: {item._id?.slice(-8)}</span>
                         {item.weight > 0 && <span className="text-emerald-600 flex items-center gap-1"><FaRecycle size={8} /> {item.weight} KG</span>}
                       </p>
                     </td>
-
                     <td className="px-5 py-4">
-                      <span className={getStatusStyle(item.status ||"Pending")}>
+                      <span className={getStatusStyle(item.status || "Pending")}>
                         {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
-                        {item.status ||"Pending"}
+                        {item.status || "Pending"}
                       </span>
                     </td>
-                    <td className="px-5 py-4 last:rounded-r-2xl">
+                    <td className="px-5 py-4 last:rounded-r-xl">
                       <div className="flex flex-col items-center gap-2">
-                        {(status ==="arrived" || status ==="awaiting payment") && type ==="pickups" ? (
-                          <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
-                            <FaCreditCard /> Pay G�50
+                        {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+                          <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 transition-all active:scale-95">
+                            <FaCreditCard /> Pay ₹50
                           </button>
-                        ) : status ==="collected" && type ==="food" ? (
+                        ) : status === "collected" && type === "food" ? (
                           item.donorConfirmedCollection ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
-                              <FaCheck size={10} /> Fully Logged
+                            <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-black uppercase border border-emerald-100">
+                              <FaCheck size={10} /> Logged
                             </div>
                           ) : (
-                            <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 shadow-lg shadow-amber-900/20 transition-all active:scale-95">
+                            <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 transition-all active:scale-95">
                               <FaCheck /> Confirm
                             </button>
                           )
-                        ) : status ==="completed" && type ==="pickups" ? (
-                          <button onClick={() => generateReceipt(item)} className="w-full bg-[#F4F7F6] text-blue-600 border border-transparent px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                        ) : status === "completed" && type === "pickups" ? (
+                          <button onClick={() => generateReceipt(item)} className="w-full bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-slate-800 hover:text-white transition-all">
                             <FaDownload size={10} /> Receipt
                           </button>
-                        ) : <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">Verified</span>}
-
+                        ) : <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">—</span>}
                         {hasVolunteer && (
                           !isFinished ? (
                             item.helpRequested ? (
-                              <div className="flex items-center gap-2 px-4 py-2 bg-sky-50 text-sky-600 rounded-xl text-[10px] font-black uppercase border border-sky-100 animate-pulse">
-                                <FaInfoCircle size={10} /> Signal Active
+                              <div className="flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-600 rounded-lg text-[10px] font-black uppercase border border-sky-100 animate-pulse">
+                                <FaInfoCircle size={10} /> Active
                               </div>
                             ) : (
-                              <button
-                                onClick={() => handleLiveHelp(item, type)}
-                                className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] active:scale-95"
-                              >
-                                <FaInfoCircle /> Live Help
+                              <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-sky-50 text-sky-600 px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all active:scale-95">
+                                <FaInfoCircle /> Help
                               </button>
                             )
                           ) : (
                             item.review ? (
-                              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-transparent opacity-60">
-                                <FaCheckDouble size={10} /> Feedback Logged
+                              <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 text-slate-400 rounded-lg text-[10px] font-black uppercase border border-slate-200">
+                                <FaCheckDouble size={10} /> Reviewed
                               </div>
                             ) : (
-                              <button
-                                onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
-                                className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] active:scale-95"
-                              >
-                                <FaStar /> Review & Report
+                              <button onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })} className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all active:scale-95">
+                                <FaStar /> Review
                               </button>
                             )
                           )
@@ -625,27 +585,15 @@ const Dashboard = () => {
         <div className="md:hidden space-y-4">
           {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(item => renderMobileCard(item, type))}
         </div>
-        
-        {/* Pagination Controls */}
         {list.length > itemsPerPage && (
-          <div className="flex justify-center items-center gap-4 py-8">
-            <button 
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-            >
-              <span className="font-black">&lt;</span>
-            </button>
-            <span className="text-xs font-black uppercase tracking-widest text-slate-400">
-              Page <span className="text-green-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(list.length / itemsPerPage)}
+          <div className="flex justify-center items-center gap-3 py-8">
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
+              className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:border-green-400 hover:text-green-600 disabled:opacity-30 transition-all text-sm font-bold">‹</button>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <span className="text-slate-800">{currentPage}</span> / {Math.ceil(list.length / itemsPerPage)}
             </span>
-            <button 
-              onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
-              disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-            >
-              <span className="font-black">&gt;</span>
-            </button>
+            <button onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))} disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:border-green-400 hover:text-green-600 disabled:opacity-30 transition-all text-sm font-bold">›</button>
           </div>
         )}
       </>
@@ -653,396 +601,332 @@ const Dashboard = () => {
   };
 
   return (
-        <div className="min-h-screen bg-[#F4F7F6] font-sans text-[#0A2F1D] pb-20 relative overflow-hidden">
-      
-      
-      
-      <div className="relative z-10">
-        <Nav />
-        <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
-          {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
-          <div className="lg:col-span-1 space-y-4 md:space-y-6">
-          <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-transparent p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-transparent text-center">
-            <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
-              <div className="relative w-full h-full bg-white rounded-full flex items-center justify-center text-2xl md:text-4xl text-emerald-600 font-black shadow-inner border border-white">
+    <div className="min-h-screen bg-[#F0F2F5] font-sans">
+      <Nav />
+      <div className="flex pt-[68px] min-h-screen">
+
+        {/* ── DARK SIDEBAR ── */}
+        <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40">
+          <div className="p-6 border-b border-white/10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">
                 {currentName.charAt(0).toUpperCase()}
               </div>
+              <div className="overflow-hidden">
+                <p className="text-white font-bold text-sm truncate">{currentName}</p>
+                <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest">Eco Citizen</p>
+              </div>
             </div>
-            <h2 className="text-lg md:text-xl font-black text-slate-800 tracking-tight">{currentName}</h2>
-            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-              Citizen ID: <span className="ml-1 opacity-70">#{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
+            <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
             </div>
           </div>
-          <nav className="flex lg:flex-col gap-3 overflow-x-auto hide-scrollbar pb-4 lg:pb-0 snap-x px-1 lg:px-0">
-            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="profile" icon={FaUser} label="Profile" /></div>
-            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="pickups" icon={FaRecycle} label="Waste" /></div>
-            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution" /></div>
-            <div className="min-w-[140px] lg:min-w-0 lg:w-full snap-start"><TabButton id="food" icon={FaUtensils} label="Food" /></div>
+          <nav className="flex flex-col gap-1 p-4 flex-1">
+            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Navigation</p>
+            <TabButton id="profile" icon={FaUser} label="My Profile" />
+            <TabButton id="pickups" icon={FaRecycle} label="Waste Pickups" />
+            <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution Reports" />
+            <TabButton id="food" icon={FaUtensils} label="Food Sharing" />
           </nav>
+          <div className="p-4 border-t border-white/10">
+            <div className="bg-white/5 rounded-xl p-4">
+              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3">Impact Score</p>
+              <p className="text-3xl font-black text-white"><Counter end={stats.totalImpact} /></p>
+              <p className="text-[10px] text-green-400 font-bold mt-1">Credits Earned</p>
+              <div className="w-full h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
+                <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── MOBILE BOTTOM NAV ── */}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A2332] border-t border-white/10 flex pb-safe">
+          {[
+            { id: "profile", icon: FaUser, label: "Profile" },
+            { id: "pickups", icon: FaRecycle, label: "Waste" },
+            { id: "pollution", icon: FaExclamationTriangle, label: "Pollution" },
+            { id: "food", icon: FaUtensils, label: "Food" },
+          ].map(({ id, icon: Icon, label }) => (
+            <button key={id} onClick={() => setActiveTab(id)}
+              className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === id ? "text-green-400" : "text-slate-500"}`}>
+              <Icon size={16} />
+              {label}
+            </button>
+          ))}
         </div>
 
-        {/* RIGHT COLUMN: Tab Content */}
-        <div className="lg:col-span-3">
-          <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-transparent rounded-[2rem] shadow-xl shadow-slate-200/50 border border-transparent overflow-hidden min-h-[500px]">
-            {activeTab ==="profile" ? (
-               <div className="p-6 md:p-8 animate-in fade-in duration-500">
-                <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
-                  <div>
-                    <h3 className="text-2xl md:text-3xl font-black text-[#0A2F1D] tracking-tight">Main Workspace</h3>
-                    <p className="text-gray-400 font-bold text-xs md:sm">Managing your environmental contribution</p>
-                  </div>
-                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${isEditing ?"bg-red-50 text-red-600 hover:bg-red-100" :"bg-[#F4F7F6] text-slate-600 hover:bg-slate-100 border border-transparent hover:border-slate-300"}`}>
-                    {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
-                  </button>
+        {/* ── MAIN CONTENT ── */}
+        <main className="flex-1 lg:ml-64 pb-24 lg:pb-8">
+          {activeTab === "profile" ? (
+            <div className="p-6 md:p-10 max-w-5xl mx-auto">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">My Dashboard</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Manage your environmental footprint</p>
                 </div>
+                <button onClick={() => setIsEditing(!isEditing)}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${isEditing ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm"}`}>
+                  {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
+                </button>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="p-6 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent rounded-2xl border border-transparent group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
-                        <FaUser size={14} />
-                      </div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Legal Name</p>
-                    </div>
-                    {isEditing ? (
-                      <div className="flex gap-2">
-                        <input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-white border border-slate-300 rounded-2xl px-5 py-3 w-full font-black text-slate-700 outline-none focus:border-green-500 shadow-[0_8px_30px_rgb(0,0,0,0.04)]" />
-                        <button onClick={handleUpdateName} className="bg-[#0A2F1D] text-white px-5 rounded-2xl hover:bg-[#0E3D26] transition-all font-black text-xs shadow-[0_8px_30px_rgb(0,0,0,0.04)]">SAVE</button>
-                      </div>
-                    ) : <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{currentName}</p>}
+              {/* Stats Row */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                {[
+                  { icon: FaRecycle, label: "Waste", val: stats.breakdown?.pickups, color: "text-emerald-600", bg: "bg-emerald-50" },
+                  { icon: FaExclamationTriangle, label: "Pollution", val: stats.breakdown?.pollution, color: "text-rose-600", bg: "bg-rose-50" },
+                  { icon: FaUtensils, label: "Food", val: stats.breakdown?.food, color: "text-amber-600", bg: "bg-amber-50" },
+                ].map((s, i) => (
+                  <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                    <div className={`w-9 h-9 ${s.bg} ${s.color} rounded-xl flex items-center justify-center mb-3`}><s.icon size={15} /></div>
+                    <p className="text-2xl font-black text-slate-800"><Counter end={s.val || 0} /></p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{s.label}</p>
                   </div>
-                  <div className="p-6 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent rounded-2xl border border-transparent group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
-                        <FaClock size={14} />
-                      </div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Contact</p>
-                    </div>
-                    <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{user.phone || 'No phone set'}</p>
+                ))}
+              </div>
+
+              {/* Profile Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center"><FaUser size={13} /></div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Legal Name</p>
                   </div>
+                  {isEditing ? (
+                    <div className="flex gap-2">
+                      <input value={newName} onChange={(e) => setNewName(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 w-full font-bold text-slate-700 outline-none focus:border-green-500 focus:bg-white transition-all text-sm" />
+                      <button onClick={handleUpdateName} className="bg-green-600 text-white px-5 rounded-xl hover:bg-green-700 transition-all font-black text-xs whitespace-nowrap">SAVE</button>
+                    </div>
+                  ) : <p className="text-xl font-black text-slate-800">{currentName}</p>}
                 </div>
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center"><FaClock size={13} /></div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Contact</p>
+                  </div>
+                  <p className="text-xl font-black text-slate-800">{user.phone || 'Not set'}</p>
+                </div>
+              </div>
 
-                {/* =��� SECURITY SECTION */}
-                {isEditing && (
-                  <div className="mb-12 space-y-6 animate-in slide-in-from-top-4 duration-500">
-                    <div className="flex items-center gap-4">
-                      <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-lg">Security Settings</h4>
-                      <div className="h-px bg-gray-100 flex-1"></div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-4">
-                      <button
-                        onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${phoneState.show ? 'bg-[#0A2F1D] text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                      >
-                        <FaEdit size={14} className={phoneState.show ?"text-green-400" :"text-green-600"} /> Update Phone
-                      </button>
-                      <button
-                        onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-100 text-rose-600 hover:bg-rose-50'}`}
-                      >
-                        <FaTimes size={14} /> Account Termination
-                      </button>
-                    </div>
-
-                    {/* Forms ... existing logic remains identical ... */}
-                    {phoneState.show && (
-                      <div className="p-8 bg-green-50 border border-green-100 rounded-3xl shadow-inner animate-in slide-in-from-top-4 duration-300">
-                        {phoneState.step === 1 ? (
-                          <div className="flex flex-wrap gap-4 items-end">
-                            <div className="flex-1 min-w-[240px]">
-                              <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest ml-1">New Mobile Number</label>
-                              <input
-                                type="tel" placeholder="+91..."
-                                value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                                className="w-full bg-white border border-green-200 rounded-2xl px-6 py-4 font-black text-slate-700 outline-none focus:border-green-600 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                              />
-                            </div>
-                            <button
-                              onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                              className="bg-green-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                            >
-                              {phoneState.loading ?"Requesting..." :"Send Verification Code"}
-                            </button>
+              {/* Security */}
+              {isEditing && (
+                <div className="mb-6 space-y-4 animate-in slide-in-from-top-4 duration-300">
+                  <div className="flex items-center gap-3">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Security Settings</p>
+                    <div className="h-px bg-slate-200 flex-1"></div>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
+                      className={`flex-1 min-w-[200px] px-5 py-3.5 border rounded-xl text-[11px] font-black uppercase transition-all flex items-center justify-center gap-2 ${phoneState.show ? 'bg-slate-800 text-white border-slate-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                      <FaEdit size={13} className="text-green-500" /> Update Phone
+                    </button>
+                    <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
+                      className={`flex-1 min-w-[200px] px-5 py-3.5 border rounded-xl text-[11px] font-black uppercase transition-all flex items-center justify-center gap-2 ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-200 text-rose-600 hover:bg-rose-50'}`}>
+                      <FaTimes size={13} /> Account Termination
+                    </button>
+                  </div>
+                  {phoneState.show && (
+                    <div className="p-6 bg-green-50 border border-green-100 rounded-2xl animate-in slide-in-from-top-4 duration-300">
+                      {phoneState.step === 1 ? (
+                        <div className="flex flex-wrap gap-3 items-end">
+                          <div className="flex-1 min-w-[240px]">
+                            <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest">New Mobile Number</label>
+                            <input type="tel" placeholder="+91..." value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
+                              className="w-full bg-white border border-green-200 rounded-xl px-4 py-3 font-bold text-slate-700 outline-none focus:border-green-600 transition-all" />
                           </div>
-                        ) : (
-                          <div className="flex flex-wrap gap-4 items-end">
-                            <div className="flex-1 min-w-[240px]">
-                              <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest ml-1 text-center">Verification Code (Sent to {phoneState.newPhone})</label>
-                              <div className="flex justify-between gap-2 max-w-[320px] mx-auto">
-                                {[0, 1, 2, 3, 4, 5].map((i) => (
-                                  <input
-                                    key={i}
-                                    type="text"
-                                    maxLength="1"
-                                    value={phoneState.otp[i] ||""}
-                                    onChange={(e) => {
-                                      const val = e.target.value.replace(/[^0-9]/g,"");
-                                      let newOtp = phoneState.otp.split("");
-                                      newOtp[i] = val;
-                                      setPhoneState({ ...phoneState, otp: newOtp.join("") });
-                                      if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                                    }}
-                                    className="w-10 h-10 md:w-12 md:h-12 bg-white border border-green-200 rounded-xl font-black text-slate-700 text-center outline-none focus:border-green-600 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-lg"
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                            <button
-                              onClick={handleVerifyPhone} disabled={phoneState.loading}
-                              className="bg-[#0A2F1D] text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-[#0E3D26] transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                            >
-                              {phoneState.loading ?"Verifying..." :"Confirm Protocol"}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {deleteState.show && (
-                      <div className="p-10 bg-rose-50 border border-rose-100 rounded-[3rem] shadow-inner animate-in slide-in-from-top-4 duration-300">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 bg-rose-200 text-rose-700 rounded-full flex items-center justify-center text-xl animate-pulse">G��n+�</div>
-                          <div>
-                            <h4 className="text-xl font-black text-rose-900 tracking-tight">Termination Protocol</h4>
-                            <p className="text-[10px] text-rose-500 font-black uppercase tracking-widest">This action will permanently purge your data.</p>
-                          </div>
+                          <button onClick={handleSendPhoneOtp} disabled={phoneState.loading} className="bg-green-600 text-white px-8 py-3 rounded-xl text-[11px] font-black uppercase hover:bg-green-700 transition-all">
+                            {phoneState.loading ? "Sending..." : "Send Code"}
+                          </button>
                         </div>
-
-                        {deleteState.step !== 2 ? (
-                          <div className="space-y-5">
-                            <textarea
-                              placeholder="Reason for leaving (debrief)..."
-                              value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
-                              className="w-full bg-white border-2 border-rose-200 rounded-3xl p-6 font-bold text-gray-700 outline-none focus:border-rose-500 transition-all min-h-[120px] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                            />
-                            <button
-                              onClick={handleDeleteRequest} disabled={deleteState.loading}
-                              className="w-full bg-rose-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all shadow-xl shadow-rose-900/20 active:scale-95"
-                            >
-                              {deleteState.loading ?"Processing..." :"Initiate Verification"}
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="space-y-5">
-                            <div className="flex justify-between gap-2 max-w-[350px] mx-auto">
-                              {[0, 1, 2, 3, 4, 5].map((i) => (
-                                <input
-                                  key={i}
-                                  type="text"
-                                  maxLength="1"
-                                  value={deleteState.otp[i] ||""}
-                                  onChange={(e) => {
-                                    const val = e.target.value.replace(/[^0-9]/g,"");
-                                    let newOtp = deleteState.otp.split("");
-                                    newOtp[i] = val;
-                                    setDeleteState({ ...deleteState, otp: newOtp.join("") });
-                                    if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                                  }}
-                                  className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-[#0A2F1D] text-center outline-none focus:border-rose-900 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-lg"
-                                />
+                      ) : (
+                        <div className="flex flex-wrap gap-3 items-end">
+                          <div className="flex-1 min-w-[240px]">
+                            <label className="text-[10px] font-black text-green-700 uppercase mb-2 block tracking-widest text-center">Code sent to {phoneState.newPhone}</label>
+                            <div className="flex justify-center gap-2">
+                              {[0,1,2,3,4,5].map((i) => (
+                                <input key={i} type="text" maxLength="1" value={phoneState.otp[i] || ""}
+                                  onChange={(e) => { const val = e.target.value.replace(/[^0-9]/g,""); let o = phoneState.otp.split(""); o[i]=val; setPhoneState({...phoneState,otp:o.join("")}); if(val&&e.target.nextSibling)e.target.nextSibling.focus(); }}
+                                  className="w-10 h-10 bg-white border border-green-200 rounded-lg font-black text-slate-700 text-center outline-none focus:border-green-600 transition-all text-lg" />
                               ))}
                             </div>
-                            <button
-                              onClick={handleFinalDelete} disabled={deleteState.loading}
-                              className="w-full bg-black text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-900 transition-all shadow-2xl active:scale-95"
-                            >
-                              {deleteState.loading ?"Purging..." :"FINALIZE ACCOUNT DELETION"}
-                            </button>
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="bg-[#0A2F1D] p-8 md:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden group border border-[#062013]">
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/10 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
-
-                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
-                    <div className="md:col-span-3 text-center md:text-left">
-                      <h4 className="text-green-400 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
-                      <div className="flex flex-col md:flex-row items-center md:items-baseline gap-2 md:gap-4 mb-2">
-                        <span className="text-6xl md:text-8xl font-black tracking-tighter text-white">
-                          <Counter end={stats.totalImpact} />
-                        </span>
-                        <div className="space-y-0.5 md:space-y-1">
-                          <p className="text-xl md:text-2xl font-black text-green-400">CREDITS</p>
-                          <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-300">Total Life Impact</p>
+                          <button onClick={handleVerifyPhone} disabled={phoneState.loading} className="bg-slate-800 text-white px-8 py-3 rounded-xl text-[11px] font-black uppercase hover:bg-slate-900 transition-all">
+                            {phoneState.loading ? "Verifying..." : "Confirm"}
+                          </button>
                         </div>
-                      </div>
-                      <div className="w-full h-1.5 md:h-2 bg-[#0E3D26] rounded-full mt-6 overflow-hidden">
-                        <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></div>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-2 space-y-3 md:space-y-4">
-                      {[
-                        { icon: FaRecycle, color: "text-emerald-400", bg: "bg-[#0E3D26]", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
-                        { icon: FaExclamationTriangle, color: "text-rose-400", bg: "bg-[#0E3D26]", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
-                        { icon: FaUtensils, color: "text-amber-400", bg: "bg-[#0E3D26]", label: "Food Donations", val: stats.breakdown?.food, suffix: " meals" }
-                      ].map((item, i) => (
-                        <div key={i} className={`${item.bg} px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-[#0A2F1D] hover:bg-[#134D30] transition-all cursor-default group/item`}>
-                          <div className={`p-2 rounded-xl bg-[#0A2F1D] ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
-                            <item.icon size={14} className="md:w-4 md:h-4" />
-                          </div>
-                          <div>
-                            <p className="text-[8px] md:text-[9px] uppercase font-black text-slate-400 tracking-widest">{item.label}</p>
-                            <p className="text-lg md:text-xl font-bold flex items-center gap-1 text-white">
-                              <Counter end={item.val || 0} />
-                              <span className="text-[12px] md:text-[14px] opacity-40 text-slate-300">{item.suffix}</span>
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="p-8 md:p-12 animate-in slide-in-from-bottom-4 duration-500">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
-                  <div>
-                    <h3 className="text-3xl font-black text-[#0A2F1D] tracking-tight capitalize">{activeTab} Activity Log</h3>
-                    <p className="text-gray-400 font-bold text-sm tracking-tight">Monitoring your environmental mission history</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3">
-                    {/* Status Filter */}
-                    <div className="flex bg-slate-100 p-1 rounded-xl">
-                      {["all","pending","active","completed"].map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => setStatusFilter(s)}
-                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ?"bg-white text-green-600 shadow-[0_8px_30px_rgb(0,0,0,0.04)]" :"text-slate-400 hover:text-slate-600"}`}
-                        >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Month Filter */}
-                    <div className="flex bg-slate-100 p-1 rounded-xl items-center">
-                      <input
-                        type="month"
-                        value={monthFilter}
-                        onChange={(e) => setMonthFilter(e.target.value)}
-                        className="bg-transparent text-[10px] font-black uppercase text-gray-500 outline-none px-3 py-1 border-none w-[110px] cursor-pointer"
-                      />
-                      {monthFilter && (
-                        <button onClick={() => setMonthFilter("")} className="px-2 text-rose-500 hover:text-rose-700 transition-all">
-                          <FaTimes size={10} />
-                        </button>
                       )}
                     </div>
+                  )}
+                  {deleteState.show && (
+                    <div className="p-6 bg-rose-50 border border-rose-100 rounded-2xl animate-in slide-in-from-top-4 duration-300">
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-10 h-10 bg-rose-200 text-rose-700 rounded-full flex items-center justify-center text-lg animate-pulse">⚠</div>
+                        <div>
+                          <h4 className="text-lg font-black text-rose-900">Termination Protocol</h4>
+                          <p className="text-[10px] text-rose-500 font-bold uppercase tracking-widest">This permanently deletes your account.</p>
+                        </div>
+                      </div>
+                      {deleteState.step !== 2 ? (
+                        <div className="space-y-4">
+                          <textarea placeholder="Reason for leaving..." value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
+                            className="w-full bg-white border-2 border-rose-200 rounded-xl p-4 font-medium text-gray-700 outline-none focus:border-rose-500 transition-all min-h-[100px]" />
+                          <button onClick={handleDeleteRequest} disabled={deleteState.loading} className="w-full bg-rose-600 text-white py-4 rounded-xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all active:scale-95">
+                            {deleteState.loading ? "Processing..." : "Initiate Verification"}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="flex justify-center gap-2">
+                            {[0,1,2,3,4,5].map((i) => (
+                              <input key={i} type="text" maxLength="1" value={deleteState.otp[i] || ""}
+                                onChange={(e) => { const val = e.target.value.replace(/[^0-9]/g,""); let o = deleteState.otp.split(""); o[i]=val; setDeleteState({...deleteState,otp:o.join("")}); if(val&&e.target.nextSibling)e.target.nextSibling.focus(); }}
+                                className="w-10 h-10 bg-white border-2 border-rose-200 rounded-lg font-black text-slate-800 text-center outline-none focus:border-rose-900 transition-all text-lg" />
+                            ))}
+                          </div>
+                          <button onClick={handleFinalDelete} disabled={deleteState.loading} className="w-full bg-slate-900 text-white py-4 rounded-xl text-[11px] font-black uppercase hover:bg-rose-900 transition-all active:scale-95">
+                            {deleteState.loading ? "Purging..." : "Finalize Account Deletion"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Impact Banner */}
+              <div className="bg-[#1A2332] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-green-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8">
+                  <div className="flex-1 text-center md:text-left">
+                    <p className="text-green-400 text-[10px] font-black uppercase tracking-widest mb-3">Contribution Excellence</p>
+                    <div className="flex items-baseline gap-3 justify-center md:justify-start">
+                      <span className="text-6xl font-black text-white"><Counter end={stats.totalImpact} /></span>
+                      <span className="text-2xl font-black text-green-400">CREDITS</span>
+                    </div>
+                    <p className="text-slate-400 text-xs font-medium mt-2">Total environmental impact score</p>
+                    <div className="w-full max-w-xs h-2 bg-white/10 rounded-full mt-4 overflow-hidden mx-auto md:mx-0">
+                      <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_12px_rgba(34,197,94,0.5)]"></div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3 w-full md:w-64 shrink-0">
+                    {[
+                      { icon: FaRecycle, label: "Waste Managed", val: stats.breakdown?.pickups, color: "text-emerald-400" },
+                      { icon: FaExclamationTriangle, label: "Pollution Cases", val: stats.breakdown?.pollution, color: "text-rose-400" },
+                      { icon: FaUtensils, label: "Food Donations", val: stats.breakdown?.food, color: "text-amber-400" },
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl px-4 py-3 hover:bg-white/10 transition-all">
+                        <s.icon size={14} className={s.color} />
+                        <div>
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</p>
+                          <p className="text-base font-black text-white"><Counter end={s.val || 0} /></p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {renderTable(getFilteredData(), ["Service Period","Description"], activeTab)}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          ) : (
+            <div className="p-6 md:p-10 max-w-6xl mx-auto">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-5 mb-8">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-800 tracking-tight capitalize">{activeTab} Activity</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Your environmental mission history</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+                    {["all","pending","active","completed"].map((s) => (
+                      <button key={s} onClick={() => setStatusFilter(s)}
+                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ? "bg-green-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-700"}`}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm items-center px-2">
+                    <input type="month" value={monthFilter} onChange={(e) => setMonthFilter(e.target.value)}
+                      className="bg-transparent text-[10px] font-bold text-slate-500 outline-none w-[110px] cursor-pointer" />
+                    {monthFilter && (
+                      <button onClick={() => setMonthFilter("")} className="ml-1 text-rose-400 hover:text-rose-600 transition-all"><FaTimes size={9} /></button>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6">
+                {renderTable(getFilteredData(), ["Service Period", "Description"], activeTab)}
+              </div>
+            </div>
+          )}
+        </main>
       </div>
+
       <div id="recaptcha-container"></div>
 
-      {/* =�� REVIEW & REPORT MODAL */}
+      {/* ── REVIEW MODAL ── */}
       {reviewModal.show && (
-        <div className="fixed inset-0 bg-[#0A2F1D]/40  z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
-            <div className="bg-amber-50 p-8 flex justify-between items-center border-b border-amber-100">
+        <div className="fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
+            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 flex justify-between items-center">
               <div>
-                <h3 className="text-xl font-black text-amber-900 tracking-tight">Mission Debrief</h3>
-                <p className="text-[10px] text-amber-600 font-bold uppercase tracking-widest">Rate your volunteer & Report issues</p>
+                <h3 className="text-lg font-black text-white">Mission Debrief</h3>
+                <p className="text-[10px] text-amber-100 font-bold uppercase tracking-widest">Rate your volunteer & report issues</p>
               </div>
-              <button
-                onClick={() => setReviewModal({ show: false, item: null, type:"", rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-amber-900 hover:rotate-90 transition-transform shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-              >
-                <FaTimes />
+              <button onClick={() => setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-all hover:rotate-90">
+                <FaTimes size={13} />
               </button>
             </div>
-
-            <div className="p-8 space-y-8">
-              {/* Star Rating */}
-              <div className="text-center space-y-4">
-                <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Volunteer Performance</p>
+            <div className="p-6 space-y-6">
+              <div className="text-center space-y-3">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Volunteer Performance</p>
                 <div className="flex justify-center gap-2">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setReviewModal(prev => ({ ...prev, rating: s }))}
-                      className={`text-3xl transition-all transform active:scale-75 ${reviewModal.rating >= s ?"text-amber-500 scale-110" :"text-slate-200 hover:text-amber-200"}`}
-                    >
+                  {[1,2,3,4,5].map((s) => (
+                    <button key={s} onClick={() => setReviewModal(prev => ({ ...prev, rating: s }))}
+                      className={`text-3xl transition-all active:scale-75 ${reviewModal.rating >= s ? "text-amber-400 scale-110" : "text-slate-200 hover:text-amber-200"}`}>
                       <FaStar />
                     </button>
                   ))}
                 </div>
               </div>
-
-              {/* Feedback Comment */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Optional Feedback</label>
-                <textarea
-                  placeholder="Share your experience with this service..."
-                  value={reviewModal.comment}
+              <div>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Feedback (optional)</label>
+                <textarea placeholder="Share your experience..." value={reviewModal.comment}
                   onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
-                  className="w-full bg-[#F4F7F6] border-2 border-slate-100 rounded-2xl p-4 font-bold text-gray-700 outline-none focus:border-amber-400 transition-all min-h-[100px]"
-                />
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 font-medium text-slate-700 outline-none focus:border-amber-400 transition-all min-h-[90px] resize-none" />
               </div>
-
-              {/* Report Issue Toggle */}
-              <div className="pt-4 border-t border-transparent">
-                <button
-                  onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ?"bg-red-50 text-red-700 shadow-inner" :"bg-gray-50 text-gray-400 hover:bg-gray-100"}`}
-                >
-                  <span className="text-[11px] font-black uppercase flex items-center gap-2">
-                    <FaExclamationTriangle /> Add Issue Report
-                  </span>
-                  <div className={`w-4 h-4 rounded-full border-2 transition-all ${reviewModal.isReport ?"bg-red-500 border-red-500" :"border-gray-300"}`}></div>
+              <div className="border-t border-slate-100 pt-4">
+                <button onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
+                  className={`w-full p-3.5 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ? "bg-red-50 text-red-700" : "bg-slate-50 text-slate-500 hover:bg-slate-100"}`}>
+                  <span className="text-[11px] font-black uppercase flex items-center gap-2"><FaExclamationTriangle /> Report an Issue</span>
+                  <div className={`w-4 h-4 rounded-full border-2 transition-all ${reviewModal.isReport ? "bg-red-500 border-red-500" : "border-slate-300"}`}></div>
                 </button>
-
                 {reviewModal.isReport && (
-                  <div className="mt-4 animate-in slide-in-from-top-2 duration-200">
-                    <textarea
-                      placeholder="Describe the problem in detail (required)..."
-                      required
-                      value={reviewModal.reportReason}
+                  <div className="mt-3 animate-in slide-in-from-top-2 duration-200">
+                    <textarea placeholder="Describe the problem (required)..." required value={reviewModal.reportReason}
                       onChange={(e) => setReviewModal(prev => ({ ...prev, reportReason: e.target.value }))}
-                      className="w-full bg-red-50/50 border-2 border-red-100 rounded-2xl p-4 font-bold text-red-900 outline-none focus:border-red-400 transition-all"
-                    />
+                      className="w-full bg-red-50 border border-red-200 rounded-xl p-4 font-medium text-red-900 outline-none focus:border-red-400 transition-all resize-none" />
                   </div>
                 )}
               </div>
-
-              <button
-                onClick={handleReviewSubmit}
-                disabled={reviewModal.loading}
-                className="w-full bg-green-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-xl shadow-green-900/20 active:scale-95 disabled:opacity-50"
-              >
-                {reviewModal.loading ?"Uploading Data..." :"Finalize Review"}
+              <button onClick={handleReviewSubmit} disabled={reviewModal.loading}
+                className="w-full bg-green-600 text-white py-4 rounded-xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-lg shadow-green-600/30 active:scale-95 disabled:opacity-50">
+                {reviewModal.loading ? "Submitting..." : "Submit Review"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Custom Styles for Dashboard */}
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
       `}</style>
-      </div>
     </div>
   );
 };
 
 export default Dashboard;
-
-
-
-
-
