@@ -403,7 +403,7 @@ const Dashboard = () => {
           : "text-slate-400 hover:bg-white/10 hover:text-white"
       }`}
     >
-      <div className={`p-2 rounded-lg ${activeTab === id ? "bg-white/20" : "bg-white/5"}`}>
+      <div className={`p-2 rounded-lg ${activeTab === id ? "bg-green-200/50 text-green-600" : "bg-slate-100 text-slate-400"}`}>
         <Icon size={14} />
       </div>
       {label}
@@ -602,13 +602,13 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F2F5] font-sans">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <Nav />
       <div className="flex pt-[68px] min-h-screen">
 
         {/* ── DARK SIDEBAR ── */}
         <aside className="hidden lg:flex w-64 bg-[#1A2332] flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto z-40 border-r border-white/10 shadow-2xl rounded-tr-[2rem] rounded-br-[2rem]">
-          <div className="p-6 border-b border-white/10">
+          <div className="p-6 border-b border-slate-100">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">
                 {currentName.charAt(0).toUpperCase()}
@@ -624,7 +624,7 @@ const Dashboard = () => {
             </div>
           </div>
           <nav className="flex flex-col gap-1 p-4 flex-1">
-            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Navigation</p>
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Navigation</p>
             <TabButton id="profile" icon={FaUser} label="My Profile" />
             <TabButton id="pickups" icon={FaRecycle} label="Waste Pickups" />
             <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution Reports" />
@@ -643,7 +643,7 @@ const Dashboard = () => {
         </aside>
 
         {/* ── MOBILE BOTTOM NAV ── */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A2332] border-t border-white/10 flex">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 flex shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
           {[
             { id: "profile", icon: FaUser, label: "Profile" },
             { id: "pickups", icon: FaRecycle, label: "Waste" },
@@ -651,7 +651,7 @@ const Dashboard = () => {
             { id: "food", icon: FaUtensils, label: "Food" },
           ].map(({ id, icon: Icon, label }) => (
             <button key={id} onClick={() => setActiveTab(id)}
-              className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === id ? "text-green-400" : "text-slate-500"}`}>
+              className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === id ? "text-green-600" : "text-slate-400"}`}>
               <Icon size={16} />
               {label}
             </button>
@@ -681,7 +681,7 @@ const Dashboard = () => {
                 </div>
                 <button onClick={() => setIsEditing(!isEditing)}
                   className={`relative z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all shrink-0 ${
-                    isEditing ? "bg-red-500/20 text-red-400 hover:bg-red-500/30" : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
+                    isEditing ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200"
                   }`}>
                   {isEditing ? <><FaTimes size={12} /> Cancel</> : <><FaEdit size={12} /> Edit Profile</>}
                 </button>
