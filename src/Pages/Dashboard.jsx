@@ -412,7 +412,7 @@ const Dashboard = () => {
         }`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
-        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white" :"bg-slate-50 group-hover:bg-slate-100"}`}>
+        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white text-green-600" :"bg-slate-50 group-hover:bg-slate-100"}`}>
           <Icon size={14} className="md:w-4.5 md:h-4.5" />
         </div>
         {label}
@@ -856,13 +856,12 @@ const Dashboard = () => {
                   </div>
                 )}
 
-                {/* =��� THE IMPACT CARD */}
-                <div className="bg-slate-50 p-8 md:p-10 rounded-3xl text-white shadow-2xl relative overflow-hidden group border border-green-800">
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-white -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
+                <div className="bg-slate-900 p-8 md:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden group border border-slate-800">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/10 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
                     <div className="md:col-span-3 text-center md:text-left">
-                      <h4 className="text-green-300 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
+                      <h4 className="text-green-400 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-4">Contribution Excellence</h4>
                       <div className="flex flex-col md:flex-row items-center md:items-baseline gap-2 md:gap-4 mb-2">
                         <span className="text-6xl md:text-8xl font-black tracking-tighter text-white">
                           <Counter end={stats.totalImpact} />
@@ -872,19 +871,19 @@ const Dashboard = () => {
                           <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-300">Total Life Impact</p>
                         </div>
                       </div>
-                      <div className="w-full h-1.5 md:h-2 bg-white rounded-full mt-6 overflow-hidden">
-                        <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
+                      <div className="w-full h-1.5 md:h-2 bg-slate-800 rounded-full mt-6 overflow-hidden">
+                        <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></div>
                       </div>
                     </div>
 
                     <div className="md:col-span-2 space-y-3 md:space-y-4">
                       {[
-                        { icon: FaRecycle, color:"text-emerald-400", bg:"bg-white", label:"Waste Managed", val: stats.breakdown?.pickups, suffix:"+" },
-                        { icon: FaExclamationTriangle, color:"text-rose-400", bg:"bg-white", label:"Pollution Cases", val: stats.breakdown?.pollution, suffix:"!" },
-                        { icon: FaUtensils, color:"text-amber-400", bg:"bg-white", label:"Food Donations", val: stats.breakdown?.food, suffix:"G��" }
+                        { icon: FaRecycle, color: "text-emerald-400", bg: "bg-slate-800", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
+                        { icon: FaExclamationTriangle, color: "text-rose-400", bg: "bg-slate-800", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
+                        { icon: FaUtensils, color: "text-amber-400", bg: "bg-slate-800", label: "Food Donations", val: stats.breakdown?.food, suffix: " meals" }
                       ].map((item, i) => (
-                        <div key={i} className={`${item.bg}  px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-slate-200 hover:bg-white transition-all cursor-default group/item`}>
-                          <div className={`p-2 rounded-xl bg-white ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
+                        <div key={i} className={`${item.bg} px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-slate-700 hover:bg-slate-700 transition-all cursor-default group/item`}>
+                          <div className={`p-2 rounded-xl bg-slate-900 ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
                             <item.icon size={14} className="md:w-4 md:h-4" />
                           </div>
                           <div>
