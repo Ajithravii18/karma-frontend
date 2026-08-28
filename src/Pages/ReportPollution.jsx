@@ -128,13 +128,13 @@ function PollutionReport() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-10 relative">
+    <div className="min-h-screen bg-[#F4F7F6] font-sans text-[#0A2F1D] pb-10 relative">
       <Nav />
       <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* LEFT PANE */}
-          <div className="flex flex-col justify-between bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-sm border border-gray-100 min-h-[680px]">
+          <div className="flex flex-col justify-between bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px]">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E9F5EC] rounded-full text-[#0B7A30] text-[10px] font-black tracking-widest uppercase mb-10">
                 <span className="w-2 h-2 rounded-full bg-[#09B948]"></span>
@@ -152,15 +152,15 @@ function PollutionReport() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center min-h-[160px]">
+              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
                 <div className="w-10 h-10 rounded-full bg-[#E9F5EC] text-[#0B7A30] flex items-center justify-center mb-4">
                   <FaCrosshairs size={16} />
                 </div>
                 <h4 className="font-black text-[#1A2530] text-lg mb-1">Pinpoint Accuracy</h4>
                 <p className="text-sm font-medium text-gray-500 leading-relaxed">GPS location helps fast verification.</p>
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-slate-50 text-[#EA580C] flex items-center justify-center mb-4">
+              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
+                <div className="w-10 h-10 rounded-full bg-[#F4F7F6] text-[#EA580C] flex items-center justify-center mb-4">
                   <FaCamera size={16} />
                 </div>
                 <h4 className="font-black text-[#1A2530] text-lg mb-1">Visual Evidence</h4>
@@ -170,7 +170,7 @@ function PollutionReport() {
           </div>
 
           {/* RIGHT PANE (FORM) */}
-          <div className="bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-sm border border-gray-100 min-h-[680px] flex flex-col justify-center">
+          <div className="bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px] flex flex-col justify-center">
             <form onSubmit={handleSubmit} className="space-y-6">
 
               <div className="space-y-2">
@@ -180,7 +180,7 @@ function PollutionReport() {
                 <select
                   value={pollutionType}
                   onChange={(e) => setPollutionType(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                  className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
                   required
                 >
                   <option value="">Select Category...</option>
@@ -197,7 +197,7 @@ function PollutionReport() {
                   placeholder="Describe the environmental hazard..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
+                  className="w-full bg-[#F4F7F6] border-transparent rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
                   required
                 />
               </div>
@@ -209,7 +209,7 @@ function PollutionReport() {
                 </label>
                 <div
                   onClick={() => fileInputRef.current.click()}
-                  className="w-full bg-slate-50 border-2 border-dashed border-gray-300 rounded-3xl px-5 py-8 text-center cursor-pointer hover:bg-white hover:border-[#09B948] transition-all group flex flex-col items-center justify-center"
+                  className="w-full bg-[#F4F7F6] border-2 border-dashed border-gray-300 rounded-3xl px-5 py-8 text-center cursor-pointer hover:bg-white hover:border-[#09B948] transition-all group flex flex-col items-center justify-center"
                 >
                   <FaCamera className="text-gray-400 group-hover:text-[#09B948] mb-2 transition-colors" size={24} />
                   <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">
@@ -220,7 +220,7 @@ function PollutionReport() {
                 {photos.length > 0 && (
                   <div className="grid grid-cols-4 gap-3 mt-3">
                     {photos.map((file, index) => (
-                      <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-sm group">
+                      <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
                         <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
                         <button
                           type="button"

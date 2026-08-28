@@ -395,7 +395,7 @@ const Dashboard = () => {
         return `${base} bg-sky-100 text-sky-700 border-sky-200`;
 
       case 'available':
-        return `${base} bg-emerald-100 text-emerald-700 border-emerald-200 shadow-sm`;
+        return `${base} bg-emerald-100 text-emerald-700 border-emerald-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]`;
 
       default:
         return `${base} bg-orange-50 text-orange-600 border-orange-100`;
@@ -408,11 +408,11 @@ const Dashboard = () => {
       onClick={() => setActiveTab(id)}
       className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
         ?"bg-green-600 text-white shadow-md border-green-600"
-        :"bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm"
+        :"bg-white text-slate-500 border-transparent hover:border-slate-300 hover:text-[#0A2F1D] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
         }`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
-        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white text-green-600" :"bg-slate-50 group-hover:bg-slate-100"}`}>
+        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white text-green-600" :"bg-[#F4F7F6] group-hover:bg-slate-100"}`}>
           <Icon size={14} className="md:w-4.5 md:h-4.5" />
         </div>
         {label}
@@ -428,7 +428,7 @@ const Dashboard = () => {
     const startDateTime = new Date(item.createdAt || item.reportedAt);
 
     return (
-      <div key={item._id} className="bg-white shadow-sm border border-slate-200 p-5 rounded-2xl border border-slate-200 shadow-sm mb-4">
+      <div key={item._id} className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent p-5 rounded-2xl border border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-4">
         <div className="flex justify-between items-start mb-4">
           <div className={getStatusStyle(item.status ||"Pending")}>
              {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
@@ -439,7 +439,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <h4 className="text-base font-black text-gray-900 mb-1">
+        <h4 className="text-base font-black text-[#0A2F1D] mb-1">
           {item.placeName || item.wasteType || item.pollutionType ||"Service Request"}
         </h4>
         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
@@ -458,7 +458,7 @@ const Dashboard = () => {
               </button>
              )
           ) : status ==="completed" && type ==="pickups" ? (
-            <button onClick={() => generateReceipt(item)} className="w-full bg-slate-900 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
+            <button onClick={() => generateReceipt(item)} className="w-full bg-[#0A2F1D] text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
               <FaDownload size={10} /> Get Receipt
             </button>
           ) : null}
@@ -488,7 +488,7 @@ const Dashboard = () => {
   const renderTable = (list, columns, type) => {
     if (loading && list.length === 0) return <div className="p-10 text-center"><FaSpinner className="animate-spin text-green-600 text-2xl mx-auto" /></div>;
     if (!list || list.length === 0) return (
-      <div className="p-16 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-100">
+      <div className="p-16 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-transparent">
         <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">No {type} records found</p>
       </div>
     );
@@ -514,7 +514,7 @@ const Dashboard = () => {
                 const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
 
                 return (
-                  <tr key={item._id || idx} className="bg-white group hover:bg-slate-50 transition-all duration-300 shadow-sm border border-slate-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
+                  <tr key={item._id || idx} className="bg-white group hover:bg-[#F4F7F6] transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
                     {/* TIME SECTION (START & END) */}
                     <td className="px-5 py-4 text-sm font-bold text-slate-500 first:rounded-l-2xl">
                       <div className="space-y-2 min-w-[180px]">
@@ -580,7 +580,7 @@ const Dashboard = () => {
                             </button>
                           )
                         ) : status ==="completed" && type ==="pickups" ? (
-                          <button onClick={() => generateReceipt(item)} className="w-full bg-slate-50 text-blue-600 border border-slate-200 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                          <button onClick={() => generateReceipt(item)} className="w-full bg-[#F4F7F6] text-blue-600 border border-transparent px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                             <FaDownload size={10} /> Receipt
                           </button>
                         ) : <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">Verified</span>}
@@ -594,20 +594,20 @@ const Dashboard = () => {
                             ) : (
                               <button
                                 onClick={() => handleLiveHelp(item, type)}
-                                className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] active:scale-95"
                               >
                                 <FaInfoCircle /> Live Help
                               </button>
                             )
                           ) : (
                             item.review ? (
-                              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
+                              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-transparent opacity-60">
                                 <FaCheckDouble size={10} /> Feedback Logged
                               </div>
                             ) : (
                               <button
                                 onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
-                                className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] active:scale-95"
                               >
                                 <FaStar /> Review & Report
                               </button>
@@ -632,7 +632,7 @@ const Dashboard = () => {
             <button 
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
             >
               <span className="font-black">&lt;</span>
             </button>
@@ -642,7 +642,7 @@ const Dashboard = () => {
             <button 
               onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
               disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
             >
               <span className="font-black">&gt;</span>
             </button>
@@ -653,7 +653,7 @@ const Dashboard = () => {
   };
 
   return (
-        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 relative overflow-hidden">
+        <div className="min-h-screen bg-[#F4F7F6] font-sans text-[#0A2F1D] pb-20 relative overflow-hidden">
       
       
       
@@ -662,14 +662,14 @@ const Dashboard = () => {
         <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
           {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
           <div className="lg:col-span-1 space-y-4 md:space-y-6">
-          <div className="bg-white shadow-sm border-slate-200 p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-200 text-center">
+          <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-transparent p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-transparent text-center">
             <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
               <div className="relative w-full h-full bg-white rounded-full flex items-center justify-center text-2xl md:text-4xl text-emerald-600 font-black shadow-inner border border-white">
                 {currentName.charAt(0).toUpperCase()}
               </div>
             </div>
             <h2 className="text-lg md:text-xl font-black text-slate-800 tracking-tight">{currentName}</h2>
-            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-sm">
+            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
               Citizen ID: <span className="ml-1 opacity-70">#{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
             </div>
           </div>
@@ -683,21 +683,21 @@ const Dashboard = () => {
 
         {/* RIGHT COLUMN: Tab Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white shadow-sm border-slate-200 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden min-h-[500px]">
+          <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-transparent rounded-[2rem] shadow-xl shadow-slate-200/50 border border-transparent overflow-hidden min-h-[500px]">
             {activeTab ==="profile" ? (
                <div className="p-6 md:p-8 animate-in fade-in duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Main Workspace</h3>
+                    <h3 className="text-2xl md:text-3xl font-black text-[#0A2F1D] tracking-tight">Main Workspace</h3>
                     <p className="text-gray-400 font-bold text-xs md:sm">Managing your environmental contribution</p>
                   </div>
-                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-sm ${isEditing ?"bg-red-50 text-red-600 hover:bg-red-100" :"bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 hover:border-slate-300"}`}>
+                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${isEditing ?"bg-red-50 text-red-600 hover:bg-red-100" :"bg-[#F4F7F6] text-slate-600 hover:bg-slate-100 border border-transparent hover:border-slate-300"}`}>
                     {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="p-6 bg-white shadow-sm border border-slate-200 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent rounded-2xl border border-transparent group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaUser size={14} />
@@ -706,12 +706,12 @@ const Dashboard = () => {
                     </div>
                     {isEditing ? (
                       <div className="flex gap-2">
-                        <input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-white border border-slate-300 rounded-2xl px-5 py-3 w-full font-black text-slate-700 outline-none focus:border-green-500 shadow-sm" />
-                        <button onClick={handleUpdateName} className="bg-slate-900 text-white px-5 rounded-2xl hover:bg-slate-800 transition-all font-black text-xs shadow-sm">SAVE</button>
+                        <input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-white border border-slate-300 rounded-2xl px-5 py-3 w-full font-black text-slate-700 outline-none focus:border-green-500 shadow-[0_8px_30px_rgb(0,0,0,0.04)]" />
+                        <button onClick={handleUpdateName} className="bg-[#0A2F1D] text-white px-5 rounded-2xl hover:bg-[#0E3D26] transition-all font-black text-xs shadow-[0_8px_30px_rgb(0,0,0,0.04)]">SAVE</button>
                       </div>
                     ) : <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{currentName}</p>}
                   </div>
-                  <div className="p-6 bg-white shadow-sm border border-slate-200 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent rounded-2xl border border-transparent group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaClock size={14} />
@@ -733,13 +733,13 @@ const Dashboard = () => {
                     <div className="flex flex-wrap gap-4">
                       <button
                         onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-sm ${phoneState.show ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${phoneState.show ? 'bg-[#0A2F1D] text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                       >
                         <FaEdit size={14} className={phoneState.show ?"text-green-400" :"text-green-600"} /> Update Phone
                       </button>
                       <button
                         onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-sm ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-100 text-rose-600 hover:bg-rose-50'}`}
+                        className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${deleteState.show ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-rose-100 text-rose-600 hover:bg-rose-50'}`}
                       >
                         <FaTimes size={14} /> Account Termination
                       </button>
@@ -755,12 +755,12 @@ const Dashboard = () => {
                               <input
                                 type="tel" placeholder="+91..."
                                 value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                                className="w-full bg-white border border-green-200 rounded-2xl px-6 py-4 font-black text-slate-700 outline-none focus:border-green-600 transition-all shadow-sm"
+                                className="w-full bg-white border border-green-200 rounded-2xl px-6 py-4 font-black text-slate-700 outline-none focus:border-green-600 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                               />
                             </div>
                             <button
                               onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                              className="bg-green-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-sm"
+                              className="bg-green-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                             >
                               {phoneState.loading ?"Requesting..." :"Send Verification Code"}
                             </button>
@@ -783,14 +783,14 @@ const Dashboard = () => {
                                       setPhoneState({ ...phoneState, otp: newOtp.join("") });
                                       if (val && e.target.nextSibling) e.target.nextSibling.focus();
                                     }}
-                                    className="w-10 h-10 md:w-12 md:h-12 bg-white border border-green-200 rounded-xl font-black text-slate-700 text-center outline-none focus:border-green-600 transition-all shadow-sm text-lg"
+                                    className="w-10 h-10 md:w-12 md:h-12 bg-white border border-green-200 rounded-xl font-black text-slate-700 text-center outline-none focus:border-green-600 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-lg"
                                   />
                                 ))}
                               </div>
                             </div>
                             <button
                               onClick={handleVerifyPhone} disabled={phoneState.loading}
-                              className="bg-slate-900 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-slate-800 transition-all shadow-sm"
+                              className="bg-[#0A2F1D] text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-[#0E3D26] transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                             >
                               {phoneState.loading ?"Verifying..." :"Confirm Protocol"}
                             </button>
@@ -814,7 +814,7 @@ const Dashboard = () => {
                             <textarea
                               placeholder="Reason for leaving (debrief)..."
                               value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
-                              className="w-full bg-white border-2 border-rose-200 rounded-3xl p-6 font-bold text-gray-700 outline-none focus:border-rose-500 transition-all min-h-[120px] shadow-sm"
+                              className="w-full bg-white border-2 border-rose-200 rounded-3xl p-6 font-bold text-gray-700 outline-none focus:border-rose-500 transition-all min-h-[120px] shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                             />
                             <button
                               onClick={handleDeleteRequest} disabled={deleteState.loading}
@@ -839,7 +839,7 @@ const Dashboard = () => {
                                     setDeleteState({ ...deleteState, otp: newOtp.join("") });
                                     if (val && e.target.nextSibling) e.target.nextSibling.focus();
                                   }}
-                                  className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-gray-900 text-center outline-none focus:border-rose-900 transition-all shadow-sm text-lg"
+                                  className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-[#0A2F1D] text-center outline-none focus:border-rose-900 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-lg"
                                 />
                               ))}
                             </div>
@@ -856,7 +856,7 @@ const Dashboard = () => {
                   </div>
                 )}
 
-                <div className="bg-slate-900 p-8 md:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden group border border-slate-800">
+                <div className="bg-[#0A2F1D] p-8 md:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden group border border-[#062013]">
                   <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/10 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
@@ -871,19 +871,19 @@ const Dashboard = () => {
                           <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-300">Total Life Impact</p>
                         </div>
                       </div>
-                      <div className="w-full h-1.5 md:h-2 bg-slate-800 rounded-full mt-6 overflow-hidden">
+                      <div className="w-full h-1.5 md:h-2 bg-[#0E3D26] rounded-full mt-6 overflow-hidden">
                         <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></div>
                       </div>
                     </div>
 
                     <div className="md:col-span-2 space-y-3 md:space-y-4">
                       {[
-                        { icon: FaRecycle, color: "text-emerald-400", bg: "bg-slate-800", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
-                        { icon: FaExclamationTriangle, color: "text-rose-400", bg: "bg-slate-800", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
-                        { icon: FaUtensils, color: "text-amber-400", bg: "bg-slate-800", label: "Food Donations", val: stats.breakdown?.food, suffix: " meals" }
+                        { icon: FaRecycle, color: "text-emerald-400", bg: "bg-[#0E3D26]", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
+                        { icon: FaExclamationTriangle, color: "text-rose-400", bg: "bg-[#0E3D26]", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
+                        { icon: FaUtensils, color: "text-amber-400", bg: "bg-[#0E3D26]", label: "Food Donations", val: stats.breakdown?.food, suffix: " meals" }
                       ].map((item, i) => (
-                        <div key={i} className={`${item.bg} px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-slate-700 hover:bg-slate-700 transition-all cursor-default group/item`}>
-                          <div className={`p-2 rounded-xl bg-slate-900 ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
+                        <div key={i} className={`${item.bg} px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-[#0A2F1D] hover:bg-[#134D30] transition-all cursor-default group/item`}>
+                          <div className={`p-2 rounded-xl bg-[#0A2F1D] ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
                             <item.icon size={14} className="md:w-4 md:h-4" />
                           </div>
                           <div>
@@ -903,7 +903,7 @@ const Dashboard = () => {
               <div className="p-8 md:p-12 animate-in slide-in-from-bottom-4 duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
                   <div>
-                    <h3 className="text-3xl font-black text-gray-900 tracking-tight capitalize">{activeTab} Activity Log</h3>
+                    <h3 className="text-3xl font-black text-[#0A2F1D] tracking-tight capitalize">{activeTab} Activity Log</h3>
                     <p className="text-gray-400 font-bold text-sm tracking-tight">Monitoring your environmental mission history</p>
                   </div>
 
@@ -914,7 +914,7 @@ const Dashboard = () => {
                         <button
                           key={s}
                           onClick={() => setStatusFilter(s)}
-                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ?"bg-white text-green-600 shadow-sm" :"text-slate-400 hover:text-slate-600"}`}
+                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ?"bg-white text-green-600 shadow-[0_8px_30px_rgb(0,0,0,0.04)]" :"text-slate-400 hover:text-slate-600"}`}
                         >
                           {s}
                         </button>
@@ -948,7 +948,7 @@ const Dashboard = () => {
 
       {/* =�� REVIEW & REPORT MODAL */}
       {reviewModal.show && (
-        <div className="fixed inset-0 bg-slate-900/40  z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-[#0A2F1D]/40  z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
             <div className="bg-amber-50 p-8 flex justify-between items-center border-b border-amber-100">
               <div>
@@ -957,7 +957,7 @@ const Dashboard = () => {
               </div>
               <button
                 onClick={() => setReviewModal({ show: false, item: null, type:"", rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-amber-900 hover:rotate-90 transition-transform shadow-sm"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-amber-900 hover:rotate-90 transition-transform shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
               >
                 <FaTimes />
               </button>
@@ -987,12 +987,12 @@ const Dashboard = () => {
                   placeholder="Share your experience with this service..."
                   value={reviewModal.comment}
                   onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
-                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold text-gray-700 outline-none focus:border-amber-400 transition-all min-h-[100px]"
+                  className="w-full bg-[#F4F7F6] border-2 border-slate-100 rounded-2xl p-4 font-bold text-gray-700 outline-none focus:border-amber-400 transition-all min-h-[100px]"
                 />
               </div>
 
               {/* Report Issue Toggle */}
-              <div className="pt-4 border-t border-gray-100">
+              <div className="pt-4 border-t border-transparent">
                 <button
                   onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
                   className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ?"bg-red-50 text-red-700 shadow-inner" :"bg-gray-50 text-gray-400 hover:bg-gray-100"}`}

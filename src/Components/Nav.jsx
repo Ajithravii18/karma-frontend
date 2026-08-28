@@ -191,9 +191,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   return (
     <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${
       isScrolled
-        ? "bg-white shadow-sm border-b border-slate-200 py-3"
+        ? "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-b border-transparent py-3"
         : isDarkNav
-          ? "bg-white border-b border-slate-200 py-4"
+          ? "bg-white border-b border-transparent py-4"
           : "bg-transparent py-5"
     } font-sans`}>
       
@@ -204,7 +204,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           onClick={handleHome}
           className={`flex items-center gap-2 cursor-pointer pl-2 pr-5 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 border ${
             isScrolled || location.pathname !== "/"
-              ? "bg-white border-slate-200 shadow-sm hover:border-slate-300"
+              ? "bg-white border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-slate-300"
               : "bg-white shadow-lg border-white/20 hover:shadow-xl hover:border-green-200"
           }`}
         >
@@ -237,7 +237,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               Services <FaChevronDown className="text-[10px]" />
             </button>
 
-            <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
+            <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl  opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
               {services.map((service, index) => (
                 <button
                   key={index}
@@ -277,7 +277,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 </button>
 
                 {showNotifications && (
-                  <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-3xl shadow-2xl border border-gray-100 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
+                  <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-3xl shadow-2xl  z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
                     <div className="p-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
                       <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">Alerts Hub</h3>
                       <button onClick={() => setShowNotifications(false)} className="md:hidden text-gray-400 p-1"><FaTimes size={14} /></button>
@@ -308,18 +308,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   onClick={() => setShowDropdown(!showDropdown)}
                   className={`flex items-center gap-3 pl-1.5 pr-2 md:pr-4 py-1.5 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 border ${
                     isScrolled || location.pathname !== "/"
-                      ? "bg-white border-slate-200 shadow-sm"
+                      ? "bg-white border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                       : "bg-white shadow-lg border-white/20"
                   }`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-sm ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-600'}`}>
                     {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                   </div>
                   <span className="font-black text-sm hidden lg:inline text-green-900">{userName}</span>
                   <FaChevronDown className={`text-[10px] text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                 </button>
                 {showDropdown && (
-                  <div className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2">
+                  <div className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl  z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2">
                     <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-6 py-4 hover:bg-gray-50 text-gray-700 font-bold text-sm transition">
                       <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-green-600"} />
                       {userRole === 'admin' ? "Admin Console" : "Dashboard"}
@@ -358,7 +358,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
       {/* Mobile Drawer (Logic Untouched) */}
       <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setIsMenuOpen(false)}>
         <div ref={menuRef} className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+          <div className="p-6 border-b border-transparent flex justify-between items-center">
             <div className="flex items-center gap-3"><img src={logo} className="w-10" alt="Logo" /><h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2></div>
             <button onClick={() => setIsMenuOpen(false)} className="p-2 text-gray-400"><FaTimes size={24} /></button>
           </div>
