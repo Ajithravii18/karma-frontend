@@ -191,42 +191,23 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const isDashboard = location.pathname === "/dashboard";
 
   return (
-    <nav className={`fixed top-0 w-full left-0 z-[100] transition-all duration-500 ${
-      location.pathname === "/"
-        ? isScrolled
-          ? "bg-white shadow-sm border-b border-slate-200 py-3"
-          : "bg-transparent py-5"
-        : "bg-white border-b border-slate-200 py-3"
-    } font-sans`}>
+    <nav className="fixed top-0 w-full left-0 z-[100] transition-all duration-500 bg-white shadow-sm border-b border-slate-200 py-3 font-sans">
 
       <div className="w-full px-6 flex justify-between items-center relative z-10">
 
         {/* Logo */}
         <div onClick={handleHome} className="cursor-pointer">
-          {location.pathname === "/" ? (
-            <div className={`flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border ${
-              !isScrolled ? "bg-white shadow-lg border-white/20" : "bg-white border-slate-200 shadow-sm"
-            }`}>
-              <img src={logo} className="w-7" alt="E-Karma Logo" />
-              <span className="text-base font-black tracking-tighter uppercase text-green-900">E-Karma</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
-              <img src={logo} className="w-8" alt="E-Karma Logo" />
-              <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+            <img src={logo} className="w-8" alt="E-Karma Logo" />
+            <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+          </div>
         </div>
 
         {/* Desktop Nav Links */}
         <div className="hidden lg:flex items-center space-x-6">
           {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
             <button key={idx} onClick={item.onClick}
-              className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
-                location.pathname === "/" && !isScrolled 
-                  ? "text-white/90 hover:text-white"
-                  : "text-slate-600 hover:text-green-600"
-              }`}>
+              className="font-semibold transition-all duration-200 py-2 text-sm relative group text-slate-600 hover:text-green-600">
               {item.label}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full"></span>
             </button>
@@ -234,11 +215,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
           {/* Services Dropdown */}
           <div className="relative group">
-            <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
-              location.pathname === "/" && !isScrolled 
-                ? "text-white/90 hover:text-white"
-                : "text-slate-600 hover:text-green-600"
-            }`}>
+            <button className="font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 text-slate-600 hover:text-green-600">
               Services <FaChevronDown className="text-[10px]" />
             </button>
             <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
@@ -266,11 +243,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className={`relative p-2.5 rounded-xl transition-all cursor-pointer ${
-                    location.pathname === "/" && !isScrolled
-                      ? "bg-white/10 text-white/90 hover:bg-white/20"
-                      : "bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50 border border-slate-200"
-                  }`}
+                  className="relative p-2.5 rounded-xl transition-all cursor-pointer bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50 border border-slate-200"
                 >
                   <FaBell size={18} />
                   {unreadCount > 0 && (
@@ -310,11 +283,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <div className="relative group/profile" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className={`flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border ${
-                    location.pathname === "/" && !isScrolled
-                      ? "bg-white shadow-lg border-white/20"
-                      : "bg-white border-slate-200 shadow-sm hover:border-slate-300"
-                  }`}
+                  className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 bg-white border border-slate-200 shadow-sm hover:border-slate-300"
                 >
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-500'}`}>
                     {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
@@ -339,11 +308,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             /* Sign In Button */
             <button
               onClick={() => nav("/login")}
-              className={`px-5 py-2 rounded-xl font-bold text-sm transition-all active:scale-95 ${
-                location.pathname === "/" && !isScrolled
-                ? "bg-white text-green-900 shadow-lg hover:bg-green-50"
-                : "bg-green-600 text-white hover:bg-green-700 shadow-sm"
-              }`}
+              className="px-5 py-2 rounded-xl font-bold text-sm transition-all active:scale-95 bg-green-600 text-white hover:bg-green-700 shadow-sm"
             >
               Sign In
             </button>
@@ -352,11 +317,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${
-              location.pathname === "/" && !isScrolled
-                ? "text-white/90 hover:bg-white/10"
-                : "text-slate-500 hover:bg-slate-100"
-            }`}
+            className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle text-slate-500 hover:bg-slate-100"
           >
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
