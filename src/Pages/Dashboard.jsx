@@ -821,33 +821,19 @@ const Dashboard = () => {
                   {/* Impact Banner */}
                   <div className="bg-gradient-to-br from-green-600 to-emerald-800 rounded-3xl p-8 md:p-10 text-white relative overflow-hidden shadow-xl shadow-green-900/20">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-                    <div className="relative z-10 flex flex-col xl:flex-row gap-8 xl:items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-green-100 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
-                          <FaLeaf /> Contribution Excellence
-                        </p>
-                        <div className="flex items-baseline gap-3 mt-4">
-                          <span className="text-7xl font-black text-white"><Counter end={stats.totalImpact} /></span>
-                          <span className="text-2xl font-black text-green-200">CREDITS</span>
-                        </div>
-                        <p className="text-green-50/80 text-sm font-medium mt-3 max-w-sm">
-                          Your total environmental impact score. Keep completing missions to earn more credits and unlock exclusive eco-rewards.
-                        </p>
-                        <div className="w-full max-w-sm h-3 bg-black/20 rounded-full mt-6 overflow-hidden">
-                          <div className="h-full bg-white w-3/4 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
-                        </div>
+                    <div className="relative z-10 flex flex-col items-center text-center">
+                      <p className="text-green-100 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center justify-center gap-2">
+                        <FaLeaf /> Contribution Excellence
+                      </p>
+                      <div className="flex items-baseline justify-center gap-3 mt-4">
+                        <span className="text-7xl md:text-8xl font-black text-white"><Counter end={stats.totalImpact} /></span>
+                        <span className="text-2xl font-black text-green-200">CREDITS</span>
                       </div>
-                      <div className="flex flex-col items-center justify-center w-full xl:w-72 shrink-0 bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-300 to-orange-500 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/30 transform group-hover:scale-110 transition-transform duration-500 border-2 border-white/20 relative z-10">
-                          <FaStar className="text-3xl text-white" />
-                        </div>
-                        <p className="text-green-100 text-[10px] font-black uppercase tracking-widest text-center">Next Milestone</p>
-                        <p className="text-white font-black text-2xl text-center leading-tight mt-1">Eco Warrior</p>
-                        <div className="w-12 h-1 bg-white/20 rounded-full my-4 relative z-10"></div>
-                        <p className="text-xs font-medium text-green-50 text-center relative z-10">
-                          Earn <strong className="text-white font-black text-sm bg-white/20 px-1.5 py-0.5 rounded-md mx-0.5">7</strong> more credits to unlock this badge!
-                        </p>
+                      <p className="text-green-50/80 text-sm font-medium mt-4 max-w-md mx-auto">
+                        Your total environmental impact score. Keep completing missions to earn more credits and unlock exclusive eco-rewards.
+                      </p>
+                      <div className="w-full max-w-md h-3 bg-black/20 rounded-full mt-8 overflow-hidden mx-auto">
+                        <div className="h-full bg-white w-3/4 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
                       </div>
                     </div>
                   </div>
