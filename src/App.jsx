@@ -30,7 +30,6 @@ import VolunteerHistory from './Pages/VolunteerHistory';
 import DeletionLogs from './Pages/DeletionLogs';
 
 import UserReports from './Pages/UserReports';
-import BottomNav from './Components/BottomNav';
 
 function App() {
   return (
@@ -50,7 +49,7 @@ function App() {
       />
 
       <BrowserRouter>
-        <div className="pb-16 lg:pb-0"> {/* Padding to prevent content from hiding behind bottom nav on mobile */}
+        <div>
           <Routes>
             {/* Public Routes */}
             <Route path='/' element={<Main />} />
@@ -130,7 +129,6 @@ function App() {
             {/* Fallback Route */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          <BottomNav />
         </div>
       </BrowserRouter>
     </>
