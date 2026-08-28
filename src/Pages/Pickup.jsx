@@ -100,7 +100,7 @@ function SchedulePickup() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen relative overflow-hidden">
+    <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 min-h-screen relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none"></div>
@@ -131,12 +131,12 @@ function SchedulePickup() {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200" className="grid grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+              <div className="bg-white/50 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaCrosshairs className="text-green-500 mb-3" size={24} />
                 <h4 className="font-bold text-slate-800">Pinpoint Accuracy</h4>
                 <p className="text-xs text-slate-400">Doorstep pickup with GPS routing.</p>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+              <div className="bg-white/50 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaMapMarkerAlt className="text-amber-500 mb-3" size={24} />
                 <h4 className="font-bold text-slate-800">Reliable Service</h4>
                 <p className="text-xs text-slate-400">Convenient slots that suit you.</p>
@@ -147,7 +147,7 @@ function SchedulePickup() {
           {/* RIGHT CONTENT */}
           <div data-aos="zoom-in" className="space-y-6">
             {/* The Power Form */}
-            <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
+            <div className="bg-white/60 backdrop-blur-2xl p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
               <form onSubmit={handleSubmit} className="space-y-5">
 
                 <div className="space-y-2">

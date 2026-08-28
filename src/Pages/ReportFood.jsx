@@ -121,7 +121,7 @@ function ReportLeftoverFood() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen relative overflow-hidden">
+    <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 min-h-screen relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none"></div>
@@ -169,7 +169,7 @@ function ReportLeftoverFood() {
           {/* RIGHT CONTENT */}
           <div data-aos="zoom-in" className="space-y-6">
             {/* Form */}
-            <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
+            <div className="bg-white/60 backdrop-blur-2xl p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
               <form onSubmit={handleSubmit} className="space-y-5">
                 
                 {/* Row 1: Place & Quantity */}

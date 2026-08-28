@@ -408,16 +408,16 @@ const Dashboard = () => {
       onClick={() => setActiveTab(id)}
       className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
         ? "bg-green-600 text-white shadow-md border-green-600"
-        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm"
+        : "bg-white/40 text-slate-500 border-white/60 hover:bg-white/60 hover:text-slate-900 shadow-sm"
         }`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
-        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/10" : "bg-slate-50 group-hover:bg-slate-100"}`}>
+        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/10" : "bg-white/50 group-hover:bg-white"}`}>
           <Icon size={14} className="md:w-4.5 md:h-4.5" />
         </div>
         {label}
       </div>
-      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`} />
+      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ? "opacity-100" : "opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"}`} />
     </button>
   );
 
@@ -428,7 +428,7 @@ const Dashboard = () => {
     const startDateTime = new Date(item.createdAt || item.reportedAt);
 
     return (
-      <div key={item._id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm mb-4">
+      <div key={item._id} className="bg-white/50 backdrop-blur-md p-5 rounded-2xl border border-white/60 shadow-sm mb-4">
         <div className="flex justify-between items-start mb-4">
           <div className={getStatusStyle(item.status || "Pending")}>
              {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
@@ -514,7 +514,7 @@ const Dashboard = () => {
                 const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
 
                 return (
-                  <tr key={item._id || idx} className="bg-white group hover:bg-slate-50 transition-all duration-300 shadow-sm border border-slate-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
+                  <tr key={item._id || idx} className="bg-white/40 group hover:bg-white/70 transition-all duration-300 shadow-sm border border-white/60 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
                     {/* TIME SECTION (START & END) */}
                     <td className="px-5 py-4 text-sm font-bold text-slate-500 first:rounded-l-2xl">
                       <div className="space-y-2 min-w-[180px]">
@@ -653,24 +653,24 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 font-sans text-slate-900 pb-20 relative overflow-hidden">
       {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-200/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
       
       <div className="relative z-10">
         <Nav />
         <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
           {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
           <div className="lg:col-span-1 space-y-4 md:space-y-6">
-          <div className="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-200 text-center">
+          <div className="bg-white/60 backdrop-blur-2xl p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-white/80 text-center">
             <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
-              <div className="relative w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-2xl md:text-4xl text-slate-400 font-black shadow-inner">
+              <div className="relative w-full h-full bg-white/80 rounded-full flex items-center justify-center text-2xl md:text-4xl text-emerald-600 font-black shadow-inner border border-white">
                 {currentName.charAt(0).toUpperCase()}
               </div>
             </div>
-            <h2 className="text-lg md:text-xl font-black text-gray-900 tracking-tight">{currentName}</h2>
-            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-slate-50 text-slate-500 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-slate-200">
+            <h2 className="text-lg md:text-xl font-black text-slate-800 tracking-tight">{currentName}</h2>
+            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white/80 text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-sm">
               Citizen ID: <span className="ml-1 opacity-70">#{user._id?.slice(-6) || 'N/A'}</span>
             </div>
           </div>
@@ -684,7 +684,7 @@ const Dashboard = () => {
 
         {/* RIGHT COLUMN: Tab Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden min-h-[500px]">
+          <div className="bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-xl shadow-slate-200/50 border border-white/80 overflow-hidden min-h-[500px]">
             {activeTab === "profile" ? (
                <div className="p-6 md:p-8 animate-in fade-in duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
@@ -698,7 +698,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 group transition-all hover:bg-white/60 hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaUser size={14} />
@@ -712,7 +712,7 @@ const Dashboard = () => {
                       </div>
                     ) : <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{currentName}</p>}
                   </div>
-                  <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 group transition-all hover:bg-white/60 hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaClock size={14} />
