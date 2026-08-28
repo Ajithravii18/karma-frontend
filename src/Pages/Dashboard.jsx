@@ -66,7 +66,10 @@ const Dashboard = () => {
         fetchAllData(false);
       }
     }, 10000);
-    return (
+    return () => clearInterval(interval);
+  }, [loading, activeTab]);
+
+  return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 font-sans text-slate-900 flex flex-col relative overflow-hidden">
       <Nav />
       <div className="flex flex-1 pt-[72px] min-h-[100vh]">
@@ -209,7 +212,7 @@ const Dashboard = () => {
                       <button
                         key={s}
                         onClick={() => setStatusFilter(s)}
-                        className={px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all }
+                        className="px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all"
                       >
                         {s}
                       </button>
@@ -304,31 +307,25 @@ const Dashboard = () => {
                 {reviewModal.loading ? "Uploading Data..." : "Finalize Review"}
               </button>
             </div>
+
+
+
+
+
+
           </div>
         </div>
       )}
 
       {/* Custom Styles for Dashboard */}
-      <style>{`
+            <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
       `}</style>
-      </div>
     </div>
   );
 };
 
 export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-

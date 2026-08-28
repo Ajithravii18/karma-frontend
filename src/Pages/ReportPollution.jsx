@@ -250,7 +250,10 @@ function PollutionReport() {
                 <button
                   type="button"
                   onClick={getLocation}
-                  className={w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 }
+                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
+                      ? "bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
+                      : "bg-[#FFF4ED] text-[#EA580C] border-[#EA580C]/30 hover:bg-[#FCE3D4]"
+                    }`}
                 >
                   <FaCrosshairs size={14} /> {locationStatus === "success" ? "COORDINATES SECURED (RE-SYNC)" : "?? Pin Current Location"}
                 </button>
