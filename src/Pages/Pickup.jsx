@@ -111,7 +111,7 @@ function SchedulePickup() {
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* LEFT CONTENT: Impact Messaging */}
-          <div className="lg:sticky lg:top-32 space-y-2">
+          <div className="lg:sticky lg:top-32 space-y-6 bg-white/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
             <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
               <span className="relative flex h-2 w-2 mr-0.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -255,3 +255,4 @@ function SchedulePickup() {
   );
 }
 export default SchedulePickup;
+

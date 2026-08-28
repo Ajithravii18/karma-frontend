@@ -193,7 +193,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
       isScrolled
         ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-green-100/50 py-3"
         : isDarkNav
-          ? "bg-white border-b border-gray-100 py-4"
+          ? "bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_4px_30px_rgb(0,0,0,0.05)] py-4"
           : "bg-transparent py-5"
     } font-sans`}>
       

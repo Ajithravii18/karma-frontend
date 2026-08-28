@@ -653,7 +653,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] font-sans text-slate-900 pb-20 relative overflow-hidden">
+    <div className="min-h-screen bg-[#EAF3EF] font-sans text-slate-900 pb-20 relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
@@ -858,7 +858,7 @@ const Dashboard = () => {
                 )}
 
                 {/* 🌈 THE IMPACT CARD */}
-                <div className="bg-slate-900 p-8 md:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden group border border-slate-800">
+                <div className="bg-gradient-to-br from-green-900 via-green-950 to-emerald-900 p-8 md:p-10 rounded-3xl text-white shadow-2xl relative overflow-hidden group border border-green-800">
                   <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
