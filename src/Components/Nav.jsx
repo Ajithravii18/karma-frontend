@@ -199,14 +199,23 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         : "bg-[#1A2332] border-b border-white/10 py-3"
     } font-sans`}>
 
-      <div className="w-full px-6 lg:px-8 flex justify-between items-center relative z-10">
+      <div className="w-full px-6 flex justify-between items-center relative z-10">
 
         {/* Logo */}
-        <div onClick={handleHome} className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity active:scale-95">
-          <img src={logo} className="w-8" alt="E-Karma Logo" />
-          <span className={`text-base font-black tracking-tighter uppercase ${
-            location.pathname !== "/" || isScrolled ? "text-white" : "text-green-900"
-          }`}>E-Karma</span>
+        <div onClick={handleHome} className="cursor-pointer">
+          {location.pathname === "/" ? (
+            <div className={`flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border ${
+              !isScrolled ? "bg-white shadow-lg border-white/20" : "bg-white border-slate-200 shadow-sm"
+            }`}>
+              <img src={logo} className="w-7" alt="E-Karma Logo" />
+              <span className="text-base font-black tracking-tighter uppercase text-green-900">E-Karma</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+              <img src={logo} className="w-8" alt="E-Karma Logo" />
+              <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+            </div>
+          )}
         </div>
 
         {/* Desktop Nav Links */}
