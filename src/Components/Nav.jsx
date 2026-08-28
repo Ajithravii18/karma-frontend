@@ -223,7 +223,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
             <button key={idx} onClick={item.onClick}
               className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
-                location.pathname !== "/" || isScrolled ? "text-slate-300 hover:text-white" : "text-white/90 hover:text-white"
+                location.pathname === "/" && isScrolled 
+                  ? "text-slate-700 hover:text-green-600" 
+                  : location.pathname !== "/"
+                  ? "text-slate-300 hover:text-white"
+                  : "text-white/90 hover:text-white"
               }`}>
               {item.label}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 transition-all duration-300 group-hover:w-full"></span>
@@ -233,7 +237,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {/* Services Dropdown */}
           <div className="relative group">
             <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
-              location.pathname !== "/" || isScrolled ? "text-slate-300 hover:text-white" : "text-white/90 hover:text-white"
+              location.pathname === "/" && isScrolled 
+                ? "text-slate-700 hover:text-green-600" 
+                : location.pathname !== "/"
+                ? "text-slate-300 hover:text-white"
+                : "text-white/90 hover:text-white"
             }`}>
               Services <FaChevronDown className="text-[10px]" />
             </button>
@@ -263,7 +271,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className={`relative p-2.5 rounded-xl transition-all cursor-pointer ${
-                    location.pathname !== "/" || isScrolled
+                    location.pathname === "/" && isScrolled
+                      ? "bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50"
+                      : location.pathname !== "/"
                       ? "bg-white/10 text-slate-300 hover:text-white hover:bg-white/20"
                       : "bg-white/10 text-white/80 hover:bg-white/20"
                   }`}
@@ -307,7 +317,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className={`flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border ${
-                    location.pathname !== "/" || isScrolled
+                    location.pathname === "/" && isScrolled
+                      ? "bg-slate-50 border-slate-100 hover:bg-slate-100"
+                      : location.pathname !== "/"
                       ? "bg-white/10 border-white/15 hover:bg-white/20"
                       : "bg-white shadow-lg border-white/20"
                   }`}
@@ -315,8 +327,14 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-500'}`}>
                     {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                   </div>
-                  <span className={`font-bold text-sm hidden lg:inline ${location.pathname !== "/" || isScrolled ? "text-white" : "text-slate-800"}`}>{userName}</span>
-                  <FaChevronDown className={`text-[10px] ${location.pathname !== "/" || isScrolled ? "text-slate-400" : "text-slate-500"} transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                  <span className={`font-bold text-sm hidden lg:inline ${
+                    location.pathname === "/" && isScrolled ? "text-slate-700" :
+                    location.pathname !== "/" ? "text-white" : "text-slate-800"
+                  }`}>{userName}</span>
+                  <FaChevronDown className={`text-[10px] ${
+                    location.pathname === "/" && isScrolled ? "text-slate-400" :
+                    location.pathname !== "/" ? "text-slate-400" : "text-slate-500"
+                  } transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                 </button>
                 {showDropdown && (
                   <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 border border-slate-100">
@@ -336,7 +354,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <button
               onClick={() => nav("/login")}
               className={`px-5 py-2 rounded-xl font-bold text-sm transition-all active:scale-95 ${
-                location.pathname !== "/" || isScrolled
+                location.pathname === "/" && isScrolled
+                ? "bg-green-600 text-white hover:bg-green-700 shadow-md"
+                : location.pathname !== "/"
                 ? "bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
                 : "bg-white text-green-900 shadow-lg hover:bg-green-50"
               }`}
@@ -349,7 +369,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${
-              location.pathname !== "/" || isScrolled ? "text-slate-300 hover:bg-white/10" : "text-white/90 hover:bg-white/10"
+              location.pathname === "/" && isScrolled
+                ? "text-slate-600 hover:bg-slate-100"
+                : location.pathname !== "/"
+                ? "text-slate-300 hover:bg-white/10"
+                : "text-white/90 hover:bg-white/10"
             }`}
           >
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
