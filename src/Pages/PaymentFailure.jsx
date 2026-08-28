@@ -10,7 +10,7 @@ const PaymentFailure = () => {
   const pickupId = searchParams.get("pickupId");
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-[40px] shadow-2xl p-10 text-center border border-red-50">
         <FaTimesCircle className="text-red-500 text-7xl mx-auto mb-6" />
         
@@ -46,3 +46,4 @@ const PaymentFailure = () => {
 };
 
 export default PaymentFailure;
+

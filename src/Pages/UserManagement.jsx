@@ -100,7 +100,7 @@ const UserManagement = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex">
       <div className="flex-1 pb-20">
         <Nav />
         <div className="max-w-[1400px] mx-auto pt-32 px-8">
@@ -194,7 +194,7 @@ const UserManagement = () => {
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100">
+                <tr className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Identity Node</th>
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Rating / Status</th>
                   <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Occupancy</th>
@@ -206,7 +206,7 @@ const UserManagement = () => {
               <tbody className="divide-y divide-slate-100">
                 {currentItems.length > 0 ? (
                   currentItems.map((u) => (
-                    <tr key={u._id} className="group hover:bg-slate-50 transition-all duration-300">
+                    <tr key={u._id} className="group hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 transition-all duration-300">
                       <td className="px-10 py-8">
                         <div className="flex items-center gap-6">
                           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg transition-transform group-hover:scale-110 duration-500 ${u.role === 'volunteer' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'
@@ -280,7 +280,7 @@ const UserManagement = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="py-32 text-center bg-slate-50/50">
+                    <td colSpan="5" className="py-32 text-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50">
                       <FaDatabase className="mx-auto text-slate-200 mb-4" size={40} />
                       <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">Empty Cluster Found</p>
                     </td>
@@ -311,11 +311,11 @@ const UserManagement = () => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-6">
-                       <div className="bg-slate-50 p-3 rounded-2xl">
+                       <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-3 rounded-2xl">
                           <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Role Type</p>
                           <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? 'text-indigo-600' : 'text-emerald-600'}`}>{u.role}</p>
                        </div>
-                       <div className="bg-slate-50 p-3 rounded-2xl">
+                       <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-3 rounded-2xl">
                           <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Availability</p>
                           <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? (u.isBusy ? 'text-amber-500' : 'text-green-600') : 'text-slate-300'}`}>
                              {u.role === 'volunteer' ? (u.isBusy ? "In Task" : "Free") : "N/A"}
@@ -372,7 +372,7 @@ const UserManagement = () => {
                   <button 
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
-                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
                   >
                       &lt;
                   </button>
@@ -382,7 +382,7 @@ const UserManagement = () => {
                   <button 
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
-                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
                   >
                       &gt;
                   </button>

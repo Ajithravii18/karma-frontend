@@ -126,7 +126,7 @@ const Main = forwardRef((props, ref) => {
   };
 
   return (
-    <div className="bg-slate-50 overflow-x-hidden">
+    <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-x-hidden">
       <Nav
         onHomeClick={scrollToHome}
         onAboutClick={scrollToAbout}

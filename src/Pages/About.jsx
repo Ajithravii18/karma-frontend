@@ -34,7 +34,7 @@ const About = forwardRef((props, ref) => {
     {/* Mission */}
     <div 
       data-aos="fade-up"
-      className="bg-[#F5F7F8] p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
+      className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
     >
       <div className="text-4xl mb-4">🎯</div>
       <h3 className="text-xl font-semibold text-[#1B5E20] mb-3">
@@ -50,7 +50,7 @@ const About = forwardRef((props, ref) => {
     <div 
       data-aos="fade-up"
       data-aos-delay="200"
-      className="bg-[#F5F7F8] p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
+      className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
     >
       <div className="text-4xl mb-4">🌍</div>
       <h3 className="text-xl font-semibold text-[#1B5E20] mb-3">
@@ -66,7 +66,7 @@ const About = forwardRef((props, ref) => {
     <div 
       data-aos="fade-up"
       data-aos-delay="400"
-      className="bg-[#F5F7F8] p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
+      className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300"
     >
       <div className="text-4xl mb-4">🤝</div>
       <h3 className="text-xl font-semibold text-[#1B5E20] mb-3">

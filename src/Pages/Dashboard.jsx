@@ -67,11 +67,11 @@ const Dashboard = () => {
       }
     }, 10000);
     return (
-    <div className="min-h-screen bg-[#F9F9F9] font-sans text-slate-900 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-emerald-100 font-sans text-slate-900 flex flex-col relative overflow-hidden">
       <Nav />
       <div className="flex flex-1 pt-[72px] min-h-[100vh]">
         {/* SIDEBAR */}
-        <aside className="hidden lg:flex w-[260px] bg-[#F4F4F4] flex-col pt-6 px-4 h-[calc(100vh-72px)] sticky top-[72px] border-r border-gray-200 shadow-sm z-10">
+        <aside className="hidden lg:flex w-[260px] bg-transparent border-none flex-col pt-6 px-4 h-[calc(100vh-72px)] sticky top-[72px] border-r border-gray-200 shadow-sm z-10">
           <div className="mb-6 px-4">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-6 h-6 bg-slate-200 rounded-md flex items-center justify-center text-[10px]">??</div>
@@ -106,13 +106,13 @@ const Dashboard = () => {
               {/* Cards Row 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 items-start">
                 {/* Profile Avatar Card */}
-                <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-200 text-center flex flex-col items-center justify-center min-h-[220px] lg:col-span-1 hidden">
+                <div className="bg-white/30 backdrop-blur-md p-8 rounded-[2.5rem] text-center flex flex-col items-center justify-center min-h-[220px] lg:col-span-1 hidden">
                    {/* Removed from display to match mockup layout precisely, which shows Legal Name and Verified Contact stretching. The original had 3 boxes here. Mockup has 2 wide ones. */}
                 </div>
 
                 {/* Info Cards - MATCHING MOCKUP */}
                 <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-                  <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 flex flex-col justify-center min-h-[140px]">
+                  <div className="bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 flex flex-col justify-center min-h-[140px]">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="p-2 bg-[#E9F5EC] text-[#0B7A30] rounded-full">
                         <FaUser size={12} />
@@ -132,7 +132,7 @@ const Dashboard = () => {
                     )}
                   </div>
 
-                  <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 flex flex-col justify-center min-h-[140px]">
+                  <div className="bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 flex flex-col justify-center min-h-[140px]">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="p-2 bg-[#E9F5EC] text-[#0B7A30] rounded-full">
                         <FaClock size={12} />
@@ -179,7 +179,7 @@ const Dashboard = () => {
                     { icon: FaExclamationTriangle, color: "text-rose-600", bg: "bg-rose-100", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
                     { icon: FaHeart, color: "text-rose-600", bg: "bg-rose-100", label: "Food Donations", val: stats.breakdown?.food, suffix: "" }
                   ].map((item, i) => (
-                    <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 flex flex-col items-center justify-center text-center group cursor-default hover:border-gray-300 transition-colors min-h-[140px]">
+                    <div key={i} className="bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 flex flex-col items-center justify-center text-center group cursor-default hover:border-gray-300 transition-colors min-h-[140px]">
                       <div className={`p-2 rounded-full ${item.bg} ${item.color} group-hover:scale-110 transition-transform mb-3`}>
                         <item.icon size={16} />
                       </div>
@@ -217,7 +217,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white/40 backdrop-blur-md rounded-3xl p-6 border border-white/50">
                 {renderTable(getFilteredData(), ["Service Period", "Description"], activeTab)}
               </div>
             </div>
@@ -229,7 +229,7 @@ const Dashboard = () => {
       {/* 🌟 REVIEW & REPORT MODAL */}
       {reviewModal.show && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
+          <div className="bg-white/80 backdrop-blur-xl w-full max-w-lg border border-white/50 rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
             <div className="bg-amber-50 p-8 flex justify-between items-center border-b border-amber-100">
               <div>
                 <h3 className="text-xl font-black text-amber-900 tracking-tight">Mission Debrief</h3>
@@ -267,7 +267,7 @@ const Dashboard = () => {
                   placeholder="Share your experience with this service..."
                   value={reviewModal.comment}
                   onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
-                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold text-gray-700 outline-none focus:border-amber-400 transition-all min-h-[100px]"
+                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-slate-100 rounded-2xl p-4 font-bold text-gray-700 outline-none focus:border-amber-400 transition-all min-h-[100px]"
                 />
               </div>
 
@@ -321,6 +321,8 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
 
 
 

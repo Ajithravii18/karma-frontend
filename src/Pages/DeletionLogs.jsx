@@ -46,7 +46,7 @@ const DeletionLogs = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex">
             <div className="flex-1 pb-20">
                 <Nav />
                 <div className="max-w-4xl mx-auto pt-32 px-6">
@@ -76,7 +76,7 @@ const DeletionLogs = () => {
                     </div>
                 ) : logs.length === 0 ? (
                     <div className="bg-white p-20 rounded-3xl text-center border border-slate-100 shadow-sm">
-                        <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <FaUserTimes size={30} className="text-slate-200" />
                         </div>
                         <h3 className="text-xl font-bold text-slate-800 mb-2">Pristine Records</h3>
@@ -99,7 +99,7 @@ const DeletionLogs = () => {
                                 {/* Collapsed Row */}
                                 <button
                                     onClick={() => toggleExpand(log._id)}
-                                    className="w-full grid grid-cols-12 items-center px-6 py-5 text-left cursor-pointer group transition-colors hover:bg-slate-50/50"
+                                    className="w-full grid grid-cols-12 items-center px-6 py-5 text-left cursor-pointer group transition-colors hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50"
                                 >
                                     {/* Index */}
                                     <div className="col-span-1">
@@ -155,17 +155,17 @@ const DeletionLogs = () => {
                                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedId === log._id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
                                     <div className="px-6 pb-6 pt-2 border-t border-slate-100">
                                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
-                                            <div className="bg-slate-50 p-4 rounded-xl">
+                                            <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-4 rounded-xl">
                                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-1">Full Name</p>
                                                 <p className="text-sm font-bold text-slate-700">{log.userName}</p>
                                             </div>
-                                            <div className="bg-slate-50 p-4 rounded-xl">
+                                            <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-4 rounded-xl">
                                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-1">Phone Number</p>
                                                 <p className="text-sm font-bold text-slate-700 flex items-center gap-2">
                                                     <FaPhoneAlt size={10} className="text-indigo-400" /> {log.userPhone}
                                                 </p>
                                             </div>
-                                            <div className="bg-slate-50 p-4 rounded-xl">
+                                            <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-4 rounded-xl">
                                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-1">Verification</p>
                                                 <p className="text-xs font-bold text-emerald-500">✅ OTP Verified</p>
                                             </div>
@@ -217,3 +217,4 @@ const DeletionLogs = () => {
 };
 
 export default DeletionLogs;
+

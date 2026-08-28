@@ -207,7 +207,7 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
             <Nav />
             <div className="max-w-[1440px] mx-auto pt-24 md:pt-32 px-4 md:px-8">
                 {/* HEADER */}
@@ -220,7 +220,7 @@ const AdminDashboard = () => {
                         <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-                        <button onClick={() => navigate("/admin/users")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-slate-50 transition-all">
+                        <button onClick={() => navigate("/admin/users")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 transition-all">
                             <FaUsersCog className="text-indigo-600" /> Users
                         </button>
                         <button onClick={() => navigate("/admin/deletion-logs")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 transition-all">
@@ -301,7 +301,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-4 w-full xl:w-auto">
                         <div className="relative w-full xl:w-72">
                             <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search records..." className="w-full pl-16 pr-8 py-4 bg-slate-50 border-none rounded-[1.2rem] text-[11px] font-bold uppercase outline-none focus:ring-2 ring-indigo-100" />
+                            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search records..." className="w-full pl-16 pr-8 py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-[1.2rem] text-[11px] font-bold uppercase outline-none focus:ring-2 ring-indigo-100" />
                         </div>
                         <button onClick={downloadCSV} className="bg-slate-900 text-white p-4 rounded-[1.2rem] hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center min-w-[50px] shrink-0" title="Download CSV Report">
                             <FaDownload size={14} />
@@ -313,7 +313,7 @@ const AdminDashboard = () => {
                 <div className="bg-white border border-slate-100 rounded-3xl md:rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto">
                     <table className="w-full text-left min-w-[800px]">
                         <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100">
+                            <tr className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
                                 <th className="p-10 text-[10px] font-black uppercase text-slate-400">Mission Content</th>
                                 <th className="p-10 text-[10px] font-black uppercase text-slate-400">Assigned Agent</th>
                                 <th className="p-10 text-[10px] font-black uppercase text-slate-400 text-center">Time</th>
@@ -337,7 +337,7 @@ const AdminDashboard = () => {
                                 return (
                                     <React.Fragment key={report._id}>
                                         {/* ── MAIN SUMMARY ROW ── */}
-                                        <tr className={`group transition-all cursor-pointer relative ${report.isFlagged ? 'bg-rose-50 shadow-[inset_4px_0_0_0_#f43f5e] z-10 scale-[1.01]' : report.volFlaggedByCitizen ? 'bg-amber-50 shadow-[inset_4px_0_0_0_#f59e0b]' : hasMisconductReport ? 'bg-amber-50/70 shadow-[inset_4px_0_0_0_#f59e0b]' : report.helpRequested ? 'bg-sky-50 shadow-[inset_4px_0_0_0_#0ea5e9]' : isExpanded ? 'bg-white z-[10]' : isFinished ? 'opacity-50 grayscale-[0.2]' : 'bg-white hover:bg-slate-50'} transform transition-all duration-300`} onClick={() => setExpandedId(isExpanded ? null : report._id)}>
+                                        <tr className={`group transition-all cursor-pointer relative ${report.isFlagged ? 'bg-rose-50 shadow-[inset_4px_0_0_0_#f43f5e] z-10 scale-[1.01]' : report.volFlaggedByCitizen ? 'bg-amber-50 shadow-[inset_4px_0_0_0_#f59e0b]' : hasMisconductReport ? 'bg-amber-50/70 shadow-[inset_4px_0_0_0_#f59e0b]' : report.helpRequested ? 'bg-sky-50 shadow-[inset_4px_0_0_0_#0ea5e9]' : isExpanded ? 'bg-white z-[10]' : isFinished ? 'opacity-50 grayscale-[0.2]' : 'bg-white hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100'} transform transition-all duration-300`} onClick={() => setExpandedId(isExpanded ? null : report._id)}>
                                             {/* COLUMN 1: SERVICE TYPE + TITLE */}
                                             <td className={`p-8 first:rounded-l-[3.5rem] transition-all ${report.isFlagged ? 'bg-rose-50/30' : report.volFlaggedByCitizen || hasMisconductReport ? 'bg-amber-50/40' : isExpanded ? 'bg-indigo-50/80' : ''}`}>
                                                 <div className="flex items-center gap-4 relative">
@@ -454,7 +454,7 @@ const AdminDashboard = () => {
                                                             <FaFlag size={11} />
                                                         </button>
                                                     )}
-                                                    <button onClick={(e) => deleteReport(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white rounded-xl transition-all">
+                                                    <button onClick={(e) => deleteReport(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-300 hover:bg-rose-500 hover:text-white rounded-xl transition-all">
                                                         <FaTrash size={11} />
                                                     </button>
                                                 </div>
@@ -740,7 +740,7 @@ const AdminDashboard = () => {
                         <button 
                             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
-                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
                         >
                             &lt;
                         </button>
@@ -750,7 +750,7 @@ const AdminDashboard = () => {
                         <button 
                             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages}
-                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
                         >
                             &gt;
                         </button>

@@ -31,7 +31,7 @@ const ReportDetails = () => {
   }, [id, type]);
 
   if (!report && loading) return (
-    <div className="min-h-screen bg-[#F0F4F2] flex flex-col items-center justify-center font-black text-emerald-800 uppercase tracking-widest text-xs">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 flex flex-col items-center justify-center font-black text-emerald-800 uppercase tracking-widest text-xs">
       <FaLeaf className="animate-spin mb-4" size={24} />
       Synchronizing Eco-Ledger...
     </div>
@@ -63,7 +63,7 @@ const ReportDetails = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#F8FAF9] font-sans text-slate-900 flex">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex">
       <div className="flex-1 pb-20">
         <Nav />
         <div className="max-w-7xl mx-auto pt-32 px-6">

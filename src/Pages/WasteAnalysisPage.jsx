@@ -61,7 +61,7 @@ const WasteAnalysisPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex">
             <div className="flex-1 pb-20">
                 <Nav />
                 <div className="max-w-[1200px] mx-auto pt-32 px-8">
@@ -115,7 +115,7 @@ const WasteAnalysisPage = () => {
                             {Object.entries(stats.byStatus).map(([status, count]) => (
                                 <div key={status} className="flex items-center gap-4">
                                     <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase w-24 text-center ${statusColors[status] || "bg-slate-100 text-slate-500"}`}>{status}</span>
-                                    <div className="flex-1 h-2.5 bg-slate-50 rounded-full overflow-hidden">
+                                    <div className="flex-1 h-2.5 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-gradient-to-r from-emerald-400 to-indigo-500 rounded-full transition-all duration-1000"
                                             style={{ width: `${stats.total > 0 ? (count / stats.total) * 100 : 0}%` }}
@@ -138,7 +138,7 @@ const WasteAnalysisPage = () => {
                                             <span className="text-[10px] font-black text-slate-500 uppercase">{type}</span>
                                             <span className="text-sm font-black text-slate-800">{count} <span className="text-[10px] font-normal text-slate-400">jobs</span></span>
                                         </div>
-                                        <div className="w-full h-3 bg-slate-50 rounded-full overflow-hidden p-0.5 border border-slate-100">
+                                        <div className="w-full h-3 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-full overflow-hidden p-0.5 border border-slate-100">
                                             <div
                                                 className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-1000"
                                                 style={{ width: `${(count / maxType) * 100}%` }}
@@ -188,3 +188,4 @@ const WasteAnalysisPage = () => {
 };
 
 export default WasteAnalysisPage;
+

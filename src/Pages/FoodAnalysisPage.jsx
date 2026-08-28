@@ -72,7 +72,7 @@ const FoodAnalysisPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex">
             <div className="flex-1 pb-20">
                 <Nav />
                 <div className="max-w-[1200px] mx-auto pt-32 px-8">
@@ -125,7 +125,7 @@ const FoodAnalysisPage = () => {
                             {Object.entries(stats.byStatus).map(([status, count]) => (
                                 <div key={status} className="flex items-center gap-4">
                                     <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase w-24 text-center ${statusColors[status] || "bg-slate-100 text-slate-500"}`}>{status}</span>
-                                    <div className="flex-1 h-2.5 bg-slate-50 rounded-full overflow-hidden">
+                                    <div className="flex-1 h-2.5 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-1000"
                                             style={{ width: `${stats.total > 0 ? (count / stats.total) * 100 : 0}%` }}
@@ -233,3 +233,4 @@ const FoodAnalysisPage = () => {
 };
 
 export default FoodAnalysisPage;
+

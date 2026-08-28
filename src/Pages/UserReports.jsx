@@ -221,7 +221,7 @@ const UserReports = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
       <Nav />
 
       <div className="max-w-7xl mx-auto pt-32 px-6">
@@ -284,7 +284,7 @@ const UserReports = () => {
         {/* REPORTS TABLE */}
         <div className="bg-white border border-slate-200 rounded-[3.5rem] overflow-hidden shadow-2xl">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-100">
+            <thead className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
               <tr>
                 <th className="p-8 text-[11px] font-black uppercase text-slate-400">Type</th>
                 <th className="p-8 text-[11px] font-black uppercase text-slate-400">Details</th>
@@ -300,7 +300,7 @@ const UserReports = () => {
                 const hasVolunteer = report.assignedVolunteer || report.claimedBy;
 
                 return (
-                  <tr key={report._id} className={`group transition-all ${isFinished ? 'opacity-60' : 'hover:bg-slate-50/50'}`}>
+                  <tr key={report._id} className={`group transition-all ${isFinished ? 'opacity-60' : 'hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50'}`}>
                     <td className="p-8">
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-sm ${report.isFood ? 'bg-emerald-100 text-emerald-600' : report.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
                         {report.isFood ? <FaUtensils /> : report.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
@@ -443,3 +443,4 @@ const UserReports = () => {
 };
 
 export default UserReports;
+

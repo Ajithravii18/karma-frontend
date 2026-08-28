@@ -415,7 +415,7 @@ const VolunteerPortal = () => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
       <Nav />
 
       {/* ===== CAMERA / GALLERY PICKER MODAL ===== */}
@@ -583,7 +583,7 @@ const VolunteerPortal = () => {
                   <input
                     type="tel" placeholder="+91..."
                     value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
                 <button
@@ -611,7 +611,7 @@ const VolunteerPortal = () => {
                           setPhoneState({ ...phoneState, otp: newOtp.join("") });
                           if (val && e.target.nextSibling) e.target.nextSibling.focus();
                         }}
-                        className="w-10 h-10 md:w-12 md:h-12 bg-slate-50 border-2 border-indigo-100 rounded-xl font-black text-slate-800 text-center outline-none focus:border-indigo-500 transition-all shadow-sm text-lg"
+                        className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-indigo-100 rounded-xl font-black text-slate-800 text-center outline-none focus:border-indigo-500 transition-all shadow-sm text-lg"
                       />
                     ))}
                   </div>
@@ -705,7 +705,7 @@ const VolunteerPortal = () => {
           {/* DESKTOP TABLE VIEW */}
           <div className="hidden lg:block bg-white border border-slate-200 rounded-[3.5rem] overflow-hidden shadow-2xl">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 border-b border-slate-100">
+              <thead className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
                 <tr>
                   <th className="p-8 text-[11px] font-black uppercase text-slate-400">Sector</th>
                   <th className="p-8 text-[11px] font-black uppercase text-slate-400">Intelligence</th>
@@ -720,7 +720,7 @@ const VolunteerPortal = () => {
                   const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
 
                   return (
-                    <tr key={task._id} className={`group transition-all ${isFinished ? 'opacity-50' : assignedToMe ? 'bg-emerald-50/30' : 'hover:bg-slate-50/50'}`}>
+                    <tr key={task._id} className={`group transition-all ${isFinished ? 'opacity-50' : assignedToMe ? 'bg-emerald-50/30' : 'hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50'}`}>
                       <td className="p-8">
                         <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
                           {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
@@ -851,7 +851,7 @@ const VolunteerPortal = () => {
 
                   <div className="flex flex-col gap-3">
                     {isFinished ? (
-                      <div className="flex items-center gap-2 px-6 py-4 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase border border-slate-100 italic justify-center">
+                      <div className="flex items-center gap-2 px-6 py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 rounded-2xl text-[9px] font-black uppercase border border-slate-100 italic justify-center">
                         Mission Resolved Successfully
                       </div>
                     ) : (!assignedToMe && !task.assignedVolunteer) ? (
@@ -889,12 +889,12 @@ const VolunteerPortal = () => {
                             <button onClick={() => handleAction(task._id, 'complete')} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95">Complete Mission</button>
                           )}
                           <div className="flex gap-2">
-                            <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="flex-1 py-3 text-[8px] font-black text-slate-400 bg-slate-50 rounded-xl uppercase tracking-widest border border-slate-100 hover:text-rose-500 transition-colors">Abort</button>
+                            <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="flex-1 py-3 text-[8px] font-black text-slate-400 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-xl uppercase tracking-widest border border-slate-100 hover:text-rose-500 transition-colors">Abort</button>
                             <button onClick={() => handleFlagReport(task._id)} className="flex-1 py-3 text-[8px] font-black text-rose-600 bg-rose-50 rounded-xl uppercase tracking-widest border border-rose-100">Flag Fraud</button>
                           </div>
                       </div>
                     ) : (
-                      <div className="py-4 bg-slate-50 text-slate-400 font-black text-[9px] uppercase text-center rounded-2xl border border-slate-100">Sector Claimed: Another Agent Active</div>
+                      <div className="py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 font-black text-[9px] uppercase text-center rounded-2xl border border-slate-100">Sector Claimed: Another Agent Active</div>
                     )}
                   </div>
                 </div>
@@ -972,7 +972,7 @@ const VolunteerPortal = () => {
                   placeholder="Notes about this mission or citizen behavior..."
                   value={reviewModal.comment}
                   onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
-                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold text-slate-700 outline-none focus:border-emerald-400 transition-all min-h-[100px]"
+                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-slate-100 rounded-2xl p-4 font-bold text-slate-700 outline-none focus:border-emerald-400 transition-all min-h-[100px]"
                 />
               </div>
 
@@ -980,7 +980,7 @@ const VolunteerPortal = () => {
               <div className="pt-4 border-t border-slate-100">
                 <button
                   onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ? "bg-rose-50 text-rose-700 shadow-inner" : "bg-slate-50 text-slate-400 hover:bg-slate-100"}`}
+                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ? "bg-rose-50 text-rose-700 shadow-inner" : "bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 hover:bg-slate-100"}`}
                 >
                   <span className="text-[11px] font-black uppercase flex items-center gap-2">
                     <FaExclamationTriangle /> Citizen Misconduct Report

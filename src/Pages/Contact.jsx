@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react'
 const Contact = forwardRef((props, ref) => {
   return (
     <div ref={ref}>
-        <section className="bg-[#F5F7F8] py-20 px-6 md:px-20">
+        <section className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 py-20 px-6 md:px-20">
   <div className="max-w-6xl mx-auto">
 
     {/* Heading */}

@@ -24,7 +24,7 @@ const PaymentSuccess = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-[40px] shadow-2xl p-10 text-center border border-green-50">
         <FaCheckCircle className="text-green-500 text-7xl mx-auto mb-6" />
         
@@ -33,7 +33,7 @@ const PaymentSuccess = () => {
           Your transaction was successful. Your pickup is now confirmed.
         </p>
 
-        <div className="bg-slate-50 rounded-2xl p-4 mb-8 text-left border border-gray-100">
+        <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-2xl p-4 mb-8 text-left border border-gray-100">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Transaction ID</p>
           <p className="text-xs font-mono font-bold text-green-700 break-all">{txnId}</p>
         </div>

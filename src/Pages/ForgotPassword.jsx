@@ -50,7 +50,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/90 flex items-center justify-center relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/90 flex items-center justify-center relative overflow-hidden font-sans">
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -142,3 +142,4 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+

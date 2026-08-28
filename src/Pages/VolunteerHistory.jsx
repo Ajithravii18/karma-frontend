@@ -111,7 +111,7 @@ const VolunteerHistory = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100">
         <div className="flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-emerald-500 shadow-xl"></div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Decrypting Archive...</p>
@@ -121,7 +121,7 @@ const VolunteerHistory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
       <Nav />
       <div className="max-w-[1400px] mx-auto pt-32 px-8">
 
@@ -202,7 +202,7 @@ const VolunteerHistory = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100">
+                  <tr className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
                     <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Identity Node</th>
                     <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Operation Type</th>
                     <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Timestamp</th>
@@ -226,7 +226,7 @@ const VolunteerHistory = () => {
                           : `${item.weight || "0"} KG Collected`;
 
                       return (
-                        <tr key={item._id} className="group hover:bg-slate-50 transition-all duration-300">
+                        <tr key={item._id} className="group hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 transition-all duration-300">
                           <td className="px-10 py-8">
                             <div className="flex items-center gap-4">
                               <div className="px-3 py-1 bg-slate-100 rounded-lg font-mono text-[10px] font-black text-slate-400">
@@ -277,7 +277,7 @@ const VolunteerHistory = () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="6" className="py-32 text-center bg-slate-50/50">
+                      <td colSpan="6" className="py-32 text-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50">
                         <FaChartLine className="mx-auto text-slate-200 mb-4" size={40} />
                         <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">Archive Cluster Empty</p>
                       </td>

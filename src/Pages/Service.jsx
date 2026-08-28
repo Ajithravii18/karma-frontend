@@ -69,7 +69,7 @@ const Services = forwardRef((props, ref) => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-white/5 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/10 hover:bg-white/10 hover:border-green-500/30 transition-all duration-500 flex flex-col"
+              className="group p-4 md:p-6 transition-all duration-500 flex flex-col"
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
