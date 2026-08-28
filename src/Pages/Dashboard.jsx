@@ -664,8 +664,8 @@ const Dashboard = () => {
             <div className="p-6 md:p-8 xl:p-10 max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                 
-                {/* ── LEFT COLUMN ── */}
-                <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+                {/* ── PROFILE COLUMN (Right on Desktop, Top on Mobile) ── */}
+                <div className="lg:col-span-5 xl:col-span-4 space-y-6 lg:order-last">
                   
                   {/* Hero Card */}
                   <div className="bg-gradient-to-b from-green-50 to-white border border-green-100 shadow-sm rounded-2xl p-8 flex flex-col items-center text-center relative overflow-hidden">
@@ -796,8 +796,8 @@ const Dashboard = () => {
                   )}
                 </div>
 
-                {/* ── RIGHT COLUMN ── */}
-                <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+                {/* ── STATS COLUMN (Left on Desktop, Bottom on Mobile) ── */}
+                <div className="lg:col-span-7 xl:col-span-8 space-y-6 lg:order-first">
                   
                   {/* Stats Strip */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
