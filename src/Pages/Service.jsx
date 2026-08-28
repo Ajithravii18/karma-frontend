@@ -1,38 +1,38 @@
-import { forwardRef } from "react";
-import { FaRecycle, FaLeaf, FaMapMarkedAlt, FaUtensils, FaChartBar, FaBell } from "react-icons/fa";
+import { forwardRef } from"react";
+import { FaRecycle, FaLeaf, FaMapMarkedAlt, FaUtensils, FaChartBar, FaBell } from"react-icons/fa";
 import hero from '../assets/hero.jpg'
 
 const Services = forwardRef((props, ref) => {
   const services = [
     {
       icon: <FaRecycle />,
-      title: "Smart Waste Collection",
-      desc: "Schedule door-to-door waste pickup, track collection status in real-time, and make secure online payments with full transparency.",
+      title:"Smart Waste Collection",
+      desc:"Schedule door-to-door waste pickup, track collection status in real-time, and make secure online payments with full transparency.",
     },
     {
       icon: <FaLeaf />,
-      title: "Waste Segregation",
-      desc: "Categorize waste into biodegradable, non-biodegradable, plastic, and e-waste to promote responsible disposal and sustainability.",
+      title:"Waste Segregation",
+      desc:"Categorize waste into biodegradable, non-biodegradable, plastic, and e-waste to promote responsible disposal and sustainability.",
     },
     {
       icon: <FaMapMarkedAlt />,
-      title: "Pollution Reporting",
-      desc: "Report illegal dumping or polluted areas with image and live location for faster action by authorities.",
+      title:"Pollution Reporting",
+      desc:"Report illegal dumping or polluted areas with image and live location for faster action by authorities.",
     },
     {
       icon: <FaUtensils />,
-      title: "Food Sharing Platform",
-      desc: "List surplus edible food and allow NGOs or volunteers to collect and distribute it to the needy.",
+      title:"Food Sharing Platform",
+      desc:"List surplus edible food and allow NGOs or volunteers to collect and distribute it to the needy.",
     },
     {
       icon: <FaChartBar />,
-      title: "Admin Dashboard",
-      desc: "Comprehensive dashboard to manage users, workers, complaints, payments, and monitor service efficiency.",
+      title:"Admin Dashboard",
+      desc:"Comprehensive dashboard to manage users, workers, complaints, payments, and monitor service efficiency.",
     },
     {
       icon: <FaBell />,
-      title: "Real-Time Notifications",
-      desc: "Automated alerts for pickup schedules, complaint updates, and food availability.",
+      title:"Real-Time Notifications",
+      desc:"Automated alerts for pickup schedules, complaint updates, and food availability.",
     },
   ];
 
@@ -43,8 +43,8 @@ const Services = forwardRef((props, ref) => {
         className="absolute inset-0 z-0 opacity-10"
         style={{
           backgroundImage: `url(${hero})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize:"cover",
+          backgroundPosition:"center",
         }}
       ></div>
 

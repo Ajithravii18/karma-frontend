@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from"react";
 import {
   FaUser, FaRecycle, FaExclamationTriangle, FaUtensils,
   FaChevronRight, FaEdit, FaCheck, FaTimes, FaColumns,
   FaCreditCard, FaSpinner, FaClock, FaDownload, FaLeaf,
   FaFlag, FaStar, FaInfoCircle, FaCheckCircle, FaCheckDouble
-} from "react-icons/fa";
-import api from "../utils/api";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { generateReceipt } from "../utils/ReceiptGenerator";
-import Nav from "../Components/Nav";
-import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../firebaseconfig";
-import Counter from "../Components/Counter";
+} from"react-icons/fa";
+import api from"../utils/api";
+import { useNavigate } from"react-router-dom";
+import toast from"react-hot-toast";
+import { generateReceipt } from"../utils/ReceiptGenerator";
+import Nav from"../Components/Nav";
+import { auth, RecaptchaVerifier, signInWithPhoneNumber } from"../firebaseconfig";
+import Counter from"../Components/Counter";
 
 
 const Dashboard = () => {
@@ -29,12 +29,12 @@ const Dashboard = () => {
   const itemsPerPage = 5;
 
   // --- SECURITY STATES ---
-  const [phoneState, setPhoneState] = useState({ show: false, newPhone: "", otp: "", step: 1, loading: false });
-  const [deleteState, setDeleteState] = useState({ show: false, reason: "", otp: "", loading: false });
-  const [reviewModal, setReviewModal] = useState({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false });
+  const [phoneState, setPhoneState] = useState({ show: false, newPhone:"", otp:"", step: 1, loading: false });
+  const [deleteState, setDeleteState] = useState({ show: false, reason:"", otp:"", loading: false });
+  const [reviewModal, setReviewModal] = useState({ show: false, item: null, type:"", rating: 0, comment:"", isReport: false, reportReason:"", loading: false });
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const currentName = localStorage.getItem("userName") || user.name || "User";
+  const user = JSON.parse(localStorage.getItem("user") ||"{}");
+  const currentName = localStorage.getItem("userName") || user.name ||"User";
 
   // --- FIXED LOGIC HOOKS ---
   useEffect(() => {
@@ -46,13 +46,13 @@ const Dashboard = () => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("txnid")) {
       toast.success("Payment Successful! The volunteer has been notified.");
-      window.history.replaceState({}, document.title, "/dashboard");
+      window.history.replaceState({}, document.title,"/dashboard");
       fetchAllData();
     }
     
     const retryId = params.get("retry");
     if (retryId) {
-      window.history.replaceState({}, document.title, "/dashboard");
+      window.history.replaceState({}, document.title,"/dashboard");
       // Delay slightly to ensure component is mounted and data is fetched if needed
       setTimeout(() => {
         handlePayment(retryId);
@@ -62,7 +62,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!loading && activeTab !== "profile") {
+      if (!loading && activeTab !=="profile") {
         fetchAllData(false);
       }
     }, 10000);
@@ -109,7 +109,7 @@ const Dashboard = () => {
     try {
       // Dynamically load Razorpay SDK
       const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.src ="https://checkout.razorpay.com/v1/checkout.js";
       script.onerror = () => {
         toast.error("Razorpay SDK failed to load. Are you online?");
         setProcessingPayment(null);
@@ -123,9 +123,9 @@ const Dashboard = () => {
             key: orderData.key,
             amount: orderData.amount,
             currency: orderData.currency,
-            name: "Karma",
-            description: "Waste Pickup Fee",
-            image: "https://cdn-icons-png.flaticon.com/512/3299/3299935.png",
+            name:"Karma",
+            description:"Waste Pickup Fee",
+            image:"https://cdn-icons-png.flaticon.com/512/3299/3299935.png",
             order_id: orderData.orderId,
             handler: async function (response) {
               try {
@@ -141,16 +141,16 @@ const Dashboard = () => {
             },
             prefill: {
               name: currentName,
-              contact: user.phone || ""
+              contact: user.phone ||""
             },
             theme: {
-              color: "#16a34a"
+              color:"#16a34a"
             }
           };
 
           const rzp = new window.Razorpay(options);
           rzp.on("payment.failed", function (response) {
-            window.location.href = `/payment-failure?error=${response.error.description || "payment_failed"}&pickupId=${pickupId}`;
+            window.location.href = `/payment-failure?error=${response.error.description ||"payment_failed"}&pickupId=${pickupId}`;
           });
           rzp.open();
         } catch (apiErr) {
@@ -177,7 +177,7 @@ const Dashboard = () => {
   };
 
   const handleFlagVolunteer = async (item, type) => {
-    const reason = window.prompt("GÜán+Å Report Issue: Describe the problem with this volunteer/mission (e.g., No show, rude behavior):");
+    const reason = window.prompt("Gï¿½ï¿½n+ï¿½ Report Issue: Describe the problem with this volunteer/mission (e.g., No show, rude behavior):");
     if (!reason || reason.trim().length < 5) {
       toast.error("Please provide a detailed reason (min 5 characters)");
       return;
@@ -191,12 +191,12 @@ const Dashboard = () => {
       toast.success("Issue reported to Admin HQ");
       fetchAllData(false);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to submit report");
+      toast.error(err.response?.data?.message ||"Failed to submit report");
     }
   };
 
   const handleLiveHelp = async (item, type) => {
-    const message = window.prompt("=ƒåÿ SOS: What issue are you experiencing? (e.g., Courier is not answering, payment stuck):");
+    const message = window.prompt("=ï¿½ï¿½ï¿½ SOS: What issue are you experiencing? (e.g., Courier is not answering, payment stuck):");
     if (!message || message.trim().length < 5) {
       return toast.error("Please provide a brief description (min 5 characters)");
     }
@@ -212,7 +212,7 @@ const Dashboard = () => {
       });
       toast.success("Help signal sent to HQ. Standby.");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to signal HQ");
+      toast.error(err.response?.data?.message ||"Failed to signal HQ");
     }
   };
 
@@ -232,7 +232,7 @@ const Dashboard = () => {
         reportReason: reviewModal.reportReason
       });
       toast.success("Feedback uploaded to mission logs");
-      setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false });
+      setReviewModal({ show: false, item: null, type:"", rating: 0, comment:"", isReport: false, reportReason:"", loading: false });
       fetchAllData(false);
     } catch (err) {
       toast.error("Upload failed. Offline?");
@@ -251,19 +251,19 @@ const Dashboard = () => {
       const check = await api.get(`/api/check-phone-availability?phone=${formattedPhone}`);
       if (check.data.exists) {
         setPhoneState(prev => ({ ...prev, loading: false }));
-        return toast.error("Number already registered ");
+        return toast.error("Number already registered");
       }
 
       // 2. Firebase Recaptcha
       if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "invisible" });
+        window.recaptchaVerifier = new RecaptchaVerifier(auth,"recaptcha-container", { size:"invisible" });
       }
 
       // 3. Send SMS
       const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
       window.confirmationResult = confirmationResult;
 
-      toast.success("Security code sent! ");
+      toast.success("Security code sent!");
       setPhoneState(prev => ({ ...prev, step: 2, loading: false }));
     } catch (err) {
       console.error(err);
@@ -287,7 +287,7 @@ const Dashboard = () => {
 
       toast.success("Shield updated! Rebooting session...");
       localStorage.clear();
-      setTimeout(() => window.location.href = "/login", 1500);
+      setTimeout(() => window.location.href ="/login", 1500);
     } catch (err) {
       toast.error("Invalid verification code");
       setPhoneState(prev => ({ ...prev, loading: false }));
@@ -301,14 +301,14 @@ const Dashboard = () => {
     try {
       // 1. Firebase Recaptcha
       if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "invisible" });
+        window.recaptchaVerifier = new RecaptchaVerifier(auth,"recaptcha-container", { size:"invisible" });
       }
 
       // 2. Send SMS to current number
       const confirmationResult = await signInWithPhoneNumber(auth, user.phone, window.recaptchaVerifier);
       window.confirmationResult = confirmationResult;
 
-      toast.success("Termination OTP sent! ");
+      toast.success("Termination OTP sent!");
       setDeleteState(prev => ({ ...prev, step: 2, loading: false }));
     } catch (err) {
       toast.error("Security handshake failed");
@@ -324,7 +324,7 @@ const Dashboard = () => {
     try {
       setDeleteState(prev => ({ ...prev, loading: true }));
 
-      // 1. Verify Firebase OTP GÇö this signs the user into Firebase Auth
+      // 1. Verify Firebase OTP Gï¿½ï¿½ this signs the user into Firebase Auth
       await window.confirmationResult.confirm(deleteState.otp);
 
       // 2. Delete the Firebase Auth user from the client side
@@ -335,7 +335,7 @@ const Dashboard = () => {
           console.log("Firebase Auth user deleted successfully.");
         }
       } catch (firebaseErr) {
-        // Log but don't block GÇö the backend will also attempt Firebase Admin deletion
+        // Log but don't block Gï¿½ï¿½ the backend will also attempt Firebase Admin deletion
         console.warn("Firebase client-side deletion warning:", firebaseErr?.message);
       }
 
@@ -344,10 +344,10 @@ const Dashboard = () => {
 
       toast.success("Identity purged. Goodbye.");
       localStorage.clear();
-      setTimeout(() => window.location.href = "/", 1500);
+      setTimeout(() => window.location.href ="/", 1500);
     } catch (err) {
       console.error("Account deletion error:", err);
-      const msg = err?.response?.data?.message || err?.message || "Verification failed";
+      const msg = err?.response?.data?.message || err?.message ||"Verification failed";
       toast.error(msg);
       setDeleteState(prev => ({ ...prev, loading: false }));
     }
@@ -358,11 +358,11 @@ const Dashboard = () => {
   const getFilteredData = () => {
     const list = data[activeTab] || [];
     return list.filter(item => {
-      const status = (item.status || "Pending").toLowerCase();
-      const matchesStatus = statusFilter === "all" ||
-        (statusFilter === "pending" && ["pending", "reported", "available"].includes(status)) ||
-        (statusFilter === "active" && ["verified", "claimed", "arrived", "collected", "paid", "success"].includes(status)) ||
-        (statusFilter === "completed" && ["completed", "resolved", "delivered"].includes(status));
+      const status = (item.status ||"Pending").toLowerCase();
+      const matchesStatus = statusFilter ==="all" ||
+        (statusFilter ==="pending" && ["pending","reported","available"].includes(status)) ||
+        (statusFilter ==="active" && ["verified","claimed","arrived","collected","paid","success"].includes(status)) ||
+        (statusFilter ==="completed" && ["completed","resolved","delivered"].includes(status));
 
       let matchesMonth = true;
       if (monthFilter) {
@@ -376,7 +376,7 @@ const Dashboard = () => {
 
   // --- STATUS THEMES ---
   const getStatusStyle = (status) => {
-    const base = "px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1.5 w-fit border";
+    const base ="px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1.5 w-fit border";
     const s = status?.toLowerCase();
     switch (s) {
       case 'completed':
@@ -407,32 +407,32 @@ const Dashboard = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 group whitespace-nowrap border w-full text-left ${activeTab === id
-        ? "bg-green-600 text-white shadow-md border-green-600"
-        : "bg-white text-slate-500 border-transparent hover:border-slate-300 hover:text-slate-900 shadow-sm"
+        ?"bg-green-600 text-white shadow-md border-green-600"
+        :"bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-sm"
         }`}
     >
       <div className="flex items-center gap-2 md:gap-4 font-bold tracking-tight text-[11px] md:text-sm">
-        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ? "bg-white/10" : "bg-slate-50 group-hover:bg-slate-100"}`}>
+        <div className={`p-1.5 md:p-2 rounded-lg transition-colors ${activeTab === id ?"bg-white" :"bg-slate-50 group-hover:bg-slate-100"}`}>
           <Icon size={14} className="md:w-4.5 md:h-4.5" />
         </div>
         {label}
       </div>
-      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ? "opacity-100" : "opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"}`} />
+      <FaChevronRight className={`hidden lg:block text-xs transition-transform duration-300 ${activeTab === id ?"opacity-100" :"opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"}`} />
     </button>
   );
 
   const renderMobileCard = (item, type) => {
     const status = item.status?.toLowerCase();
-    const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+    const isFinished = ["completed","resolved","delivered","success","paid"].includes(status);
     const hasVolunteer = item.assignedVolunteer || item.claimedBy;
     const startDateTime = new Date(item.createdAt || item.reportedAt);
 
     return (
-      <div key={item._id} className="bg-white/40 backdrop-blur-md shadow-sm border border-white/50 p-5 rounded-2xl border border-white/60 shadow-sm mb-4">
+      <div key={item._id} className="bg-white shadow-sm border border-slate-200 p-5 rounded-2xl border border-slate-200 shadow-sm mb-4">
         <div className="flex justify-between items-start mb-4">
-          <div className={getStatusStyle(item.status || "Pending")}>
+          <div className={getStatusStyle(item.status ||"Pending")}>
              {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
-             {item.status || "Pending"}
+             {item.status ||"Pending"}
           </div>
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
             {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
@@ -440,24 +440,24 @@ const Dashboard = () => {
         </div>
 
         <h4 className="text-base font-black text-gray-900 mb-1">
-          {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+          {item.placeName || item.wasteType || item.pollutionType ||"Service Request"}
         </h4>
         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
            Mission ID: #{item._id?.slice(-8)}
         </p>
 
         <div className="flex flex-col gap-3">
-          {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+          {(status ==="arrived" || status ==="awaiting payment") && type ==="pickups" ? (
             <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
-              <FaCreditCard /> Pay Gé¦50
+              <FaCreditCard /> Pay Gï¿½50
             </button>
-          ) : status === "collected" && type === "food" ? (
+          ) : status ==="collected" && type ==="food" ? (
              !item.donorConfirmedCollection && (
               <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
                 <FaCheck /> Confirm Collection
               </button>
              )
-          ) : status === "completed" && type === "pickups" ? (
+          ) : status ==="completed" && type ==="pickups" ? (
             <button onClick={() => generateReceipt(item)} className="w-full bg-slate-900 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
               <FaDownload size={10} /> Get Receipt
             </button>
@@ -468,13 +468,13 @@ const Dashboard = () => {
               onClick={() => handleLiveHelp(item, type)}
               className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100"
             >
-              <FaInfoCircle /> {item.helpRequested ? "Signal Active" : "Request Help"}
+              <FaInfoCircle /> {item.helpRequested ?"Signal Active" :"Request Help"}
             </button>
           )}
 
           {hasVolunteer && isFinished && !item.review && (
             <button
-              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
               className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2"
             >
               <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
@@ -507,7 +507,7 @@ const Dashboard = () => {
             <tbody>
               {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item, idx) => {
                 const status = item.status?.toLowerCase();
-                const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+                const isFinished = ["completed","resolved","delivered","success","paid"].includes(status);
                 const hasVolunteer = item.assignedVolunteer || item.claimedBy;
 
                 const startDateTime = new Date(item.createdAt || item.reportedAt);
@@ -549,7 +549,7 @@ const Dashboard = () => {
                     {/* DESCRIPTION */}
                     <td className="px-5 py-4 border-l border-gray-50">
                       <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
-                        {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+                        {item.placeName || item.wasteType || item.pollutionType ||"Service Request"}
                       </p>
                       <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
                         <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
@@ -558,18 +558,18 @@ const Dashboard = () => {
                     </td>
 
                     <td className="px-5 py-4">
-                      <span className={getStatusStyle(item.status || "Pending")}>
+                      <span className={getStatusStyle(item.status ||"Pending")}>
                         {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
-                        {item.status || "Pending"}
+                        {item.status ||"Pending"}
                       </span>
                     </td>
                     <td className="px-5 py-4 last:rounded-r-2xl">
                       <div className="flex flex-col items-center gap-2">
-                        {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+                        {(status ==="arrived" || status ==="awaiting payment") && type ==="pickups" ? (
                           <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
-                            <FaCreditCard /> Pay Gé¦50
+                            <FaCreditCard /> Pay Gï¿½50
                           </button>
-                        ) : status === "collected" && type === "food" ? (
+                        ) : status ==="collected" && type ==="food" ? (
                           item.donorConfirmedCollection ? (
                             <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
                               <FaCheck size={10} /> Fully Logged
@@ -579,7 +579,7 @@ const Dashboard = () => {
                               <FaCheck /> Confirm
                             </button>
                           )
-                        ) : status === "completed" && type === "pickups" ? (
+                        ) : status ==="completed" && type ==="pickups" ? (
                           <button onClick={() => generateReceipt(item)} className="w-full bg-slate-50 text-blue-600 border border-slate-200 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
                             <FaDownload size={10} /> Receipt
                           </button>
@@ -606,7 +606,7 @@ const Dashboard = () => {
                               </div>
                             ) : (
                               <button
-                                onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                                onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
                                 className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-sm active:scale-95"
                               >
                                 <FaStar /> Review & Report
@@ -653,29 +653,23 @@ const Dashboard = () => {
   };
 
   return (
-        <div className="min-h-screen bg-[#F0F5F2] font-sans text-slate-900 pb-20 relative overflow-hidden">
-      {/* Unsplash Background Image with Overlay */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" alt="Nature Background" className="w-full h-full object-cover opacity-90" />
-        <div className="absolute inset-0 bg-emerald-900/10 backdrop-blur-[8px]"></div>
-      </div>
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 relative overflow-hidden">
+      
+      
       
       <div className="relative z-10">
         <Nav />
         <div className="max-w-6xl mx-auto pt-20 md:pt-24 pb-8 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
           {/* LEFT COLUMN: Profile Navigation (Mobile: Horizontal, Desktop: Sidebar) */}
           <div className="lg:col-span-1 space-y-4 md:space-y-6">
-          <div className="bg-white/40 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-white/80 text-center">
+          <div className="bg-white shadow-sm border-slate-200 p-5 md:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-200 text-center">
             <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6">
-              <div className="relative w-full h-full bg-white/80 rounded-full flex items-center justify-center text-2xl md:text-4xl text-emerald-600 font-black shadow-inner border border-white">
+              <div className="relative w-full h-full bg-white rounded-full flex items-center justify-center text-2xl md:text-4xl text-emerald-600 font-black shadow-inner border border-white">
                 {currentName.charAt(0).toUpperCase()}
               </div>
             </div>
             <h2 className="text-lg md:text-xl font-black text-slate-800 tracking-tight">{currentName}</h2>
-            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white/80 text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-sm">
+            <div className="mt-2 md:mt-3 inline-flex px-3 md:px-4 py-1 md:py-1.5 bg-white text-emerald-700 text-[8px] md:text-[10px] font-black uppercase rounded-full border border-white shadow-sm">
               Citizen ID: <span className="ml-1 opacity-70">#{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
             </div>
           </div>
@@ -689,21 +683,21 @@ const Dashboard = () => {
 
         {/* RIGHT COLUMN: Tab Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white/40 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent rounded-[2rem] shadow-xl shadow-slate-200/50 border border-white/80 overflow-hidden min-h-[500px]">
-            {activeTab === "profile" ? (
+          <div className="bg-white shadow-sm border-slate-200 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden min-h-[500px]">
+            {activeTab ==="profile" ? (
                <div className="p-6 md:p-8 animate-in fade-in duration-500">
                 <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
                   <div>
                     <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Main Workspace</h3>
                     <p className="text-gray-400 font-bold text-xs md:sm">Managing your environmental contribution</p>
                   </div>
-                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-sm ${isEditing ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 hover:border-slate-300"}`}>
+                  <button onClick={() => setIsEditing(!isEditing)} className={`w-full md:w-auto p-3 rounded-2xl transition-all duration-300 flex items-center justify-center md:justify-start gap-2 font-black text-[10px] uppercase shadow-sm ${isEditing ?"bg-red-50 text-red-600 hover:bg-red-100" :"bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 hover:border-slate-300"}`}>
                     {isEditing ? <><FaTimes /> Cancel</> : <><FaEdit /> Edit Profile</>}
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="p-6 bg-white/40 backdrop-blur-md shadow-sm border border-white/50 rounded-2xl border border-white/60 group transition-all hover:bg-white/60 hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white shadow-sm border border-slate-200 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaUser size={14} />
@@ -717,7 +711,7 @@ const Dashboard = () => {
                       </div>
                     ) : <p className="text-xl font-black text-slate-800 tracking-tight ml-1">{currentName}</p>}
                   </div>
-                  <div className="p-6 bg-white/40 backdrop-blur-md shadow-sm border border-white/50 rounded-2xl border border-white/60 group transition-all hover:bg-white/60 hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-6 bg-white shadow-sm border border-slate-200 rounded-2xl border border-slate-200 group transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
                         <FaClock size={14} />
@@ -728,7 +722,7 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* =ƒöÆ SECURITY SECTION */}
+                {/* =ï¿½ï¿½ï¿½ SECURITY SECTION */}
                 {isEditing && (
                   <div className="mb-12 space-y-6 animate-in slide-in-from-top-4 duration-500">
                     <div className="flex items-center gap-4">
@@ -741,7 +735,7 @@ const Dashboard = () => {
                         onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
                         className={`flex-1 min-w-[200px] px-6 md:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase transition-all flex items-center justify-center md:justify-start gap-3 shadow-sm ${phoneState.show ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                       >
-                        <FaEdit size={14} className={phoneState.show ? "text-green-400" : "text-green-600"} /> Update Phone
+                        <FaEdit size={14} className={phoneState.show ?"text-green-400" :"text-green-600"} /> Update Phone
                       </button>
                       <button
                         onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
@@ -768,7 +762,7 @@ const Dashboard = () => {
                               onClick={handleSendPhoneOtp} disabled={phoneState.loading}
                               className="bg-green-600 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-sm"
                             >
-                              {phoneState.loading ? "Requesting..." : "Send Verification Code"}
+                              {phoneState.loading ?"Requesting..." :"Send Verification Code"}
                             </button>
                           </div>
                         ) : (
@@ -781,9 +775,9 @@ const Dashboard = () => {
                                     key={i}
                                     type="text"
                                     maxLength="1"
-                                    value={phoneState.otp[i] || ""}
+                                    value={phoneState.otp[i] ||""}
                                     onChange={(e) => {
-                                      const val = e.target.value.replace(/[^0-9]/g, "");
+                                      const val = e.target.value.replace(/[^0-9]/g,"");
                                       let newOtp = phoneState.otp.split("");
                                       newOtp[i] = val;
                                       setPhoneState({ ...phoneState, otp: newOtp.join("") });
@@ -798,7 +792,7 @@ const Dashboard = () => {
                               onClick={handleVerifyPhone} disabled={phoneState.loading}
                               className="bg-slate-900 text-white px-10 py-4 rounded-2xl text-[11px] font-black uppercase hover:bg-slate-800 transition-all shadow-sm"
                             >
-                              {phoneState.loading ? "Verifying..." : "Confirm Protocol"}
+                              {phoneState.loading ?"Verifying..." :"Confirm Protocol"}
                             </button>
                           </div>
                         )}
@@ -808,7 +802,7 @@ const Dashboard = () => {
                     {deleteState.show && (
                       <div className="p-10 bg-rose-50 border border-rose-100 rounded-[3rem] shadow-inner animate-in slide-in-from-top-4 duration-300">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 bg-rose-200 text-rose-700 rounded-full flex items-center justify-center text-xl animate-pulse">GÜán+Å</div>
+                          <div className="w-10 h-10 bg-rose-200 text-rose-700 rounded-full flex items-center justify-center text-xl animate-pulse">Gï¿½ï¿½n+ï¿½</div>
                           <div>
                             <h4 className="text-xl font-black text-rose-900 tracking-tight">Termination Protocol</h4>
                             <p className="text-[10px] text-rose-500 font-black uppercase tracking-widest">This action will permanently purge your data.</p>
@@ -826,7 +820,7 @@ const Dashboard = () => {
                               onClick={handleDeleteRequest} disabled={deleteState.loading}
                               className="w-full bg-rose-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all shadow-xl shadow-rose-900/20 active:scale-95"
                             >
-                              {deleteState.loading ? "Processing..." : "Initiate Verification"}
+                              {deleteState.loading ?"Processing..." :"Initiate Verification"}
                             </button>
                           </div>
                         ) : (
@@ -837,9 +831,9 @@ const Dashboard = () => {
                                   key={i}
                                   type="text"
                                   maxLength="1"
-                                  value={deleteState.otp[i] || ""}
+                                  value={deleteState.otp[i] ||""}
                                   onChange={(e) => {
-                                    const val = e.target.value.replace(/[^0-9]/g, "");
+                                    const val = e.target.value.replace(/[^0-9]/g,"");
                                     let newOtp = deleteState.otp.split("");
                                     newOtp[i] = val;
                                     setDeleteState({ ...deleteState, otp: newOtp.join("") });
@@ -853,7 +847,7 @@ const Dashboard = () => {
                               onClick={handleFinalDelete} disabled={deleteState.loading}
                               className="w-full bg-black text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-900 transition-all shadow-2xl active:scale-95"
                             >
-                              {deleteState.loading ? "Purging..." : "FINALIZE ACCOUNT DELETION"}
+                              {deleteState.loading ?"Purging..." :"FINALIZE ACCOUNT DELETION"}
                             </button>
                           </div>
                         )}
@@ -862,9 +856,9 @@ const Dashboard = () => {
                   </div>
                 )}
 
-                {/* =ƒîê THE IMPACT CARD */}
-                <div className="bg-gradient-to-br from-green-900 via-green-950 to-emerald-900 p-8 md:p-10 rounded-3xl text-white shadow-2xl relative overflow-hidden group border border-green-800">
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
+                {/* =ï¿½ï¿½ï¿½ THE IMPACT CARD */}
+                <div className="bg-slate-50 p-8 md:p-10 rounded-3xl text-white shadow-2xl relative overflow-hidden group border border-green-800">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-white -mr-40 -mt-40 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-110"></div>
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 items-center gap-8 md:gap-10">
                     <div className="md:col-span-3 text-center md:text-left">
@@ -878,19 +872,19 @@ const Dashboard = () => {
                           <p className="text-[9px] md:text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-300">Total Life Impact</p>
                         </div>
                       </div>
-                      <div className="w-full h-1.5 md:h-2 bg-white/10 rounded-full mt-6 overflow-hidden">
+                      <div className="w-full h-1.5 md:h-2 bg-white rounded-full mt-6 overflow-hidden">
                         <div className="h-full bg-green-500 w-[75%] rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
                       </div>
                     </div>
 
                     <div className="md:col-span-2 space-y-3 md:space-y-4">
                       {[
-                        { icon: FaRecycle, color: "text-emerald-400", bg: "bg-white/5", label: "Waste Managed", val: stats.breakdown?.pickups, suffix: "+" },
-                        { icon: FaExclamationTriangle, color: "text-rose-400", bg: "bg-white/5", label: "Pollution Cases", val: stats.breakdown?.pollution, suffix: "!" },
-                        { icon: FaUtensils, color: "text-amber-400", bg: "bg-white/5", label: "Food Donations", val: stats.breakdown?.food, suffix: "GÖí" }
+                        { icon: FaRecycle, color:"text-emerald-400", bg:"bg-white", label:"Waste Managed", val: stats.breakdown?.pickups, suffix:"+" },
+                        { icon: FaExclamationTriangle, color:"text-rose-400", bg:"bg-white", label:"Pollution Cases", val: stats.breakdown?.pollution, suffix:"!" },
+                        { icon: FaUtensils, color:"text-amber-400", bg:"bg-white", label:"Food Donations", val: stats.breakdown?.food, suffix:"Gï¿½ï¿½" }
                       ].map((item, i) => (
-                        <div key={i} className={`${item.bg} backdrop-blur-xl px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-white/5 hover:bg-white/10 transition-all cursor-default group/item`}>
-                          <div className={`p-2 rounded-xl bg-white/5 ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
+                        <div key={i} className={`${item.bg}  px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl flex items-center gap-4 border border-slate-200 hover:bg-white transition-all cursor-default group/item`}>
+                          <div className={`p-2 rounded-xl bg-white ${item.color} group-hover/item:scale-110 transition-transform shadow-inner`}>
                             <item.icon size={14} className="md:w-4 md:h-4" />
                           </div>
                           <div>
@@ -917,11 +911,11 @@ const Dashboard = () => {
                   <div className="flex flex-wrap gap-3">
                     {/* Status Filter */}
                     <div className="flex bg-slate-100 p-1 rounded-xl">
-                      {["all", "pending", "active", "completed"].map((s) => (
+                      {["all","pending","active","completed"].map((s) => (
                         <button
                           key={s}
                           onClick={() => setStatusFilter(s)}
-                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ? "bg-white text-green-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                          className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${statusFilter === s ?"bg-white text-green-600 shadow-sm" :"text-slate-400 hover:text-slate-600"}`}
                         >
                           {s}
                         </button>
@@ -945,7 +939,7 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {renderTable(getFilteredData(), ["Service Period", "Description"], activeTab)}
+                {renderTable(getFilteredData(), ["Service Period","Description"], activeTab)}
               </div>
             )}
           </div>
@@ -953,9 +947,9 @@ const Dashboard = () => {
       </div>
       <div id="recaptcha-container"></div>
 
-      {/* =ƒîƒ REVIEW & REPORT MODAL */}
+      {/* =ï¿½ï¿½ REVIEW & REPORT MODAL */}
       {reviewModal.show && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-slate-900/40  z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
             <div className="bg-amber-50 p-8 flex justify-between items-center border-b border-amber-100">
               <div>
@@ -963,7 +957,7 @@ const Dashboard = () => {
                 <p className="text-[10px] text-amber-600 font-bold uppercase tracking-widest">Rate your volunteer & Report issues</p>
               </div>
               <button
-                onClick={() => setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                onClick={() => setReviewModal({ show: false, item: null, type:"", rating: 0, comment:"", isReport: false, reportReason:"", loading: false })}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-amber-900 hover:rotate-90 transition-transform shadow-sm"
               >
                 <FaTimes />
@@ -979,7 +973,7 @@ const Dashboard = () => {
                     <button
                       key={s}
                       onClick={() => setReviewModal(prev => ({ ...prev, rating: s }))}
-                      className={`text-3xl transition-all transform active:scale-75 ${reviewModal.rating >= s ? "text-amber-500 scale-110" : "text-slate-200 hover:text-amber-200"}`}
+                      className={`text-3xl transition-all transform active:scale-75 ${reviewModal.rating >= s ?"text-amber-500 scale-110" :"text-slate-200 hover:text-amber-200"}`}
                     >
                       <FaStar />
                     </button>
@@ -1002,12 +996,12 @@ const Dashboard = () => {
               <div className="pt-4 border-t border-gray-100">
                 <button
                   onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ? "bg-red-50 text-red-700 shadow-inner" : "bg-gray-50 text-gray-400 hover:bg-gray-100"}`}
+                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ?"bg-red-50 text-red-700 shadow-inner" :"bg-gray-50 text-gray-400 hover:bg-gray-100"}`}
                 >
                   <span className="text-[11px] font-black uppercase flex items-center gap-2">
                     <FaExclamationTriangle /> Add Issue Report
                   </span>
-                  <div className={`w-4 h-4 rounded-full border-2 transition-all ${reviewModal.isReport ? "bg-red-500 border-red-500" : "border-gray-300"}`}></div>
+                  <div className={`w-4 h-4 rounded-full border-2 transition-all ${reviewModal.isReport ?"bg-red-500 border-red-500" :"border-gray-300"}`}></div>
                 </button>
 
                 {reviewModal.isReport && (
@@ -1028,7 +1022,7 @@ const Dashboard = () => {
                 disabled={reviewModal.loading}
                 className="w-full bg-green-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-green-700 transition-all shadow-xl shadow-green-900/20 active:scale-95 disabled:opacity-50"
               >
-                {reviewModal.loading ? "Uploading Data..." : "Finalize Review"}
+                {reviewModal.loading ?"Uploading Data..." :"Finalize Review"}
               </button>
             </div>
           </div>

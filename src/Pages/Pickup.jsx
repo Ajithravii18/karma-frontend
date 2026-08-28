@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import api from "../utils/api";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import Nav from "../Components/Nav";
-import AOS from "aos";
-import { FaMapMarkerAlt, FaCrosshairs } from "react-icons/fa";
+import React, { useState, useEffect } from"react";
+import api from"../utils/api";
+import toast from"react-hot-toast";
+import { useNavigate } from"react-router-dom";
+import Nav from"../Components/Nav";
+import AOS from"aos";
+import { FaMapMarkerAlt, FaCrosshairs } from"react-icons/fa";
 
 function SchedulePickup() {
   const navigate = useNavigate();
@@ -13,11 +13,11 @@ function SchedulePickup() {
   const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
 
   const [form, setForm] = useState({
-    address: "",
-    wasteType: "",
-    pickupDate: "",
-    timeSlot: "",
-    description: "",
+    address:"",
+    wasteType:"",
+    pickupDate:"",
+    timeSlot:"",
+    description:"",
     lat: null,
     lng: null
   });
@@ -90,17 +90,17 @@ function SchedulePickup() {
       await api.post("/schedule-pickup", form);
       toast.success("Pickup Scheduled Successfully");
       setForm({
-        address: "", wasteType: "", pickupDate: "", timeSlot: "", description: "",
+        address:"", wasteType:"", pickupDate:"", timeSlot:"", description:"",
         lat: form.lat, lng: form.lng // Keep location for next time if needed
       });
       fetchPastPickups();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong");
+      toast.error(err.response?.data?.message ||"Something went wrong");
     } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-10 relative">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-10 relative">
       <Nav />
       <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -132,7 +132,7 @@ function SchedulePickup() {
                 <p className="text-sm font-medium text-gray-500 leading-relaxed">Doorstep pickup with GPS routing.</p>
               </div>
               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-[#EA580C] flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-slate-50 text-[#EA580C] flex items-center justify-center mb-4">
                   <FaMapMarkerAlt size={16} />
                 </div>
                 <h4 className="font-black text-[#1A2530] text-lg mb-1">Reliable Service</h4>
@@ -155,7 +155,7 @@ function SchedulePickup() {
                   placeholder="Enter detailed address..."
                   value={form.address}
                   onChange={handleChange}
-                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
+                  className="w-full bg-slate-50 border-slate-200 rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
                   required
                 />
               </div>
@@ -168,7 +168,7 @@ function SchedulePickup() {
                     name="wasteType"
                     value={form.wasteType}
                     onChange={handleChange}
-                    className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                    className="w-full bg-slate-50 border-slate-200 rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
                     required
                   >
                     <option value="">Select Type</option>
@@ -185,7 +185,7 @@ function SchedulePickup() {
                     min={today}
                     value={form.pickupDate}
                     onChange={handleChange}
-                    className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
+                    className="w-full bg-slate-50 border-slate-200 rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
                     required
                   />
                 </div>
@@ -197,7 +197,7 @@ function SchedulePickup() {
                   name="timeSlot"
                   value={form.timeSlot}
                   onChange={handleChange}
-                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                  className="w-full bg-slate-50 border-slate-200 rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
                   required
                 >
                   <option value="">Select Time Slot</option>
@@ -214,7 +214,7 @@ function SchedulePickup() {
                   placeholder="Additional Notes for Volunteer..."
                   value={form.description}
                   onChange={handleChange}
-                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-transparent rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
+                  className="w-full bg-slate-50 border-slate-200 rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
                 />
               </div>
 
@@ -223,12 +223,12 @@ function SchedulePickup() {
                 <button
                   type="button"
                   onClick={requestLocation}
-                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
-                      ? "bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
-                      : "bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-[#EA580C] border-[#EA580C]/30 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100"
+                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus ==="success"
+                      ?"bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
+                      :"bg-slate-50 text-[#EA580C] border-[#EA580C]/30 hover:bg-slate-50"
                     }`}
                 >
-                  <FaCrosshairs size={14} /> {locationStatus === "success" ? "GPS FIXED (RE-SYNC)" : "📍 Pin Current Location"}
+                  <FaCrosshairs size={14} /> {locationStatus ==="success" ?"GPS FIXED (RE-SYNC)" :"📍 Pin Current Location"}
                 </button>
               </div>
 
@@ -238,7 +238,7 @@ function SchedulePickup() {
                   disabled={loading}
                   className="w-full bg-[#09B948] text-white py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-[#0B7A30] transition-all shadow-[0_6px_20px_rgb(9,185,72,0.4)] flex items-center justify-center gap-3 disabled:opacity-50"
                 >
-                  {loading ? "Transmitting..." : "🚀 Confirm Schedule"}
+                  {loading ?"Transmitting..." :"🚀 Confirm Schedule"}
                 </button>
               </div>
 
