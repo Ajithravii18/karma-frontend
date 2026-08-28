@@ -12,7 +12,6 @@ function SchedulePickup() {
   const [loading, setLoading] = useState(false);
   const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
 
-  // UPDATED: Form now includes lat and lng
   const [form, setForm] = useState({
     address: "",
     wasteType: "",
@@ -23,10 +22,27 @@ function SchedulePickup() {
     lng: null
   });
 
+  const [pastPickups, setPastPickups] = useState([]);
+  const [loadingPickups, setLoadingPickups] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const fetchPastPickups = async () => {
+    try {
+      setLoadingPickups(true);
+      const res = await api.get("/api/my-pickups");
+      setPastPickups(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingPickups(false);
+    }
+  };
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
-    // Auto-request location on mount for seamless navigation
     requestLocation();
+    fetchPastPickups();
   }, []);
 
   // New function to capture GPS
@@ -77,6 +93,7 @@ function SchedulePickup() {
         address: "", wasteType: "", pickupDate: "", timeSlot: "", description: "",
         lat: form.lat, lng: form.lng // Keep location for next time if needed
       });
+      fetchPastPickups();
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
     } finally { setLoading(false); }
@@ -118,107 +135,160 @@ function SchedulePickup() {
             </div>
           </div>
 
-          {/* RIGHT CONTENT: The Power Form */}
-          <div data-aos="zoom-in" className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          {/* RIGHT CONTENT */}
+          <div data-aos="zoom-in" className="space-y-12">
+            {/* The Power Form */}
+            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
+              <form onSubmit={handleSubmit} className="space-y-6">
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                  <FaMapMarkerAlt /> Pickup Address / Landmark
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  placeholder="Enter detailed address..."
-                  value={form.address}
-                  onChange={handleChange}
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* Row: Waste Type & Pickup Date */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Waste Type</label>
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                    <FaMapMarkerAlt /> Pickup Address / Landmark
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="Enter detailed address..."
+                    value={form.address}
+                    onChange={handleChange}
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
+                    required
+                  />
+                </div>
+
+                {/* Row: Waste Type & Pickup Date */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Waste Type</label>
+                    <select
+                      name="wasteType"
+                      value={form.wasteType}
+                      onChange={handleChange}
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                      required
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Plastic">Plastic</option>
+                      <option value="Food">Food Waste</option>
+                      <option value="E-Waste">E-Waste</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Pickup Date</label>
+                    <input
+                      type="date"
+                      name="pickupDate"
+                      min={today}
+                      value={form.pickupDate}
+                      onChange={handleChange}
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Time Slot</label>
                   <select
-                    name="wasteType"
-                    value={form.wasteType}
+                    name="timeSlot"
+                    value={form.timeSlot}
                     onChange={handleChange}
                     className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                     required
                   >
-                    <option value="">Select Type</option>
-                    <option value="Plastic">Plastic</option>
-                    <option value="Food">Food Waste</option>
-                    <option value="E-Waste">E-Waste</option>
+                    <option value="">Select Time Slot</option>
+                    <option value="9AM-12PM">9:00 AM - 12:00 PM</option>
+                    <option value="12PM-3PM">12:00 PM - 3:00 PM</option>
+                    <option value="3PM-6PM">3:00 PM - 6:00 PM</option>
                   </select>
                 </div>
+
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Pickup Date</label>
-                  <input
-                    type="date"
-                    name="pickupDate"
-                    min={today}
-                    value={form.pickupDate}
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Additional Notes</label>
+                  <textarea
+                    name="description"
+                    placeholder="Additional Notes for Volunteer..."
+                    value={form.description}
                     onChange={handleChange}
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
-                    required
+                    rows="2"
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Time Slot</label>
-                <select
-                  name="timeSlot"
-                  value={form.timeSlot}
-                  onChange={handleChange}
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="">Select Time Slot</option>
-                  <option value="9AM-12PM">9:00 AM - 12:00 PM</option>
-                  <option value="12PM-3PM">12:00 PM - 3:00 PM</option>
-                  <option value="3PM-6PM">3:00 PM - 6:00 PM</option>
-                </select>
-              </div>
+                {/* Location Status Button */}
+                <div className="space-y-4">
+                  <button
+                    type="button"
+                    onClick={requestLocation}
+                    className={`w-full py-4 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
+                        ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
+                      }`}
+                  >
+                    <FaCrosshairs /> {locationStatus === "success" ? "GPS FIXED (RE-SYNC)" : "📍 Pin Current Location"}
+                  </button>
+                </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Additional Notes</label>
-                <textarea
-                  name="description"
-                  placeholder="Additional Notes for Volunteer..."
-                  value={form.description}
-                  onChange={handleChange}
-                  rows="2"
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
-                />
-              </div>
-
-              {/* Location Status Button */}
-              <div className="space-y-4">
                 <button
-                  type="button"
-                  onClick={requestLocation}
-                  className={`w-full py-4 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
-                      ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                      : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
-                    }`}
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
                 >
-                  <FaCrosshairs /> {locationStatus === "success" ? "GPS FIXED (RE-SYNC)" : "📍 Pin Current Location"}
+                  {loading ? "Transmitting..." : "🚀 Confirm Schedule"}
                 </button>
-              </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
-              >
-                {loading ? "Transmitting..." : "🚀 Confirm Schedule"}
-              </button>
+              </form>
+            </div>
 
-            </form>
+            {/* History List */}
+            <div className="bg-white p-8 rounded-[3rem] shadow-xl shadow-slate-200/40 border border-slate-50">
+               <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Recent Requests</h3>
+               {loadingPickups ? (
+                 <p className="text-slate-400 text-sm font-bold animate-pulse text-center py-4">Loading past pickups...</p>
+               ) : pastPickups.length === 0 ? (
+                 <p className="text-slate-400 text-sm font-bold text-center py-4">No past pickups found.</p>
+               ) : (
+                 <div className="space-y-4">
+                   {pastPickups.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((req) => (
+                     <div key={req._id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
+                       <div>
+                         <p className="text-sm font-black text-slate-800">{req.wasteType}</p>
+                         <p className="text-[10px] font-bold text-slate-500 mt-1">{new Date(req.pickupDate).toLocaleDateString()} | {req.timeSlot}</p>
+                       </div>
+                       <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest self-start sm:self-auto ${
+                         req.status?.toLowerCase() === 'completed' ? 'bg-emerald-100 text-emerald-700' : 
+                         req.status?.toLowerCase() === 'assigned' ? 'bg-indigo-100 text-indigo-700' : 'bg-amber-100 text-amber-700'
+                       }`}>
+                         {req.status || 'Pending'}
+                       </span>
+                     </div>
+                   ))}
+                   
+                   {/* Pagination */}
+                   {Math.ceil(pastPickups.length / itemsPerPage) > 1 && (
+                     <div className="flex justify-center items-center gap-4 pt-4 border-t border-slate-100 mt-6">
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &lt;
+                        </button>
+                        <span className="text-[10px] font-black uppercase text-slate-500">
+                            Page <span className="text-green-600">{currentPage}</span> of {Math.ceil(pastPickups.length / itemsPerPage)}
+                        </span>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(pastPickups.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(pastPickups.length / itemsPerPage)}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &gt;
+                        </button>
+                     </div>
+                   )}
+                 </div>
+               )}
+            </div>
           </div>
         </div>
       </section>

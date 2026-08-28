@@ -40,8 +40,26 @@ function ReportLeftoverFood() {
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
 
+  const [pastFood, setPastFood] = useState([]);
+  const [loadingFood, setLoadingFood] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const fetchPastFood = async () => {
+    try {
+      setLoadingFood(true);
+      const res = await api.get("/api/my-food");
+      setPastFood(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingFood(false);
+    }
+  };
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
+    fetchPastFood();
   }, []);
 
   const getCurrentLocation = () => {
@@ -89,7 +107,12 @@ function ReportLeftoverFood() {
       await api.post("/report-leftover-food", payload);
 
       toast.success("Mission Dispatched: Food Reported!");
-      navigate("/");
+      setPlaceName("");
+      setQuantity("");
+      setFoodType("Veg");
+      setExpiryTime("");
+      setNotes("");
+      fetchPastFood();
     } catch (err) {
       toast.error(err.response?.data?.message || "Reporting Failed");
     } finally {
@@ -134,102 +157,155 @@ function ReportLeftoverFood() {
             </div>
           </div>
 
-          {/* RIGHT CONTENT: The Power Form */}
-          <div data-aos="zoom-in" className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
-              {/* Row 1: Place & Quantity */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaMapMarkerAlt /> Pickup Location
-                  </label>
-                  <input 
-                    type="text" placeholder="Restaurant / Event Name" 
-                    value={placeName} onChange={(e) => setPlaceName(e.target.value)} 
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
-                    required 
-                  />
+          {/* RIGHT CONTENT */}
+          <div data-aos="zoom-in" className="space-y-12">
+            {/* The Power Form */}
+            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* Row 1: Place & Quantity */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                      <FaMapMarkerAlt /> Pickup Location
+                    </label>
+                    <input 
+                      type="text" placeholder="Restaurant / Event Name" 
+                      value={placeName} onChange={(e) => setPlaceName(e.target.value)} 
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
+                      required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                      <FaUtensils /> Servings (Count)
+                    </label>
+                    <input 
+                      type="number" placeholder="How many people?" 
+                      value={quantity} onChange={(e) => setQuantity(e.target.value)} 
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
+                      required 
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaUtensils /> Servings (Count)
-                  </label>
-                  <input 
-                    type="number" placeholder="How many people?" 
-                    value={quantity} onChange={(e) => setQuantity(e.target.value)} 
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
-                    required 
-                  />
-                </div>
-              </div>
 
-              {/* Row 2: Category & Expiry */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaLayerGroup /> Food Category
-                  </label>
-                  <select 
-                    value={foodType} onChange={(e) => setFoodType(e.target.value)}
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                {/* Row 2: Category & Expiry */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                      <FaLayerGroup /> Food Category
+                    </label>
+                    <select 
+                      value={foodType} onChange={(e) => setFoodType(e.target.value)}
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                    >
+                      <option value="Veg">🥦 Veg Only</option>
+                      <option value="Non-Veg">🍖 Non-Veg</option>
+                      <option value="Mix">🍱 Mixed Items</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                      <FaClock /> Best Before (Expiry)
+                    </label>
+                    <input 
+                      type="datetime-local" 
+                      value={expiryTime} onChange={(e) => setExpiryTime(e.target.value)} 
+                      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600" 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Location Selector */}
+                <div className="space-y-4">
+                  <button 
+                    type="button" onClick={getCurrentLocation} 
+                    className="w-full py-4 bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-emerald-100 transition-all flex items-center justify-center gap-3"
                   >
-                    <option value="Veg">🥦 Veg Only</option>
-                    <option value="Non-Veg">🍖 Non-Veg</option>
-                    <option value="Mix">🍱 Mixed Items</option>
-                  </select>
+                    {locationLoading ? "Analyzing Satellite Data..." : "📍 Pin Current Location"}
+                  </button>
+
+                  <div className="rounded-[2rem] overflow-hidden border-8 border-slate-50 h-56 shadow-inner relative group">
+                    <MapContainer center={position} zoom={16} className="h-full w-full z-0">
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Marker position={position} />
+                      <MapUpdater center={position} />
+                    </MapContainer>
+                    <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[1.5rem]"></div>
+                  </div>
                 </div>
+
+                {/* Notes */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                    <FaClock /> Best Before (Expiry)
-                  </label>
-                  <input 
-                    type="datetime-local" 
-                    value={expiryTime} onChange={(e) => setExpiryTime(e.target.value)} 
-                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600" 
-                    required 
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Additional Instructions</label>
+                  <textarea 
+                    placeholder="E.g. Take from back gate, items are pre-packed..." 
+                    value={notes} onChange={(e) => setNotes(e.target.value)} 
+                    rows="2" 
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium" 
                   />
                 </div>
-              </div>
 
-              {/* Location Selector */}
-              <div className="space-y-4">
+                {/* Submit */}
                 <button 
-                  type="button" onClick={getCurrentLocation} 
-                  className="w-full py-4 bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-emerald-100 transition-all flex items-center justify-center gap-3"
+                  type="submit" disabled={loading} 
+                  className="w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
                 >
-                  {locationLoading ? "Analyzing Satellite Data..." : "📍 Pin Current Location"}
+                  {loading ? "Syncing with Cloud..." : "🚀 Dispatch Report"}
                 </button>
+              </form>
+            </div>
 
-                <div className="rounded-[2rem] overflow-hidden border-8 border-slate-50 h-56 shadow-inner relative group">
-                  <MapContainer center={position} zoom={16} className="h-full w-full z-0">
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <Marker position={position} />
-                    <MapUpdater center={position} />
-                  </MapContainer>
-                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[1.5rem]"></div>
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Additional Instructions</label>
-                <textarea 
-                  placeholder="E.g. Take from back gate, items are pre-packed..." 
-                  value={notes} onChange={(e) => setNotes(e.target.value)} 
-                  rows="2" 
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium" 
-                />
-              </div>
-
-              {/* Submit */}
-              <button 
-                type="submit" disabled={loading} 
-                className="w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-green-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
-              >
-                {loading ? "Syncing with Cloud..." : "🚀 Dispatch Report"}
-              </button>
-            </form>
+            {/* History List */}
+            <div className="bg-white p-8 rounded-[3rem] shadow-xl shadow-slate-200/40 border border-slate-50">
+               <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Recent Donations</h3>
+               {loadingFood ? (
+                 <p className="text-slate-400 text-sm font-bold animate-pulse text-center py-4">Loading past donations...</p>
+               ) : pastFood.length === 0 ? (
+                 <p className="text-slate-400 text-sm font-bold text-center py-4">No past donations found.</p>
+               ) : (
+                 <div className="space-y-4">
+                   {pastFood.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((req) => (
+                     <div key={req._id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
+                       <div>
+                         <p className="text-sm font-black text-slate-800">{req.placeName} <span className="text-[10px] text-slate-500 ml-2 bg-slate-200 px-2 py-0.5 rounded">{req.quantity} servings</span></p>
+                         <p className="text-[10px] font-bold text-slate-500 mt-1">{new Date(req.createdAt).toLocaleDateString()} | Expiry: {new Date(req.expiryTime).toLocaleString()}</p>
+                       </div>
+                       <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest self-start sm:self-auto ${
+                         req.status?.toLowerCase() === 'completed' || req.status?.toLowerCase() === 'delivered' ? 'bg-emerald-100 text-emerald-700' : 
+                         req.status?.toLowerCase() === 'assigned' || req.status?.toLowerCase() === 'claimed' ? 'bg-indigo-100 text-indigo-700' : 'bg-amber-100 text-amber-700'
+                       }`}>
+                         {req.status || 'Pending'}
+                       </span>
+                     </div>
+                   ))}
+                   
+                   {/* Pagination */}
+                   {Math.ceil(pastFood.length / itemsPerPage) > 1 && (
+                     <div className="flex justify-center items-center gap-4 pt-4 border-t border-slate-100 mt-6">
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &lt;
+                        </button>
+                        <span className="text-[10px] font-black uppercase text-slate-500">
+                            Page <span className="text-emerald-600">{currentPage}</span> of {Math.ceil(pastFood.length / itemsPerPage)}
+                        </span>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(pastFood.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(pastFood.length / itemsPerPage)}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &gt;
+                        </button>
+                     </div>
+                   )}
+                 </div>
+               )}
+            </div>
           </div>
         </div>
       </section>

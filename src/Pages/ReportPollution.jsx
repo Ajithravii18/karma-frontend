@@ -34,9 +34,27 @@ function PollutionReport() {
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef();
 
+  const [pastPollution, setPastPollution] = useState([]);
+  const [loadingPollution, setLoadingPollution] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const fetchPastPollution = async () => {
+    try {
+      setLoadingPollution(true);
+      const res = await api.get("/api/my-pollution");
+      setPastPollution(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingPollution(false);
+    }
+  };
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
     getLocation(); // Auto-request location on mount
+    fetchPastPollution();
   }, []);
 
   const getLocation = () => {
@@ -102,6 +120,7 @@ function PollutionReport() {
       setPollutionType("");
       setDescription("");
       setPhotos([]);
+      fetchPastPollution();
     } catch (err) {
       toast.error(err.response?.data?.message || "Transmission failed");
     } finally {
@@ -145,119 +164,172 @@ function PollutionReport() {
             </div>
           </div>
 
-          {/* RIGHT CONTENT: The Power Form */}
-          <div data-aos="zoom-in" className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          {/* RIGHT CONTENT */}
+          <div data-aos="zoom-in" className="space-y-12">
+            {/* The Power Form */}
+            <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-slate-50">
+              <form onSubmit={handleSubmit} className="space-y-6">
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                  <FaExclamationTriangle /> Incident Category
-                </label>
-                <select
-                  value={pollutionType}
-                  onChange={(e) => setPollutionType(e.target.value)}
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="">Select Category...</option>
-                  <option>Air Pollution</option>
-                  <option>Water Contamination</option>
-                  <option>Illegal Garbage Dump</option>
-                  <option>Chemical/Toxic Waste</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Description</label>
-                <textarea
-                  placeholder="Describe the environmental hazard..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows="2"
-                  className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-medium"
-                  required
-                />
-              </div>
-
-              {/* Enhanced Image Upload with Previews */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
-                  <FaCamera /> Evidence Photos
-                </label>
-                <div
-                  onClick={() => fileInputRef.current.click()}
-                  className="border-2 border-dashed border-slate-200 p-6 rounded-2xl text-center cursor-pointer bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 transition-all group"
-                >
-                  <FaCamera className="mx-auto text-slate-300 group-hover:text-emerald-500 mb-2 transition-colors" size={24} />
-                  <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">
-                    {photos.length >= 4 ? "Max Capacity Reached" : "Attach Evidence Photos (Max 4)"}
-                  </p>
-                </div>
-
-                {photos.length > 0 && (
-                  <div className="grid grid-cols-4 gap-2 mt-3">
-                    {photos.map((file, index) => (
-                      <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
-                        <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); removePhoto(index); }}
-                          className="absolute top-1 right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
-                        >
-                          <FaTrash size={10} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  hidden
-                  ref={fileInputRef}
-                  onChange={handlePhotoChange}
-                />
-              </div>
-
-              {/* Location Selector */}
-              <div className="space-y-4">
-                <button
-                  type="button"
-                  onClick={getLocation}
-                  className={`w-full py-4 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
-                      ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                      : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
-                    }`}
-                >
-                  <FaCrosshairs /> {locationStatus === "success" ? "COORDINATES SECURED (RE-SYNC)" : "📍 Pin Current Location"}
-                </button>
-
-                <div className="rounded-[2rem] overflow-hidden border-8 border-slate-50 h-56 shadow-inner relative group">
-                  <MapContainer
-                    center={[location.lat, location.lng]}
-                    zoom={location.lat === 20.5937 ? 5 : 16}
-                    className="h-full w-full z-0"
-                    zoomControl={false}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                    <FaExclamationTriangle /> Incident Category
+                  </label>
+                  <select
+                    value={pollutionType}
+                    onChange={(e) => setPollutionType(e.target.value)}
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                    required
                   >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <RecenterMap lat={location.lat} lng={location.lng} />
-                    <Marker position={[location.lat, location.lng]} icon={markerIcon} />
-                  </MapContainer>
-                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[1.5rem]" />
+                    <option value="">Select Category...</option>
+                    <option>Air Pollution</option>
+                    <option>Water Contamination</option>
+                    <option>Illegal Garbage Dump</option>
+                    <option>Chemical/Toxic Waste</option>
+                  </select>
                 </div>
-              </div>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-5 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-emerald-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
-              >
-                {submitting ? "Transmitting Evidence..." : "🚀 Broadcast Report"}
-              </button>
-            </form>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Description</label>
+                  <textarea
+                    placeholder="Describe the environmental hazard..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows="2"
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 font-medium"
+                    required
+                  />
+                </div>
+
+                {/* Enhanced Image Upload with Previews */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2 flex items-center gap-2">
+                    <FaCamera /> Evidence Photos
+                  </label>
+                  <div
+                    onClick={() => fileInputRef.current.click()}
+                    className="border-2 border-dashed border-slate-200 p-6 rounded-2xl text-center cursor-pointer bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 transition-all group"
+                  >
+                    <FaCamera className="mx-auto text-slate-300 group-hover:text-emerald-500 mb-2 transition-colors" size={24} />
+                    <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">
+                      {photos.length >= 4 ? "Max Capacity Reached" : "Attach Evidence Photos (Max 4)"}
+                    </p>
+                  </div>
+
+                  {photos.length > 0 && (
+                    <div className="grid grid-cols-4 gap-2 mt-3">
+                      {photos.map((file, index) => (
+                        <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
+                          <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); removePhoto(index); }}
+                            className="absolute top-1 right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
+                          >
+                            <FaTrash size={10} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    hidden
+                    ref={fileInputRef}
+                    onChange={handlePhotoChange}
+                  />
+                </div>
+
+                {/* Location Selector */}
+                <div className="space-y-4">
+                  <button
+                    type="button"
+                    onClick={getLocation}
+                    className={`w-full py-4 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${locationStatus === "success"
+                        ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-orange-50 text-orange-600 animate-pulse hover:bg-orange-100"
+                      }`}
+                  >
+                    <FaCrosshairs /> {locationStatus === "success" ? "COORDINATES SECURED (RE-SYNC)" : "📍 Pin Current Location"}
+                  </button>
+
+                  <div className="rounded-[2rem] overflow-hidden border-8 border-slate-50 h-56 shadow-inner relative group">
+                    <MapContainer
+                      center={[location.lat, location.lng]}
+                      zoom={location.lat === 20.5937 ? 5 : 16}
+                      className="h-full w-full z-0"
+                      zoomControl={false}
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <RecenterMap lat={location.lat} lng={location.lng} />
+                      <Marker position={[location.lat, location.lng]} icon={markerIcon} />
+                    </MapContainer>
+                    <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[1.5rem]" />
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-5 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 shadow-xl shadow-emerald-200 transition-all transform hover:-translate-y-1 active:scale-95 disabled:bg-slate-300"
+                >
+                  {submitting ? "Transmitting Evidence..." : "🚀 Broadcast Report"}
+                </button>
+              </form>
+            </div>
+
+            {/* History List */}
+            <div className="bg-white p-8 rounded-[3rem] shadow-xl shadow-slate-200/40 border border-slate-50">
+               <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Recent Reports</h3>
+               {loadingPollution ? (
+                 <p className="text-slate-400 text-sm font-bold animate-pulse text-center py-4">Loading past reports...</p>
+               ) : pastPollution.length === 0 ? (
+                 <p className="text-slate-400 text-sm font-bold text-center py-4">No past reports found.</p>
+               ) : (
+                 <div className="space-y-4">
+                   {pastPollution.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((req) => (
+                     <div key={req._id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
+                       <div>
+                         <p className="text-sm font-black text-slate-800">{req.pollutionType}</p>
+                         <p className="text-[10px] font-bold text-slate-500 mt-1">{new Date(req.createdAt).toLocaleDateString()} | {req.address || "Location Marked"}</p>
+                       </div>
+                       <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest self-start sm:self-auto ${
+                         req.status?.toLowerCase() === 'completed' || req.status?.toLowerCase() === 'resolved' ? 'bg-emerald-100 text-emerald-700' : 
+                         req.status?.toLowerCase() === 'assigned' ? 'bg-indigo-100 text-indigo-700' : 'bg-amber-100 text-amber-700'
+                       }`}>
+                         {req.status || 'Pending'}
+                       </span>
+                     </div>
+                   ))}
+                   
+                   {/* Pagination */}
+                   {Math.ceil(pastPollution.length / itemsPerPage) > 1 && (
+                     <div className="flex justify-center items-center gap-4 pt-4 border-t border-slate-100 mt-6">
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &lt;
+                        </button>
+                        <span className="text-[10px] font-black uppercase text-slate-500">
+                            Page <span className="text-emerald-600">{currentPage}</span> of {Math.ceil(pastPollution.length / itemsPerPage)}
+                        </span>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(pastPollution.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(pastPollution.length / itemsPerPage)}
+                            className="w-8 h-8 flex justify-center items-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-all font-black text-[10px]"
+                        >
+                            &gt;
+                        </button>
+                     </div>
+                   )}
+                 </div>
+               )}
+            </div>
           </div>
         </div>
       </section>

@@ -19,6 +19,12 @@ const AdminDashboard = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [dateFilter, setDateFilter] = useState("");
     const [expandedId, setExpandedId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filter, statusFilter, searchQuery, dateFilter]);
 
     const fetchAdminData = useCallback(async (isSilent = false) => {
         try {
@@ -169,6 +175,11 @@ const AdminDashboard = () => {
         })
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = processedReports.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(processedReports.length / itemsPerPage);
+
     const downloadCSV = () => {
         if (processedReports.length === 0) {
             toast.error("No data to download!");
@@ -311,7 +322,7 @@ const AdminDashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {processedReports.length > 0 ? processedReports.map((report) => {
+                            {currentItems.length > 0 ? currentItems.map((report) => {
                                 const currentStatus = (report.status || "pending").toLowerCase();
                                 const isAssigned = !!(report.assignedVolunteer || report.volunteerName);
                                 const isFinished = ['completed', 'resolved', 'delivered'].includes(currentStatus);
@@ -724,6 +735,27 @@ const AdminDashboard = () => {
                         </tbody>
                     </table>
                 </div>
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-4 mt-8">
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                        >
+                            &lt;
+                        </button>
+                        <span className="text-[11px] font-black uppercase text-slate-500">
+                            Page <span className="text-indigo-600">{currentPage}</span> of {totalPages}
+                        </span>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                        >
+                            &gt;
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

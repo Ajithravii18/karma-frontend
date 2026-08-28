@@ -55,6 +55,9 @@ const VolunteerPortal = () => {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   // --- 🔒 SECURITY STATES ---
   const [showSecurity, setShowSecurity] = useState(false);
   const [phoneState, setPhoneState] = useState({ show: false, newPhone: "", otp: "", step: 1, loading: false });
@@ -85,6 +88,10 @@ const VolunteerPortal = () => {
     const interval = setInterval(() => fetchTasks(false), 10000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, sectorFilter]);
 
   const fetchProfile = async () => {
     try {
@@ -707,7 +714,7 @@ const VolunteerPortal = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {visibleTasks.length > 0 ? visibleTasks.map((task) => {
+                {visibleTasks.length > 0 ? visibleTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((task) => {
                   const status = (task.status || "").toLowerCase();
                   const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
                   const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
@@ -809,7 +816,7 @@ const VolunteerPortal = () => {
 
           {/* MOBILE CARD VIEW */}
           <div className="lg:hidden space-y-4">
-            {visibleTasks.length > 0 ? visibleTasks.map((task) => {
+            {visibleTasks.length > 0 ? visibleTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((task) => {
               const status = (task.status || "").toLowerCase();
               const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
               const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
@@ -898,6 +905,29 @@ const VolunteerPortal = () => {
               </div>
             )}
           </div>
+          
+          {/* Pagination Controls */}
+          {visibleTasks.length > itemsPerPage && (
+            <div className="flex justify-center items-center gap-4 py-8">
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              >
+                <span className="font-black">&lt;</span>
+              </button>
+              <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+                Page <span className="text-indigo-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(visibleTasks.length / itemsPerPage)}
+              </span>
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(visibleTasks.length / itemsPerPage), p + 1))}
+                disabled={currentPage === Math.ceil(visibleTasks.length / itemsPerPage)}
+                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              >
+                <span className="font-black">&gt;</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -30,6 +30,7 @@ import VolunteerHistory from './Pages/VolunteerHistory';
 import DeletionLogs from './Pages/DeletionLogs';
 
 import UserReports from './Pages/UserReports';
+import BottomNav from './Components/BottomNav';
 
 function App() {
   return (
@@ -49,85 +50,88 @@ function App() {
       />
 
       <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path='/' element={<Main />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/otp' element={<Otp />} />
-          <Route path='/forgot-password' element={<ForgotPassword />} />
-          <Route path='/reset-password' element={<ResetPassword />} />
+        <div className="pb-16 lg:pb-0"> {/* Padding to prevent content from hiding behind bottom nav on mobile */}
+          <Routes>
+            {/* Public Routes */}
+            <Route path='/' element={<Main />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/otp' element={<Otp />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/reset-password' element={<ResetPassword />} />
 
 
-          {/* Regular User Routes */}
-          <Route path='/pick-up' element={<ProtectedRoute allowedRoles={['user']}><Pickup /></ProtectedRoute>} />
-          <Route path='/report-pollution' element={<ProtectedRoute allowedRoles={['user']}><ReportPollution /></ProtectedRoute>} />
-          <Route path='/report-food' element={<ProtectedRoute allowedRoles={['user']}><ReportLeftoverFood /></ProtectedRoute>} />
-          <Route path='/dashboard' element={<ProtectedRoute allowedRoles={['user']}><Dashboard /></ProtectedRoute>} />
-          <Route path='/my-reports' element={<ProtectedRoute allowedRoles={['user']}><UserReports /></ProtectedRoute>} />
-          <Route
-            path="/payment-success"
-            element={
-              <ProtectedRoute allowedRoles={['user', 'admin', 'volunteer']}>
-                <PaymentSuccess />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/payment-failure"
-            element={
-              <ProtectedRoute allowedRoles={['user', 'admin', 'volunteer']}>
-                <PaymentFailure />
-              </ProtectedRoute>
-            }
-          />
+            {/* Regular User Routes */}
+            <Route path='/pick-up' element={<ProtectedRoute allowedRoles={['user']}><Pickup /></ProtectedRoute>} />
+            <Route path='/report-pollution' element={<ProtectedRoute allowedRoles={['user']}><ReportPollution /></ProtectedRoute>} />
+            <Route path='/report-food' element={<ProtectedRoute allowedRoles={['user']}><ReportLeftoverFood /></ProtectedRoute>} />
+            <Route path='/dashboard' element={<ProtectedRoute allowedRoles={['user']}><Dashboard /></ProtectedRoute>} />
+            <Route path='/my-reports' element={<ProtectedRoute allowedRoles={['user']}><UserReports /></ProtectedRoute>} />
+            <Route
+              path="/payment-success"
+              element={
+                <ProtectedRoute allowedRoles={['user', 'admin', 'volunteer']}>
+                  <PaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment-failure"
+              element={
+                <ProtectedRoute allowedRoles={['user', 'admin', 'volunteer']}>
+                  <PaymentFailure />
+                </ProtectedRoute>
+              }
+            />
 
 
-          {/* Staff Routes */}
-          <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
-          <Route
-            path="/admin/report/:type/:id"
-            element={<ProtectedRoute allowedRoles={['admin']}><ReportDetails /></ProtectedRoute>}
-          />
-          <Route
-            path="/admin/revenue-analysis"
-            element={<ProtectedRoute allowedRoles={['admin']}><RevenueAnalysisPage /></ProtectedRoute>}
-          />
-          <Route
-            path="/admin/waste-analysis"
-            element={<ProtectedRoute allowedRoles={['admin']}><WasteAnalysisPage /></ProtectedRoute>}
-          />
-          <Route
-            path="/admin/food-analysis"
-            element={<ProtectedRoute allowedRoles={['admin']}><FoodAnalysisPage /></ProtectedRoute>}
-          />
+            {/* Staff Routes */}
+            <Route path="/admin-dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+            <Route
+              path="/admin/report/:type/:id"
+              element={<ProtectedRoute allowedRoles={['admin']}><ReportDetails /></ProtectedRoute>}
+            />
+            <Route
+              path="/admin/revenue-analysis"
+              element={<ProtectedRoute allowedRoles={['admin']}><RevenueAnalysisPage /></ProtectedRoute>}
+            />
+            <Route
+              path="/admin/waste-analysis"
+              element={<ProtectedRoute allowedRoles={['admin']}><WasteAnalysisPage /></ProtectedRoute>}
+            />
+            <Route
+              path="/admin/food-analysis"
+              element={<ProtectedRoute allowedRoles={['admin']}><FoodAnalysisPage /></ProtectedRoute>}
+            />
 
 
 
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <UserManagement />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <UserManagement />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin/deletion-logs"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <DeletionLogs />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/admin/deletion-logs"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DeletionLogs />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/volunteer-portal" element={<ProtectedRoute allowedRoles={['volunteer']}><VolunteerPortal /></ProtectedRoute>} />
-          <Route path="/volunteer-history" element={<ProtectedRoute allowedRoles={['volunteer']}><VolunteerHistory /></ProtectedRoute>} />
+            <Route path="/volunteer-portal" element={<ProtectedRoute allowedRoles={['volunteer']}><VolunteerPortal /></ProtectedRoute>} />
+            <Route path="/volunteer-history" element={<ProtectedRoute allowedRoles={['volunteer']}><VolunteerHistory /></ProtectedRoute>} />
 
-          {/* Fallback Route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Fallback Route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <BottomNav />
+        </div>
       </BrowserRouter>
     </>
   );

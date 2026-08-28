@@ -60,6 +60,18 @@ const UserManagement = () => {
     return list;
   }, [users, roleFilter, availabilityFilter]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter, availabilityFilter]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
   const handleToggleRole = async (userId, currentRole) => {
     const newRole = currentRole === "user" ? "volunteer" : "user";
     if (newRole === "volunteer" && !window.confirm("Promoting to Volunteer will automatically assign a unique Agent ID (e.g. volunteer_e101). Proceed?")) return;
@@ -192,8 +204,8 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((u) => (
+                {currentItems.length > 0 ? (
+                  currentItems.map((u) => (
                     <tr key={u._id} className="group hover:bg-slate-50 transition-all duration-300">
                       <td className="px-10 py-8">
                         <div className="flex items-center gap-6">
@@ -280,8 +292,8 @@ const UserManagement = () => {
 
           {/* MOBILE CARD VIEW */}
           <div className="lg:hidden p-4 space-y-4">
-             {filteredUsers.length > 0 ? (
-               filteredUsers.map((u) => (
+             {currentItems.length > 0 ? (
+               currentItems.map((u) => (
                  <div key={u._id} className="bg-white rounded-3xl p-6 border-2 border-slate-50 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-4">
@@ -353,6 +365,29 @@ const UserManagement = () => {
                </div>
              )}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 p-8 border-t border-slate-100">
+                  <button 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                  >
+                      &lt;
+                  </button>
+                  <span className="text-[11px] font-black uppercase text-slate-500">
+                      Page <span className="text-indigo-600">{currentPage}</span> of {totalPages}
+                  </span>
+                  <button 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
+                  >
+                      &gt;
+                  </button>
+              </div>
+          )}
         </div>
         </div>
       </div>

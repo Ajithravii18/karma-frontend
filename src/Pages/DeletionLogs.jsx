@@ -10,6 +10,8 @@ const DeletionLogs = () => {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const fetchLogs = async () => {
         try {
@@ -92,7 +94,7 @@ const DeletionLogs = () => {
                         </div>
 
                         {/* List Items */}
-                        {logs.map((log, index) => (
+                        {logs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((log, index) => (
                             <div key={log._id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
                                 {/* Collapsed Row */}
                                 <button
@@ -101,7 +103,7 @@ const DeletionLogs = () => {
                                 >
                                     {/* Index */}
                                     <div className="col-span-1">
-                                        <span className="text-xs font-black text-slate-300">{String(index + 1).padStart(2, '0')}</span>
+                                        <span className="text-xs font-black text-slate-300">{String((currentPage - 1) * itemsPerPage + index + 1).padStart(2, '0')}</span>
                                     </div>
 
                                     {/* User Info */}
@@ -183,6 +185,29 @@ const DeletionLogs = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Pagination Controls */}
+                        {logs.length > itemsPerPage && (
+                          <div className="flex justify-center items-center gap-4 py-8">
+                            <button 
+                              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                              disabled={currentPage === 1}
+                              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-rose-200 hover:text-rose-500 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+                            >
+                              <span className="font-black">&lt;</span>
+                            </button>
+                            <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+                              Page <span className="text-rose-500 text-sm mx-1">{currentPage}</span> of {Math.ceil(logs.length / itemsPerPage)}
+                            </span>
+                            <button 
+                              onClick={() => setCurrentPage(p => Math.min(Math.ceil(logs.length / itemsPerPage), p + 1))}
+                              disabled={currentPage === Math.ceil(logs.length / itemsPerPage)}
+                              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-rose-200 hover:text-rose-500 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+                            >
+                              <span className="font-black">&gt;</span>
+                            </button>
+                          </div>
+                        )}
                     </div>
                 )}
             </div>

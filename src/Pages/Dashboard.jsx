@@ -25,6 +25,8 @@ const Dashboard = () => {
   const [data, setData] = useState({ pickups: [], pollution: [], food: [] });
   const [statusFilter, setStatusFilter] = useState("all");
   const [monthFilter, setMonthFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // --- SECURITY STATES ---
   const [phoneState, setPhoneState] = useState({ show: false, newPhone: "", otp: "", step: 1, loading: false });
@@ -66,6 +68,10 @@ const Dashboard = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, [activeTab, loading]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, statusFilter, monthFilter]);
 
   const fetchAllData = async (showLoader = true) => {
     const token = localStorage.getItem("authToken");
@@ -499,7 +505,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {list.map((item, idx) => {
+              {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item, idx) => {
                 const status = item.status?.toLowerCase();
                 const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
                 const hasVolunteer = item.assignedVolunteer || item.claimedBy;
@@ -617,8 +623,31 @@ const Dashboard = () => {
           </table>
         </div>
         <div className="md:hidden space-y-4">
-          {list.map(item => renderMobileCard(item, type))}
+          {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(item => renderMobileCard(item, type))}
         </div>
+        
+        {/* Pagination Controls */}
+        {list.length > itemsPerPage && (
+          <div className="flex justify-center items-center gap-4 py-8">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+            >
+              <span className="font-black">&lt;</span>
+            </button>
+            <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+              Page <span className="text-green-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(list.length / itemsPerPage)}
+            </span>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
+              disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+            >
+              <span className="font-black">&gt;</span>
+            </button>
+          </div>
+        )}
       </>
     );
   };

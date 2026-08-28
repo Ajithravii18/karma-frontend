@@ -13,6 +13,8 @@ const VolunteerHistory = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   const token = localStorage.getItem("authToken") || localStorage.getItem("token");
@@ -75,6 +77,10 @@ const VolunteerHistory = () => {
 
     return matchesSearch && matchesMonth;
   });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedMonth]);
 
   const handleDownload = () => {
     if (filteredHistory.length === 0) {
@@ -207,7 +213,7 @@ const VolunteerHistory = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredHistory.length > 0 ? (
-                    filteredHistory.map((item) => {
+                    filteredHistory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item) => {
                       const cfg = item.type === 'food'
                         ? { icon: <FaLeaf />, color: 'text-amber-600', bg: 'bg-amber-100', label: 'Food Redistribution' }
                         : item.type === 'pollution'
@@ -285,7 +291,7 @@ const VolunteerHistory = () => {
           {/* MOBILE CARDS */}
           <div className="lg:hidden space-y-4">
             {filteredHistory.length > 0 ? (
-              filteredHistory.map((item) => {
+              filteredHistory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item) => {
                 const cfg = item.type === 'food'
                   ? { icon: <FaLeaf />, color: 'text-amber-600', bg: 'bg-amber-100', label: 'Food Redistribution' }
                   : item.type === 'pollution'
@@ -343,6 +349,29 @@ const VolunteerHistory = () => {
               </div>
             )}
           </div>
+          
+          {/* Pagination Controls */}
+          {filteredHistory.length > itemsPerPage && (
+            <div className="flex justify-center items-center gap-4 py-8">
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              >
+                <span className="font-black">&lt;</span>
+              </button>
+              <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+                Page <span className="text-indigo-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(filteredHistory.length / itemsPerPage)}
+              </span>
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredHistory.length / itemsPerPage), p + 1))}
+                disabled={currentPage === Math.ceil(filteredHistory.length / itemsPerPage)}
+                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+              >
+                <span className="font-black">&gt;</span>
+              </button>
+            </div>
+          )}
         </div>
 
       </div>
