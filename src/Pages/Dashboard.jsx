@@ -40,6 +40,426 @@ const Dashboard = () => {
 
 
 
+  const fetchAllData = async (showLoader = true) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+    try {
+      if (showLoader) setLoading(true);
+      const [statsRes, pickupsRes, pollutionRes, foodRes] = await Promise.all([
+        api.get("/api/user-stats"),
+        api.get("/api/my-pickups"),
+        api.get("/api/my-pollution"),
+        api.get("/api/my-food"),
+      ]);
+      setStats(statsRes.data);
+      setData({ pickups: pickupsRes.data, pollution: pollutionRes.data, food: foodRes.data });
+    } catch (err) {
+      console.error("Sync Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePayment = async (pickupId) => {
+    setProcessingPayment(pickupId);
+    try {
+      // Dynamically load Razorpay SDK
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onerror = () => {
+        toast.error("Razorpay SDK failed to load. Are you online?");
+        setProcessingPayment(null);
+      };
+      script.onload = async () => {
+        try {
+          const res = await api.post("/api/payment/razorpay-order", { pickupId, amount: 50 });
+          const orderData = res.data;
+
+          const options = {
+            key: orderData.key,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: "Karma",
+            description: "Waste Pickup Fee",
+            image: "https://cdn-icons-png.flaticon.com/512/3299/3299935.png",
+            order_id: orderData.orderId,
+            handler: async function (response) {
+              try {
+                await api.post("/api/payment/razorpay-verify", {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                });
+                window.location.href = `/payment-success?txnid=${response.razorpay_payment_id}`;
+              } catch (verifyErr) {
+                window.location.href = `/payment-failure?error=verification_failed&pickupId=${pickupId}`;
+              }
+            },
+            prefill: {
+              name: currentName,
+              contact: user.phone || ""
+            },
+            theme: {
+              color: "#16a34a"
+            }
+          };
+
+          const rzp = new window.Razorpay(options);
+          rzp.on("payment.failed", function (response) {
+            window.location.href = `/payment-failure?error=${response.error.description || "payment_failed"}&pickupId=${pickupId}`;
+          });
+          rzp.open();
+        } catch (apiErr) {
+          window.location.href = `/payment-failure?error=initialization_failed&pickupId=${pickupId}`;
+        } finally {
+          setProcessingPayment(null);
+        }
+      };
+      document.body.appendChild(script);
+    } catch (err) {
+      window.location.href = `/payment-failure?error=server_error&pickupId=${pickupId}`;
+      setProcessingPayment(null);
+    }
+  };
+
+  const handleUpdateName = async () => {
+    if (!newName.trim()) return toast.error("Name cannot be empty");
+    try {
+      const res = await api.put("/api/update-profile", { name: newName });
+      localStorage.setItem("userName", res.data.name);
+      window.dispatchEvent(new Event("storage"));
+      toast.success("Profile updated!");
+      setIsEditing(false);
+    } catch (err) { toast.error("Update failed"); }
+  };
+
+  const getFilteredData = () => {
+    const list = data[activeTab] || [];
+    return list.filter(item => {
+      const status = (item.status || "Pending").toLowerCase();
+      const matchesStatus = statusFilter === "all" ||
+        (statusFilter === "pending" && ["pending", "reported", "available"].includes(status)) ||
+        (statusFilter === "active" && ["verified", "claimed", "arrived", "collected", "paid", "success"].includes(status)) ||
+        (statusFilter === "completed" && ["completed", "resolved", "delivered"].includes(status));
+
+      let matchesMonth = true;
+      if (monthFilter) {
+        const itemDate = new Date(item.createdAt || item.reportedAt);
+        const itemMonthStr = `${itemDate.getFullYear()}-${String(itemDate.getMonth() + 1).padStart(2, '0')}`;
+        matchesMonth = itemMonthStr === monthFilter;
+      }
+      return matchesStatus && matchesMonth;
+    });
+  };
+
+  const renderTable = (list, columns, type) => {
+    if (loading && list.length === 0) return <div className="p-10 text-center"><FaSpinner className="animate-spin text-green-600 text-2xl mx-auto" /></div>;
+    if (!list || list.length === 0) return (
+      <div className="p-16 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-100">
+        <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">No {type} records found</p>
+      </div>
+    );
+
+    return (
+      <>
+        <div className="hidden md:block overflow-x-auto custom-scrollbar">
+          <table className="w-full text-left border-separate border-spacing-y-2">
+            <thead>
+              <tr className="text-[11px] uppercase text-gray-400 font-black tracking-[0.2em] px-4">
+                {columns.map(col => <th key={col} className="px-5 py-3">{col}</th>)}
+                <th className="px-5 py-3">Status</th>
+                <th className="px-5 py-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item, idx) => {
+                const status = item.status?.toLowerCase();
+                const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+                const hasVolunteer = item.assignedVolunteer || item.claimedBy;
+
+                const startDateTime = new Date(item.createdAt || item.reportedAt);
+                const endDateTime = isFinished ? new Date(item.completedAt || item.updatedAt) : null;
+
+                return (
+                  <tr key={item._id || idx} className="bg-white group hover:bg-slate-50 transition-all duration-300 shadow-sm border border-slate-100 rounded-2xl overflow-hidden translate-y-0 hover:-translate-y-0.5">
+                    {/* TIME SECTION (START & END) */}
+                    <td className="px-5 py-4 text-sm font-bold text-slate-500 first:rounded-l-2xl">
+                      <div className="space-y-2 min-w-[180px]">
+                        {/* Start Time Row */}
+                        <div className="flex items-center gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(99,102,241,0.5)]"></div>
+                          <div className="flex flex-col">
+                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">Start Time</span>
+                            <span className="text-[11px] text-gray-800 font-extrabold flex items-center gap-1.5">
+                              {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {startDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* End Time Row */}
+                        <div className="flex items-center gap-3">
+                          <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-gray-200'}`}></div>
+                          <div className="flex flex-col">
+                            <span className="text-[8px] text-gray-400 font-black uppercase tracking-widest leading-none mb-0.5">End Time</span>
+                            {endDateTime ? (
+                              <span className="text-[11px] text-emerald-600 font-extrabold">
+                                {endDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, {endDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-gray-300 italic font-medium tracking-tight">Active Mission...</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* DESCRIPTION */}
+                    <td className="px-5 py-4 border-l border-gray-50">
+                      <p className="text-sm text-gray-800 font-black tracking-tight line-clamp-1">
+                        {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+                      </p>
+                      <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-1 opacity-60 flex items-center gap-3">
+                        <span className="flex items-center gap-1"><FaFlag size={8} /> Mission ID: {item._id?.slice(-8)}</span>
+                        {item.weight > 0 && <span className="text-emerald-600 flex items-center gap-1"><FaRecycle size={8} /> {item.weight} KG</span>}
+                      </p>
+                    </td>
+
+                    <td className="px-5 py-4">
+                      <span className={getStatusStyle(item.status || "Pending")}>
+                        {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
+                        {item.status || "Pending"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 last:rounded-r-2xl">
+                      <div className="flex flex-col items-center gap-2">
+                        {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+                          <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-green-700 shadow-lg shadow-green-900/20 transition-all active:scale-95">
+                            <FaCreditCard /> Pay Γé╣50
+                          </button>
+                        ) : status === "collected" && type === "food" ? (
+                          item.donorConfirmedCollection ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
+                              <FaCheck size={10} /> Fully Logged
+                            </div>
+                          ) : (
+                            <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 shadow-lg shadow-amber-900/20 transition-all active:scale-95">
+                              <FaCheck /> Confirm
+                            </button>
+                          )
+                        ) : status === "completed" && type === "pickups" ? (
+                          <button onClick={() => generateReceipt(item)} className="w-full bg-slate-50 text-blue-600 border border-slate-200 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                            <FaDownload size={10} /> Receipt
+                          </button>
+                        ) : <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">Verified</span>}
+
+                        {hasVolunteer && (
+                          !isFinished ? (
+                            item.helpRequested ? (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-sky-50 text-sky-600 rounded-xl text-[10px] font-black uppercase border border-sky-100 animate-pulse">
+                                <FaInfoCircle size={10} /> Signal Active
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => handleLiveHelp(item, type)}
+                                className="w-full bg-sky-50 text-sky-600 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all shadow-sm active:scale-95"
+                              >
+                                <FaInfoCircle /> Live Help
+                              </button>
+                            )
+                          ) : (
+                            item.review ? (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
+                                <FaCheckDouble size={10} /> Feedback Logged
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                                className="w-full bg-amber-50 text-amber-600 border border-amber-100 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-amber-600 hover:text-white transition-all shadow-sm active:scale-95"
+                              >
+                                <FaStar /> Review & Report
+                              </button>
+                            )
+                          )
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="md:hidden space-y-4">
+          {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(item => renderMobileCard(item, type))}
+        </div>
+        
+        {/* Pagination Controls */}
+        {list.length > itemsPerPage && (
+          <div className="flex justify-center items-center gap-4 py-8">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+            >
+              <span className="font-black">&lt;</span>
+            </button>
+            <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+              Page <span className="text-green-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(list.length / itemsPerPage)}
+            </span>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
+              disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
+            >
+              <span className="font-black">&gt;</span>
+            </button>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  const TabButton = ({ id, icon: Icon, label }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`flex items-center gap-4 px-6 py-4 transition-all duration-300 w-full text-left font-bold text-sm ${
+        activeTab === id 
+          ? "bg-white text-emerald-600 shadow-sm border border-emerald-100 rounded-2xl" 
+          : "text-slate-500 hover:bg-white/50 hover:text-slate-700 rounded-2xl"
+      }`}
+    >
+      <Icon size={16} />
+      {label}
+    </button>
+  );
+
+  const handleReviewSubmit = async () => {
+    if (reviewModal.rating === 0 && !reviewModal.isReport) return toast.error("Select a rating or file a report");
+    if (reviewModal.isReport && reviewModal.reportReason.length < 5) return toast.error("Provide a detailed report reason");
+
+    setReviewModal(prev => ({ ...prev, loading: true }));
+    try {
+      await api.post("/api/user/submit-review", {
+        requestId: reviewModal.item._id,
+        requestType: reviewModal.type === 'pickups' ? 'pickup' : reviewModal.type,
+        revieweeId: reviewModal.item.assignedVolunteer || reviewModal.item.claimedBy,
+        rating: reviewModal.rating,
+        comment: reviewModal.comment,
+        isReport: reviewModal.isReport,
+        reportReason: reviewModal.reportReason
+      });
+      toast.success("Feedback uploaded to mission logs");
+      setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false });
+      fetchAllData(false);
+    } catch (err) {
+      toast.error("Upload failed. Offline?");
+      setReviewModal(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  
+
+  const renderMobileCard = (item, type) => {
+    const status = item.status?.toLowerCase();
+    const isFinished = ["completed", "resolved", "delivered", "success", "paid"].includes(status);
+    const hasVolunteer = item.assignedVolunteer || item.claimedBy;
+    const startDateTime = new Date(item.createdAt || item.reportedAt);
+
+    return (
+      <div key={item._id} className="bg-white shadow-sm border border-slate-100 p-5 rounded-2xl border border-white/60 shadow-sm mb-4">
+        <div className="flex justify-between items-start mb-4">
+          <div className={getStatusStyle(item.status || "Pending")}>
+             {status === 'completed' || status === 'paid' ? <FaCheck className="text-[8px]" /> : <FaClock className="text-[8px]" />}
+             {item.status || "Pending"}
+          </div>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            {startDateTime.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+          </p>
+        </div>
+
+        <h4 className="text-base font-black text-gray-900 mb-1">
+          {item.placeName || item.wasteType || item.pollutionType || "Service Request"}
+        </h4>
+        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-4 opacity-60">
+           Mission ID: #{item._id?.slice(-8)}
+        </p>
+
+        <div className="flex flex-col gap-3">
+          {(status === "arrived" || status === "awaiting payment") && type === "pickups" ? (
+            <button onClick={() => handlePayment(item._id)} className="w-full bg-green-600 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
+              <FaCreditCard /> Pay Γé╣50
+            </button>
+          ) : status === "collected" && type === "food" ? (
+             !item.donorConfirmedCollection && (
+              <button onClick={() => handleConfirmCollection(item._id)} className="w-full bg-amber-500 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95">
+                <FaCheck /> Confirm Collection
+              </button>
+             )
+          ) : status === "completed" && type === "pickups" ? (
+            <button onClick={() => generateReceipt(item)} className="w-full bg-slate-900 text-white py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 shadow-lg">
+              <FaDownload size={10} /> Get Receipt
+            </button>
+          ) : null}
+
+          {hasVolunteer && !isFinished && (
+            <button
+              onClick={() => handleLiveHelp(item, type)}
+              className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100"
+            >
+              <FaInfoCircle /> {item.helpRequested ? "Signal Active" : "Request Help"}
+            </button>
+          )}
+
+          {hasVolunteer && isFinished && !item.review && (
+            <button
+              onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+              className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2"
+            >
+              <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  
+
+  const handleConfirmCollection = async (foodId) => {
+    try {
+      await api.patch(`/api/food/donor-confirm/${foodId}`);
+      toast.success("Collection confirmed! Thank you for your confirmation.");
+      fetchAllData(false); // Refresh data
+    } catch (err) {
+      toast.error("Failed to confirm collection");
+    }
+  };
+
+  
+
+  const handleLiveHelp = async (item, type) => {
+    const message = window.prompt("≡ƒåÿ SOS: What issue are you experiencing? (e.g., Courier is not answering, payment stuck):");
+    if (!message || message.trim().length < 5) {
+      return toast.error("Please provide a brief description (min 5 characters)");
+    }
+
+    // Fix: Use singular form for API
+    const apiType = type === 'pickups' ? 'pickup' : type;
+
+    try {
+      await api.post("/api/user/live-help", {
+        requestId: item._id,
+        requestType: apiType,
+        message: message
+      });
+      toast.success("Help signal sent to HQ. Standby.");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to signal HQ");
+    }
+  };
+
+  
+
     // --- FIXED LOGIC HOOKS ---
   useEffect(() => {
     setNewName(currentName);
