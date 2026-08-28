@@ -6,16 +6,14 @@ import { Toaster } from 'react-hot-toast';
 import Main from './Pages/Main';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import Pickup from './Pages/Pickup';
+import ActionCenter from './Pages/ActionCenter';
 import Otp from './Pages/Otp';
-import ReportPollution from './Pages/ReportPollution';
-import ReportLeftoverFood from './Pages/ReportFood';
 import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './ResetPassword';
 import Dashboard from './Pages/Dashboard';
 import AdminDashboard from './Pages/AdminDashboard';
 import VolunteerPortal from './Pages/VolunteerPortal';
-import UserManagement from './Pages/UserManagement'; // 🔥 1. Add this import
+import UserManagement from './Pages/UserManagement';
 
 // Component Imports
 import ProtectedRoute from './Components/ProtectedRoute';
@@ -61,9 +59,9 @@ function App() {
 
 
             {/* Regular User Routes */}
-            <Route path='/pick-up' element={<ProtectedRoute allowedRoles={['user']}><Pickup /></ProtectedRoute>} />
-            <Route path='/report-pollution' element={<ProtectedRoute allowedRoles={['user']}><ReportPollution /></ProtectedRoute>} />
-            <Route path='/report-food' element={<ProtectedRoute allowedRoles={['user']}><ReportLeftoverFood /></ProtectedRoute>} />
+            <Route path='/pick-up' element={<ProtectedRoute allowedRoles={['user']}><ActionCenter /></ProtectedRoute>} />
+            <Route path='/report-pollution' element={<ProtectedRoute allowedRoles={['user']}><ActionCenter /></ProtectedRoute>} />
+            <Route path='/report-food' element={<ProtectedRoute allowedRoles={['user']}><ActionCenter /></ProtectedRoute>} />
             <Route path='/dashboard' element={<ProtectedRoute allowedRoles={['user']}><Dashboard /></ProtectedRoute>} />
             <Route path='/my-reports' element={<ProtectedRoute allowedRoles={['user']}><UserReports /></ProtectedRoute>} />
             <Route
