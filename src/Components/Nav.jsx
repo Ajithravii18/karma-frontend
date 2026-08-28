@@ -193,7 +193,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
       isScrolled
         ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-green-100/50 py-3"
         : isDarkNav
-          ? "bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_4px_30px_rgb(0,0,0,0.05)] py-4"
+          ? "bg-slate-900/90 backdrop-blur-xl border-b border-slate-800 shadow-xl py-4"
           : "bg-transparent py-5"
     } font-sans`}>
       
@@ -224,7 +224,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               key={idx}
               onClick={item.onClick}
               className={`font-bold transition-all duration-300 py-2 text-sm relative group ${
-                isDarkNav ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+                isDarkNav ? "text-slate-200 hover:text-green-600" : "text-white/90 hover:text-white"
               }`}
             >
               {item.label}
@@ -235,7 +235,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {/* Services Dropdown */}
           <div className="relative group">
             <button className={`font-bold transition-all duration-300 py-2 text-sm flex items-center gap-1 ${
-              isDarkNav ? "text-gray-700 hover:text-green-600" : "text-white/90 hover:text-white"
+              isDarkNav ? "text-slate-200 hover:text-green-600" : "text-white/90 hover:text-white"
             }`}>
               Services <FaChevronDown className="text-[10px]" />
             </button>
@@ -351,7 +351,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${isDarkNav ? "text-gray-700 hover:bg-gray-100" : "text-white/90 hover:bg-white/10"}`}
+            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${isDarkNav ? "text-slate-200 hover:bg-gray-100" : "text-white/90 hover:bg-white/10"}`}
           >
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
@@ -397,3 +397,5 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 };
 
 export default Nav;
+
+

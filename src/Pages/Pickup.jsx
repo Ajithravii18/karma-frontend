@@ -111,17 +111,17 @@ function SchedulePickup() {
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
           {/* LEFT CONTENT: Impact Messaging */}
-          <div className="lg:sticky lg:top-32 space-y-6 bg-white/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
-            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
+          <div className="lg:sticky lg:top-32 space-y-6 bg-slate-800/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
+            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-slate-700 text-green-400 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
               <span className="relative flex h-2 w-2 mr-0.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-700 text-green-4000"></span>
               </span>
               Precision Logistics
             </div>
             
             <div data-aos="fade-right" className="space-y-2">
-              <h1 className="text-4xl font-black text-slate-900 leading-[1.1]">
+              <h1 className="text-4xl font-black text-white leading-[1.1]">
                 Schedule Your <br />
                 <span className="text-green-600 italic">Waste Pickup.</span>
               </h1>
@@ -131,14 +131,14 @@ function SchedulePickup() {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200" className="grid grid-cols-2 gap-6">
-              <div className="bg-white shadow-sm border border-slate-100 p-6 rounded-3xl shadow-sm border border-white/60">
+              <div className="bg-slate-800 shadow-sm border border-slate-700 p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaCrosshairs className="text-green-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Pinpoint Accuracy</h4>
+                <h4 className="font-bold text-white">Pinpoint Accuracy</h4>
                 <p className="text-xs text-slate-400">Doorstep pickup with GPS routing.</p>
               </div>
-              <div className="bg-white shadow-sm border border-slate-100 p-6 rounded-3xl shadow-sm border border-white/60">
+              <div className="bg-slate-800 shadow-sm border border-slate-700 p-6 rounded-3xl shadow-sm border border-white/60">
                 <FaMapMarkerAlt className="text-amber-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Reliable Service</h4>
+                <h4 className="font-bold text-white">Reliable Service</h4>
                 <p className="text-xs text-slate-400">Convenient slots that suit you.</p>
               </div>
             </div>
@@ -147,7 +147,7 @@ function SchedulePickup() {
           {/* RIGHT CONTENT */}
           <div data-aos="zoom-in" className="space-y-2">
             {/* The Power Form */}
-            <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
+            <div className="bg-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
               <form onSubmit={handleSubmit} className="space-y-3">
 
                 <div className="space-y-2">
@@ -160,7 +160,7 @@ function SchedulePickup() {
                     placeholder="Enter detailed address..."
                     value={form.address}
                     onChange={handleChange}
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
+                    className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all"
                     required
                   />
                 </div>
@@ -173,7 +173,7 @@ function SchedulePickup() {
                       name="wasteType"
                       value={form.wasteType}
                       onChange={handleChange}
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                       required
                     >
                       <option value="">Select Type</option>
@@ -190,7 +190,7 @@ function SchedulePickup() {
                       min={today}
                       value={form.pickupDate}
                       onChange={handleChange}
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600"
                       required
                     />
                   </div>
@@ -202,7 +202,7 @@ function SchedulePickup() {
                     name="timeSlot"
                     value={form.timeSlot}
                     onChange={handleChange}
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                    className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                     required
                   >
                     <option value="">Select Time Slot</option>
@@ -220,7 +220,7 @@ function SchedulePickup() {
                     value={form.description}
                     onChange={handleChange}
                     rows="2"
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
+                    className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium"
                   />
                 </div>
 
@@ -255,4 +255,5 @@ function SchedulePickup() {
   );
 }
 export default SchedulePickup;
+
 

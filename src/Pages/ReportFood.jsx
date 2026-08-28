@@ -132,17 +132,17 @@ function ReportLeftoverFood() {
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           
           {/* LEFT CONTENT: Impact Messaging */}
-          <div className="lg:sticky lg:top-32 space-y-6 bg-white/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
-            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-green-50 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
+          <div className="lg:sticky lg:top-32 space-y-6 bg-slate-800/50 p-8 md:p-10 rounded-[3rem] backdrop-blur-md border border-white shadow-lg shadow-emerald-100/50" data-aos="fade-right" data-aos-duration="1000">
+            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-slate-700 text-green-400 rounded-lg text-green-700 text-[10px] font-bold tracking-[0.2em] uppercase border border-green-100 shadow-sm">
               <span className="relative flex h-2 w-2 mr-0.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-700 text-green-4000"></span>
               </span>
               Zero Hunger Initiative
             </div>
             
             <div data-aos="fade-right" className="space-y-2">
-              <h1 className="text-4xl font-black text-slate-900 leading-[1.1]">
+              <h1 className="text-4xl font-black text-white leading-[1.1]">
                 Turn Surplus into <br />
                 <span className="text-green-600 italic">Sustainability.</span>
               </h1>
@@ -153,14 +153,14 @@ function ReportLeftoverFood() {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200" className="grid grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+              <div className="bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-700">
                 <FaUtensils className="text-green-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Direct Impact</h4>
+                <h4 className="font-bold text-white">Direct Impact</h4>
                 <p className="text-xs text-slate-400">Meals go directly to those in need.</p>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+              <div className="bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-700">
                 <FaClock className="text-amber-500 mb-3" size={24} />
-                <h4 className="font-bold text-slate-800">Fast Pickup</h4>
+                <h4 className="font-bold text-white">Fast Pickup</h4>
                 <p className="text-xs text-slate-400">Expiry tracking ensures food safety.</p>
               </div>
             </div>
@@ -169,7 +169,7 @@ function ReportLeftoverFood() {
           {/* RIGHT CONTENT */}
           <div data-aos="zoom-in" className="space-y-2">
             {/* Form */}
-            <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
+            <div className="bg-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-transparent p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-200/20 border border-white/80">
               <form onSubmit={handleSubmit} className="space-y-3">
                 
                 {/* Row 1: Place & Quantity */}
@@ -181,7 +181,7 @@ function ReportLeftoverFood() {
                     <input 
                       type="text" placeholder="Restaurant / Event Name" 
                       value={placeName} onChange={(e) => setPlaceName(e.target.value)} 
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
                       required 
                     />
                   </div>
@@ -192,7 +192,7 @@ function ReportLeftoverFood() {
                     <input 
                       type="number" placeholder="How many people?" 
                       value={quantity} onChange={(e) => setQuantity(e.target.value)} 
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium transition-all" 
                       required 
                     />
                   </div>
@@ -206,7 +206,7 @@ function ReportLeftoverFood() {
                     </label>
                     <select 
                       value={foodType} onChange={(e) => setFoodType(e.target.value)}
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-bold text-slate-600 outline-none appearance-none cursor-pointer"
                     >
                       <option value="Veg">🥦 Veg Only</option>
                       <option value="Non-Veg">🍖 Non-Veg</option>
@@ -220,7 +220,7 @@ function ReportLeftoverFood() {
                     <input 
                       type="datetime-local" 
                       value={expiryTime} onChange={(e) => setExpiryTime(e.target.value)} 
-                      className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600" 
+                      className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium text-slate-600" 
                       required 
                     />
                   </div>
@@ -252,7 +252,7 @@ function ReportLeftoverFood() {
                     placeholder="E.g. Take from back gate, items are pre-packed..." 
                     value={notes} onChange={(e) => setNotes(e.target.value)} 
                     rows="2" 
-                    className="w-full p-3 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium" 
+                    className="w-full p-3 bg-slate-700 border-none rounded-2xl focus:ring-2 focus:ring-green-500 font-medium" 
                   />
                 </div>
 
@@ -273,4 +273,5 @@ function ReportLeftoverFood() {
 }
 
 export default ReportLeftoverFood;
+
 
