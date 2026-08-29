@@ -250,38 +250,44 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           </div>
         )}
 
-        {/* Service Page Switcher Tabs */}
+        {/* Service Page Switcher Tabs (Responsive on Mobile & Desktop) */}
         {isServicePage && (
-          <div className="hidden md:flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 shadow-inner">
+          <div className="flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 shadow-inner max-w-full overflow-x-auto no-scrollbar">
             <button
               onClick={() => nav('/pick-up')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
                 location.pathname === '/pick-up'
                   ? 'bg-white text-emerald-700 border-slate-200/80 shadow-sm font-black'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <span>♻️</span> Waste Pickup
+              <span>♻️</span>
+              <span className="hidden sm:inline">Waste Pickup</span>
+              <span className="inline sm:hidden text-[11px]">Waste</span>
             </button>
             <button
               onClick={() => nav('/report-pollution')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
                 location.pathname === '/report-pollution'
                   ? 'bg-white text-rose-700 border-slate-200/80 shadow-sm font-black'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <span>🚨</span> Pollution Spot
+              <span>🚨</span>
+              <span className="hidden sm:inline">Pollution Spot</span>
+              <span className="inline sm:hidden text-[11px]">Pollution</span>
             </button>
             <button
               onClick={() => nav('/report-food')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
                 location.pathname === '/report-food'
                   ? 'bg-white text-amber-700 border-slate-200/80 shadow-sm font-black'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <span>🍲</span> Food Rescue
+              <span>🍲</span>
+              <span className="hidden sm:inline">Food Rescue</span>
+              <span className="inline sm:hidden text-[11px]">Food</span>
             </button>
           </div>
         )}
