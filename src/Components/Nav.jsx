@@ -199,8 +199,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
     <>
       <nav className={`fixed top-0 z-[100] transition-all duration-300 font-sans flex items-center ${
         isDashboard
-          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950/90 text-white border-b border-white/10 shadow-lg backdrop-blur-xl"
-          : "h-[68px] w-full left-0 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white border-b border-white/10 shadow-lg backdrop-blur-xl"
+          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-gradient-to-r from-white via-emerald-50/70 to-teal-50/80 backdrop-blur-xl border-b border-emerald-100/90 shadow-sm text-slate-800"
+          : "h-[68px] w-full left-0 bg-gradient-to-r from-white via-emerald-50/70 to-teal-50/80 backdrop-blur-xl border-b border-emerald-100/90 shadow-sm text-slate-800"
       }`}>
 
         <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
@@ -209,17 +209,17 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           <div className="flex items-center gap-3">
             {/* Logo */}
             <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
-              <div className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-sm border-white/15">
+              <div className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/90 shadow-xs border-emerald-200/80">
                 <img src={logo} className="w-7 h-7 object-contain" alt="E-Karma Logo" />
-                <span className="text-base font-black tracking-tight uppercase text-white">E-Karma</span>
+                <span className="text-base font-black tracking-tight uppercase text-slate-900">E-Karma</span>
               </div>
             </div>
 
             {isServicePage && (
-              <div className="flex items-center gap-2 pl-2 border-l border-white/15">
+              <div className="flex items-center gap-2 pl-2 border-l border-emerald-200/80">
                 <button
                   onClick={handleHome}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 bg-white/10 hover:bg-white/20 border border-white/15 transition-all active:scale-95"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 transition-all active:scale-95 shadow-xs"
                 >
                   <span>←</span>
                   <span className="hidden sm:inline">Home</span>
@@ -231,10 +231,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           {/* Dashboard Greeting (Desktop only) */}
           {isDashboard && (
             <div className="hidden lg:flex flex-col ml-4">
-              <h2 className="text-lg font-black text-white tracking-tight leading-none">
+              <h2 className="text-lg font-black text-slate-900 tracking-tight leading-none">
                 Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
               </h2>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
                 {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
               </p>
             </div>
@@ -242,13 +242,13 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
           {/* Desktop Service Page Switcher Tabs */}
           {isServicePage && (
-            <div className="hidden md:flex items-center bg-white/10 p-1 rounded-2xl border border-white/15 backdrop-blur-md shadow-inner gap-1">
+            <div className="hidden md:flex items-center bg-white/90 p-1 rounded-2xl border border-emerald-200/80 shadow-xs gap-1">
               <button
                 onClick={() => nav('/pick-up')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
                   location.pathname === '/pick-up'
-                    ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md shadow-emerald-500/25'
-                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
                 <span>♻️</span>
@@ -258,8 +258,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 onClick={() => nav('/report-pollution')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
                   location.pathname === '/report-pollution'
-                    ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/25'
-                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                    ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
                 <span>🚨</span>
@@ -269,8 +269,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 onClick={() => nav('/report-food')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
                   location.pathname === '/report-food'
-                    ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md shadow-amber-400/25'
-                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
                 <span>🍲</span>
@@ -284,18 +284,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <div className="hidden lg:flex items-center space-x-6">
               {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
                 <button key={idx} onClick={item.onClick}
-                  className="font-semibold transition-all duration-200 py-2 text-sm relative group text-slate-200 hover:text-emerald-400">
+                  className="font-semibold transition-all duration-200 py-2 text-sm relative group text-slate-700 hover:text-emerald-600">
                   {item.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
                 </button>
               ))}
 
               {/* Services Dropdown */}
               <div className="relative group">
-                <button className="font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 text-slate-200 hover:text-emerald-400">
+                <button className="font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 text-slate-700 hover:text-emerald-600">
                   Services <FaChevronDown className="text-[10px]" />
                 </button>
-                <div className="absolute left-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50 overflow-hidden">
+                <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50 overflow-hidden text-slate-800">
                   {services.map((service, index) => (
                     <button key={index}
                       onClick={() => {
@@ -306,10 +306,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                         }
                         nav(service.path);
                       }}
-                      className="flex items-center gap-3 w-full p-3.5 hover:bg-white/10 transition border-b border-white/5 last:border-0 text-left group/item"
+                      className="flex items-center gap-3 w-full p-3.5 hover:bg-emerald-50/60 transition border-b border-slate-100 last:border-0 text-left group/item"
                     >
                       <span className="text-lg">{service.icon}</span>
-                      <p className="font-bold text-white text-xs group-hover/item:text-emerald-400 transition">{service.label}</p>
+                      <p className="font-bold text-slate-800 text-xs group-hover/item:text-emerald-700 transition">{service.label}</p>
                     </button>
                   ))}
                 </div>
@@ -325,12 +325,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <div className="relative" ref={notifRef}>
                   <button
                     onClick={() => setShowNotifications(!showNotifications)}
-                    className="relative p-2.5 rounded-xl transition-all cursor-pointer bg-white/10 hover:bg-white/20 text-white border border-white/15 active:scale-95"
+                    className="relative p-2.5 rounded-xl transition-all cursor-pointer bg-white/90 hover:bg-white text-slate-700 border border-slate-200/80 shadow-xs active:scale-95"
                     title="Notifications"
                   >
                     <FaBell size={16} />
                     {unreadCount > 0 && (
-                      <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[9px] font-black flex items-center justify-center rounded-full border-2 border-slate-900 animate-pulse">
+                      <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[9px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
                         {unreadCount}
                       </span>
                     )}
@@ -366,13 +366,13 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <div className="relative group/profile" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-md"
+                    className="flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border bg-white/90 hover:bg-white border-slate-200/80 shadow-xs"
                   >
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-500'}`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-600'}`}>
                       {userRole === 'admin' ? <FaUserShield size={11} /> : (userName?.charAt(0).toUpperCase() || "U")}
                     </div>
-                    <span className="font-bold text-xs hidden sm:inline text-white truncate max-w-[100px]">{userName}</span>
-                    <FaChevronDown className={`text-[9px] text-slate-300 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                    <span className="font-bold text-xs hidden sm:inline text-slate-800 truncate max-w-[100px]">{userName}</span>
+                    <FaChevronDown className={`text-[9px] text-slate-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                   </button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 text-slate-900">
@@ -391,7 +391,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               /* Sign In Button */
               <button
                 onClick={() => nav("/login")}
-                className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20"
+                className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
               >
                 Sign In
               </button>
@@ -401,7 +401,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             {!isDashboard && (
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle bg-white/10 hover:bg-white/20 text-white border border-white/15 active:scale-95"
+                className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle bg-white/90 hover:bg-white text-slate-700 border border-slate-200/80 shadow-xs active:scale-95"
                 title="Open Menu"
               >
                 {isMenuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
@@ -413,14 +413,14 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
       {/* ── MOBILE STICKY SERVICE SWITCHER SUB-BAR (ONLY ON SERVICE PAGES) ── */}
       {isServicePage && (
-        <div className="fixed top-[68px] left-0 w-full z-40 bg-slate-950/95 backdrop-blur-xl px-3 py-2 border-b border-white/10 shadow-lg md:hidden">
-          <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-1.5 p-1 bg-white/10 rounded-2xl border border-white/15">
+        <div className="fixed top-[68px] left-0 w-full z-40 bg-white/95 backdrop-blur-xl px-3 py-2 border-b border-emerald-100/90 shadow-xs md:hidden">
+          <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80">
             <button
               onClick={() => nav('/pick-up')}
               className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/pick-up'
-                  ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
-                  : 'text-slate-300 hover:text-white'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>♻️</span>
@@ -430,8 +430,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               onClick={() => nav('/report-pollution')}
               className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/report-pollution'
-                  ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
-                  : 'text-slate-300 hover:text-white'
+                  ? 'bg-rose-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>🚨</span>
@@ -441,8 +441,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               onClick={() => nav('/report-food')}
               className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/report-food'
-                  ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/25'
-                  : 'text-slate-300 hover:text-white'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>🍲</span>
@@ -452,17 +452,17 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
         </div>
       )}
 
-      {/* ── POLISHED MOBILE DRAWER ── */}
-      <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setIsMenuOpen(false)}>
-        <div ref={menuRef} className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-slate-950 text-white shadow-2xl border-l border-white/10 transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
+      {/* ── POLISHED LIGHT MOBILE DRAWER ── */}
+      <div className={`fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setIsMenuOpen(false)}>
+        <div ref={menuRef} className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white text-slate-900 shadow-2xl border-l border-slate-200 transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
           
           {/* Drawer Header */}
-          <div className="p-5 border-b border-white/10 flex justify-between items-center bg-white/5">
+          <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-emerald-50/50">
             <div className="flex items-center gap-2.5">
               <img src={logo} className="w-8 h-8 object-contain" alt="Logo" />
-              <h2 className="font-black text-lg text-white tracking-tight uppercase">E-Karma</h2>
+              <h2 className="font-black text-lg text-slate-900 tracking-tight uppercase">E-Karma</h2>
             </div>
-            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-400 hover:text-white"><FaTimes size={20} /></button>
+            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-400 hover:text-slate-700"><FaTimes size={20} /></button>
           </div>
 
           {/* Drawer Body */}
@@ -481,22 +481,22 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                     }}
                     className={`w-full flex items-center justify-between p-3 rounded-xl font-bold text-xs transition-all border ${
                       location.pathname === s.path
-                        ? 'bg-white/15 border-emerald-500 text-emerald-400'
-                        : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                        : 'bg-slate-50 border-slate-200/80 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-base">{s.icon}</span>
                       <span>{s.label}</span>
                     </div>
-                    <span>→</span>
+                    <span className="text-slate-400 font-bold">→</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Navigation Links */}
-            <div className="pt-2 border-t border-white/10">
+            <div className="pt-2 border-t border-slate-100">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Navigation</p>
               <div className="space-y-1">
                 {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
@@ -506,7 +506,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                       setIsMenuOpen(false);
                       item.onClick();
                     }}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold text-slate-200 hover:bg-white/10 hover:text-white transition"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50/60 hover:text-emerald-700 transition"
                   >
                     <span className="text-slate-400">{item.icon}</span>
                     <span>{item.label}</span>
@@ -517,18 +517,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           </div>
 
           {/* Drawer Footer */}
-          <div className="p-5 border-t border-white/10 bg-white/5">
+          <div className="p-5 border-t border-slate-100 bg-slate-50/60">
             {isLoggedIn ? (
               <div className="space-y-2">
                 <button
                   onClick={goToDashboard}
-                  className="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm"
                 >
                   <FaColumns /> Go to Dashboard
                 </button>
                 <button
                   onClick={() => handleLogout(true)}
-                  className="w-full py-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 rounded-xl font-bold text-xs"
+                  className="w-full py-2.5 bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 rounded-xl font-bold text-xs"
                 >
                   Sign Out
                 </button>
@@ -536,7 +536,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             ) : (
               <button
                 onClick={() => { nav("/login"); setIsMenuOpen(false); }}
-                className="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20"
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-sm"
               >
                 Sign In to E-Karma
               </button>
