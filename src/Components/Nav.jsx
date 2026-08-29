@@ -211,10 +211,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
     <>
       <nav className={`fixed top-0 z-[100] transition-all duration-300 font-sans flex items-center ${
         isDashboard
-          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-gradient-to-r from-white via-emerald-50/70 to-teal-50/80 backdrop-blur-xl border-b border-emerald-100/90 shadow-sm text-slate-800"
+          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm text-slate-800"
           : location.pathname === "/" && !isScrolled
             ? "w-full left-0 bg-transparent text-white py-5"
-            : "h-[68px] w-full left-0 bg-gradient-to-r from-white via-emerald-50/70 to-teal-50/80 backdrop-blur-xl border-b border-emerald-100/90 shadow-sm text-slate-800"
+            : "h-[68px] w-full left-0 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm text-slate-800"
       }`}>
 
         <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
@@ -223,25 +223,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           <div className="flex items-center gap-4">
             {/* Logo */}
             <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
-              {location.pathname === "/" && !isScrolled ? (
-                <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
-                  <img src={logo} className="w-7 h-7 object-contain" alt="E-Karma Logo" />
-                  <span className="text-base font-black tracking-tight uppercase text-white">E-Karma</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/90 shadow-xs border-emerald-200/80">
-                  <img src={logo} className="w-7 h-7 object-contain" alt="E-Karma Logo" />
-                  <span className="text-base font-black tracking-tight uppercase text-slate-900">E-Karma</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white shadow-md border-slate-200/80">
+                <img src={logo} className="w-7 h-7 object-contain" alt="E-Karma Logo" />
+                <span className="text-base font-black tracking-tight uppercase text-slate-900">E-Karma</span>
+              </div>
             </div>
 
             {/* Back to Home Button (Only on Service Pages) */}
             {isServicePage && (
-              <div className="flex items-center gap-2 pl-2 border-l border-emerald-200/80">
+              <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
                 <button
                   onClick={handleHome}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 transition-all active:scale-95 shadow-xs"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 transition-all active:scale-95 shadow-xs"
                 >
                   <span>←</span>
                   <span className="hidden sm:inline">Home</span>
@@ -266,7 +259,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-slate-200">
                 <button
                   onClick={handleHome}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all active:scale-95"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition-all active:scale-95"
                 >
                   <span>🏠</span>
                   <span>Home</span>
@@ -275,7 +268,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 {/* Services Dropdown in Dashboard - Citizen only */}
                 {userRole !== "admin" && userRole !== "volunteer" && (
                   <div className="relative group/dashservices">
-                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all">
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition-all">
                       <FaConciergeBell className="text-emerald-600" />
                       <span>Services</span>
                       <FaChevronDown className="text-[9px] text-slate-400" />
@@ -300,7 +293,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
           {/* Desktop Service Page Switcher Tabs */}
           {isServicePage && (
-            <div className="hidden md:flex items-center bg-white/90 p-1 rounded-2xl border border-emerald-200/80 shadow-xs gap-1">
+            <div className="hidden md:flex items-center bg-white p-1 rounded-2xl border border-slate-200 shadow-xs gap-1">
               <button
                 onClick={() => nav('/pick-up')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
@@ -344,7 +337,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <button key={idx} onClick={item.onClick}
                   className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
                     location.pathname === "/" && !isScrolled 
-                      ? "text-white/90 hover:text-white"
+                      ? "text-white hover:text-emerald-300 drop-shadow-sm"
                       : "text-slate-700 hover:text-emerald-600"
                   }`}>
                   {item.label}
@@ -358,7 +351,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <div className="relative group">
                 <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
                   location.pathname === "/" && !isScrolled 
-                    ? "text-white/90 hover:text-white"
+                    ? "text-white hover:text-emerald-300 drop-shadow-sm"
                     : "text-slate-700 hover:text-emerald-600"
                 }`}>
                   Services <FaChevronDown className="text-[10px]" />
@@ -389,15 +382,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           <div className="flex items-center space-x-2.5">
             {isLoggedIn ? (
               <>
-                {/* Notification Bell */}
+                {/* Notification Bell - Solid White */}
                 <div className="relative" ref={notifRef}>
                   <button
                     onClick={() => setShowNotifications(!showNotifications)}
-                    className={`relative p-2.5 rounded-xl transition-all cursor-pointer border active:scale-95 ${
-                      location.pathname === "/" && !isScrolled
-                        ? "bg-white/10 hover:bg-white/20 text-white border-white/20 shadow-lg"
-                        : "bg-white/90 hover:bg-white text-slate-700 border-slate-200/80 shadow-xs"
-                    }`}
+                    className="relative p-2.5 rounded-xl transition-all cursor-pointer border bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 shadow-md active:scale-95"
                     title="Notifications"
                   >
                     <FaBell size={16} />
@@ -434,21 +423,17 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   )}
                 </div>
 
-                {/* Profile Pill */}
+                {/* Profile Pill - Solid White */}
                 <div className="relative group/profile" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className={`flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border ${
-                      location.pathname === "/" && !isScrolled
-                        ? "bg-white/10 hover:bg-white/20 border-white/20 text-white shadow-lg"
-                        : "bg-white/90 hover:bg-white border-slate-200/80 text-slate-800 shadow-xs"
-                    }`}
+                    className="flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border bg-white hover:bg-slate-50 border-slate-200/80 text-slate-800 shadow-md"
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-600'}`}>
                       {userRole === 'admin' ? <FaUserShield size={11} /> : (userName?.charAt(0).toUpperCase() || "U")}
                     </div>
-                    <span className={`font-bold text-xs hidden sm:inline truncate max-w-[100px] ${location.pathname === "/" && !isScrolled ? "text-white" : "text-slate-800"}`}>{userName}</span>
-                    <FaChevronDown className={`text-[9px] ${location.pathname === "/" && !isScrolled ? "text-white/60" : "text-slate-400"} transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                    <span className="font-bold text-xs hidden sm:inline truncate max-w-[100px] text-slate-800">{userName}</span>
+                    <FaChevronDown className={`text-[9px] text-slate-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                   </button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 text-slate-900">
@@ -464,12 +449,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 </div>
               </>
             ) : (
-              /* Sign In Button */
+              /* Sign In Button - Solid */
               <button
                 onClick={() => nav("/login")}
                 className={`px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 ${
                   location.pathname === "/" && !isScrolled
-                    ? "bg-white text-emerald-950 hover:bg-emerald-50 shadow-lg"
+                    ? "bg-white text-emerald-950 hover:bg-slate-50 shadow-md border border-slate-200/80"
                     : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                 }`}
               >
@@ -477,14 +462,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               </button>
             )}
 
-            {/* Mobile Menu Toggle (Available across all pages on mobile) */}
+            {/* Mobile Menu Toggle - Solid White */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle border active:scale-95 ${
-                location.pathname === "/" && !isScrolled
-                  ? "bg-white/10 hover:bg-white/20 text-white border-white/20"
-                  : "bg-white/90 hover:bg-white text-slate-700 border-slate-200/80 shadow-xs"
-              }`}
+              className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle border bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 shadow-md active:scale-95"
               title="Open Menu"
             >
               {isMenuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
