@@ -421,7 +421,7 @@ const VolunteerPortal = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto no-scrollbar z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] rounded-tr-[2rem] rounded-br-[2rem]">
+        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto no-scrollbar z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             {[
