@@ -230,6 +230,34 @@ const AdminDashboard = () => {
         
         <main className="flex-1 lg:ml-64 w-full p-4 sm:p-6 lg:p-8 xl:p-10 space-y-8 overflow-x-hidden">
           
+          {/* ── EMERGENCY SOS ALERT BANNER (If any live signals active) ── */}
+          {sosCount > 0 && (
+            <div className="bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 text-white rounded-2xl p-4 sm:p-5 shadow-lg shadow-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-rose-400">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-white text-rose-600 flex items-center justify-center shrink-0 shadow-md">
+                  <FaExclamationTriangle size={20} className="animate-bounce" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                    <h3 className="text-sm sm:text-base font-black uppercase tracking-wide">
+                      {sosCount} Active Emergency SOS Help Signal{sosCount > 1 ? 's' : ''} Received!
+                    </h3>
+                  </div>
+                  <p className="text-xs text-rose-100 mt-0.5 font-medium">
+                    Citizens or volunteers have transmitted live distress/issue signals. Review and resolve their reports below.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setStatusFilter(statusFilter === "support" ? "all" : "support")}
+                className="px-4 py-2.5 bg-white hover:bg-rose-50 text-rose-700 rounded-xl font-black text-xs uppercase tracking-wider shrink-0 transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                {statusFilter === "support" ? "Show All Missions" : `⚡ View ${sosCount} SOS Case${sosCount > 1 ? 's' : ''}`}
+              </button>
+            </div>
+          )}
+
           {/* ── TOP HEADER BAR ── */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
             <div>
@@ -457,10 +485,10 @@ const AdminDashboard = () => {
                           <tr
                             onClick={() => setExpandedId(isExpanded ? null : report._id)}
                             className={`cursor-pointer transition-colors ${
-                              report.isFlagged || report.volFlaggedByCitizen
-                                ? "bg-rose-50/50 hover:bg-rose-50 border-l-4 border-rose-500"
-                                : report.helpRequested
-                                  ? "bg-sky-50/50 hover:bg-sky-50 border-l-4 border-sky-500"
+                              report.helpRequested
+                                ? "bg-rose-50/70 hover:bg-rose-50 border-l-4 border-rose-600"
+                                : report.isFlagged || report.volFlaggedByCitizen
+                                  ? "bg-amber-50/70 hover:bg-amber-50 border-l-4 border-amber-500"
                                   : isExpanded
                                     ? "bg-slate-50 border-l-4 border-emerald-500"
                                     : "hover:bg-slate-50/80"
@@ -473,18 +501,26 @@ const AdminDashboard = () => {
                                   {serviceConfig.icon}
                                 </div>
                                 <div className="min-w-0">
-                                  <div className="flex items-center gap-1.5 mb-0.5">
+                                  <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
                                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
                                       {serviceConfig.label}
                                     </span>
+                                    {report.helpRequested && (
+                                      <span
+                                        className="inline-flex items-center gap-1 text-[9px] font-black bg-rose-600 text-white px-2 py-0.5 rounded-full uppercase animate-pulse shadow-sm shadow-rose-500/30"
+                                        title={report.helpMessage || "SOS Help Requested"}
+                                      >
+                                        <FaExclamationTriangle size={8} /> SOS: {report.helpMessage ? (report.helpMessage.length > 20 ? report.helpMessage.substring(0, 20) + '...' : report.helpMessage) : 'Help Needed'}
+                                      </span>
+                                    )}
                                     {report.isFlagged && (
-                                      <span className="text-[9px] font-black bg-rose-600 text-white px-1.5 py-0.2 rounded uppercase animate-pulse">
+                                      <span className="text-[9px] font-black bg-amber-600 text-white px-1.5 py-0.2 rounded uppercase">
                                         Flagged
                                       </span>
                                     )}
-                                    {report.helpRequested && (
-                                      <span className="text-[9px] font-black bg-sky-600 text-white px-1.5 py-0.2 rounded uppercase">
-                                        SOS
+                                    {report.volFlaggedByCitizen && (
+                                      <span className="text-[9px] font-black bg-rose-600 text-white px-1.5 py-0.2 rounded uppercase">
+                                        Misconduct
                                       </span>
                                     )}
                                   </div>
@@ -645,6 +681,97 @@ const AdminDashboard = () => {
                               <td colSpan="6" className="p-5 sm:p-6 border-t border-b border-slate-200/80">
                                 <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-6">
                                   
+                                  {/* 🚨 ACTIVE SOS EMERGENCY SIGNAL CARD */}
+                                  {report.helpRequested && (
+                                    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-amber-500/10 border-2 border-rose-500/40 shadow-xs space-y-3">
+                                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-rose-200">
+                                        <div className="flex items-center gap-2.5">
+                                          <div className="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                            <FaExclamationTriangle size={14} className="animate-bounce" />
+                                          </div>
+                                          <div>
+                                            <div className="flex items-center gap-2">
+                                              <span className="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                              <h4 className="text-xs font-black uppercase tracking-widest text-rose-800">
+                                                Live SOS / Help Request Active
+                                              </h4>
+                                            </div>
+                                            {report.helpAt && (
+                                              <p className="text-[10px] font-mono font-bold text-slate-500 mt-0.5">
+                                                Broadcasted: {new Date(report.helpAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(report.helpAt).toLocaleDateString()}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </div>
+                                        <button
+                                          onClick={(e) => handleDismissHelp(e, report._id, report.type)}
+                                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all flex items-center gap-1.5 w-fit shrink-0 active:scale-95"
+                                        >
+                                          <FaCheckCircle size={12} /> Mark SOS Resolved
+                                        </button>
+                                      </div>
+
+                                      <div className="bg-white p-4 rounded-xl border border-rose-200/80 shadow-xs">
+                                        <p className="text-[10px] font-black uppercase tracking-wider text-rose-600 mb-1 flex items-center gap-1.5">
+                                          <FaInfoCircle /> Transmitted Message from Participant:
+                                        </p>
+                                        <p className="text-sm font-bold text-slate-900 leading-relaxed break-words bg-rose-50/50 p-3 rounded-lg border border-rose-100">
+                                          "{report.helpMessage || "Live help requested. Please contact the user/volunteer immediately."}"
+                                        </p>
+                                      </div>
+
+                                      <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                                        {(report.userPhone || report.userId?.phone) && (
+                                          <a
+                                            href={`tel:${report.userPhone || report.userId?.phone}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-xs"
+                                          >
+                                            <FaPhoneAlt size={10} className="text-emerald-600" /> Call Citizen ({report.displayName || report.userName}): {report.userPhone || report.userId?.phone}
+                                          </a>
+                                        )}
+                                        {report.volunteerPhone && (
+                                          <a
+                                            href={`tel:${report.volunteerPhone}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 transition-all shadow-xs"
+                                          >
+                                            <FaPhoneAlt size={10} className="text-indigo-600" /> Call Agent ({report.volunteerName}): {report.volunteerPhone}
+                                          </a>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* 🚩 ACTIVE FLAG / MISCONDUCT REPORT CARD */}
+                                  {(report.isFlagged || report.volFlaggedByCitizen) && (
+                                    <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border-2 border-amber-500/30 shadow-xs space-y-3">
+                                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-amber-200">
+                                        <div className="flex items-center gap-2">
+                                          <FaFlag className="text-amber-600" size={14} />
+                                          <h4 className="text-xs font-black uppercase tracking-widest text-amber-900">
+                                            {report.volFlaggedByCitizen ? "Citizen Reported Volunteer Misconduct" : "Volunteer Reported Operational Issue / Fraud"}
+                                          </h4>
+                                        </div>
+                                        <button
+                                          onClick={(e) => handleUnflag(e, report._id, report.type)}
+                                          className="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition-all w-fit"
+                                        >
+                                          Dismiss & Clear Flag
+                                        </button>
+                                      </div>
+
+                                      <div className="bg-white p-3.5 rounded-xl border border-amber-200">
+                                        <p className="text-[10px] font-black uppercase tracking-wider text-amber-700 mb-1">
+                                          Incident Description:
+                                        </p>
+                                        <p className="text-xs font-bold text-slate-900 leading-relaxed">
+                                          "{report.volFlagReason || report.flagReason || "Suspicious or non-compliant activity reported."}"
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+
                                   {/* Drawer Header */}
                                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                                     <div className="flex items-center gap-2">

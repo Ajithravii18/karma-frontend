@@ -281,6 +281,28 @@ const VolunteerPortal = () => {
     }
   };
 
+  const handleLiveHelp = async (taskId) => {
+    const task = tasks.find(t => t._id === taskId);
+    const type = task.isFood ? "food" : task.isPollution ? "pollution" : "pickup";
+
+    const message = window.prompt("🆘 SOS: What emergency or operational blocker are you facing on this mission? (e.g., Gate locked, customer unreachable, safety hazard):");
+    if (!message || message.trim().length < 5) {
+      return toast.error("Please provide a brief description (min 5 characters)");
+    }
+
+    try {
+      await api.post("/api/user/live-help", {
+        requestId: taskId,
+        requestType: type,
+        message: message
+      });
+      toast.success("SOS Emergency Signal broadcasted to Admin HQ! 🚨");
+      fetchTasks(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to signal HQ");
+    }
+  };
+
   const handleReviewSubmit = async () => {
     if (reviewModal.rating === 0 && !reviewModal.isReport) return toast.error("Select a rating or file a report");
     if (reviewModal.isReport && reviewModal.reportReason.length < 5) return toast.error("Provide a detailed report reason");
@@ -1172,7 +1194,11 @@ const VolunteerPortal = () => {
                                     <div className="flex items-center gap-2">
                                       <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-[10px] font-bold text-slate-400 hover:text-rose-600 hover:underline">Abort</button>
                                       <span className="text-slate-300">•</span>
-                                      <button onClick={() => handleFlagReport(task._id)} className="text-[10px] font-bold text-rose-600 hover:underline">Flag Fraud</button>
+                                      <button onClick={() => handleFlagReport(task._id)} className="text-[10px] font-bold text-amber-600 hover:underline">Flag Fraud</button>
+                                      <span className="text-slate-300">•</span>
+                                      <button onClick={() => handleLiveHelp(task._id)} className="text-[10px] font-black text-rose-600 hover:underline flex items-center gap-1">
+                                        <FaExclamationTriangle size={8} /> SOS
+                                      </button>
                                     </div>
                                   </div>
                                 ) : (
@@ -1271,9 +1297,16 @@ const VolunteerPortal = () => {
 
                         <div className="pt-1">
                           {isFinished ? (
-                            <div className="text-center py-2 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold border border-slate-200">
-                              Mission Resolved
-                            </div>
+                            task.review ? (
+                              <div className="py-2 text-center text-xs font-bold text-slate-400 bg-slate-50 rounded-xl">Feedback Logged</div>
+                            ) : (
+                              <button
+                                onClick={() => setReviewModal({ show: true, item: task, type: '', rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                                className="w-full bg-emerald-50 text-emerald-700 border border-emerald-200 py-2.5 rounded-xl font-bold text-xs uppercase"
+                              >
+                                ⭐ Review Citizen
+                              </button>
+                            )
                           ) : (!assignedToMe && !task.assignedVolunteer) ? (
                             <button
                               onClick={() => handleClaim(task)}
@@ -1310,9 +1343,12 @@ const VolunteerPortal = () => {
                               ) : (
                                 <button onClick={() => handleAction(task._id, 'complete')} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm">Complete Mission</button>
                               )}
-                              <div className="flex justify-between text-xs pt-1">
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-slate-100">
                                 <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-slate-400 hover:text-rose-600 font-bold">Abort</button>
-                                <button onClick={() => handleFlagReport(task._id)} className="text-rose-600 font-bold">Flag Fraud</button>
+                                <button onClick={() => handleFlagReport(task._id)} className="text-amber-600 font-bold">Flag Fraud</button>
+                                <button onClick={() => handleLiveHelp(task._id)} className="text-rose-600 font-black flex items-center gap-1">
+                                  <FaExclamationTriangle size={8} /> SOS Help
+                                </button>
                               </div>
                             </div>
                           ) : (
