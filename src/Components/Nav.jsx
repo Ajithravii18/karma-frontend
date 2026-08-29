@@ -200,12 +200,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
   const freshUserRoleCheck = (role) => role !== "user" && role !== "" && role !== null;
 
-  const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history", "/admin"];
+  const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history", "/admin", "/waste-analysis", "/food-analysis", "/user-management", "/deletion-logs", "/user-reports"];
   const isDashboard = dashboardRoutes.some(route => location.pathname.startsWith(route));
 
-  // Service pages: clean app navbar (no marketing links) but full-width
-  const serviceRoutes = ["/pick-up", "/report-pollution", "/report-food", "/my-reports", "/volunteer-history"];
-  const isServicePage = serviceRoutes.some(route => location.pathname.startsWith(route));
+  // Service creation pages: only for /pick-up, /report-pollution, /report-food
+  const serviceRoutes = ["/pick-up", "/report-pollution", "/report-food"];
+  const isServicePage = !isDashboard && serviceRoutes.includes(location.pathname);
 
   return (
     <>
