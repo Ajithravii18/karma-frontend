@@ -103,7 +103,7 @@ function SchedulePickup() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <Nav />
 
-      <section className="pt-24 pb-10 px-4 md:px-8">
+      <section className="pt-[84px] pb-10 px-4 md:px-8">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* LEFT PANE */}

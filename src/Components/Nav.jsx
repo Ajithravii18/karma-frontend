@@ -191,18 +191,24 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history", "/admin"];
   const isDashboard = dashboardRoutes.some(route => location.pathname.startsWith(route));
 
+  // Service pages: clean app navbar (no marketing links) but full-width
+  const serviceRoutes = ["/pick-up", "/report-pollution", "/report-food", "/my-reports", "/volunteer-history"];
+  const isServicePage = serviceRoutes.some(route => location.pathname.startsWith(route));
+
   return (
-    <nav className={`fixed top-0 z-[100] transition-all duration-500 font-sans ${
-      isDashboard 
-        ? "w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-200 py-3"
-        : location.pathname === "/" && !isScrolled
-          ? "w-full left-0 bg-transparent py-5"
-          : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
+    <nav className={`fixed top-0 z-[100] transition-all duration-500 font-sans flex items-center ${
+      isDashboard
+        ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-200"
+        : isServicePage
+          ? "h-[68px] w-full left-0 bg-white border-b border-slate-200"
+          : location.pathname === "/" && !isScrolled
+            ? "w-full left-0 bg-transparent py-5"
+            : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
     }`}>
 
       <div className="w-full px-6 flex items-center relative z-10 justify-between">
 
-        {/* Logo */}
+        {/* Logo — hidden on desktop dashboard only (sidebar takes over), always visible on mobile */}
         <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
           {location.pathname === "/" && !isScrolled ? (
             <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
@@ -217,7 +223,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           )}
         </div>
 
-        {/* Dashboard Greeting (Desktop) */}
+        {/* Dashboard Greeting (Desktop only) */}
         {isDashboard && (
           <div className="hidden lg:flex flex-col ml-4">
             <h2 className="text-lg font-black text-slate-800 tracking-tight leading-none">
@@ -229,8 +235,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           </div>
         )}
 
-        {/* Desktop Nav Links */}
-        {!isDashboard && (
+        {/* Desktop Nav Links — hidden on dashboard AND service pages */}
+        {!isDashboard && !isServicePage && (
           <div className="hidden lg:flex items-center space-x-6">
             {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
               <button key={idx} onClick={item.onClick}
@@ -369,8 +375,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             </button>
           )}
 
-          {/* Mobile Menu Toggle */}
-          {!isDashboard && (
+          {/* Mobile Menu Toggle — only on pure marketing pages */}
+          {!isDashboard && !isServicePage && (
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${location.pathname === "/" && !isScrolled ? "text-white/90 hover:bg-white/10" : "text-slate-500 hover:bg-slate-100"}`}
