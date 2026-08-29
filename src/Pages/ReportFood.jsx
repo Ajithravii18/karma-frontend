@@ -114,44 +114,8 @@ function ReportLeftoverFood() {
 
       <Nav />
 
-      {/* ── HERO BANNER (FULL WIDTH) ── */}
-      <section className="pt-[96px] pb-6 px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="w-full max-w-[1550px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-amber-100">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-100/80 border border-amber-300/80 rounded-full shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
-              <span className="text-[11px] font-black text-amber-800 uppercase tracking-widest">
-                Zero Hunger Network • Rapid Food Rescue
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Turn Surplus into <span className="text-amber-600 italic">Community Nourishment</span>
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base max-w-3xl font-medium leading-relaxed">
-              Connect edible surplus from weddings, banquets, and restaurants directly with local shelter distribution hubs before expiration.
-            </p>
-          </div>
-
-          {/* Quick Metrics Bar */}
-          <div className="flex items-center gap-3 shrink-0 overflow-x-auto pb-2 lg:pb-0">
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Meals Rescued</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">🍲 85,000+</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-amber-50/90 border border-amber-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-amber-700 uppercase tracking-wider">Pickup SLA</p>
-              <p className="text-lg font-black text-amber-900 mt-0.5">⚡ &lt; 45 Mins</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Shelter Network</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">❤️ 120+ Hubs</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── MAIN WORKSPACE (FULL-WIDTH 2-COLUMN BALANCED) ── */}
-      <main className="flex-1 py-4 px-4 sm:px-6 lg:px-8 xl:px-12">
+      <main className="flex-1 pt-[88px] pb-10 px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="w-full max-w-[1550px] mx-auto space-y-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">

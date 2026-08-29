@@ -118,44 +118,8 @@ function PollutionReport() {
 
       <Nav />
 
-      {/* ── HERO BANNER (FULL WIDTH) ── */}
-      <section className="pt-[96px] pb-6 px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="w-full max-w-[1550px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-rose-100">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-rose-100/80 border border-rose-300/80 rounded-full shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
-              <span className="text-[11px] font-black text-rose-800 uppercase tracking-widest">
-                Citizen Environmental Watchdog • Public Hazard Registry
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Report an <span className="text-rose-600 italic">Environmental Hazard</span>
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base max-w-3xl font-medium leading-relaxed">
-              Document open burning, toxic dumping, or water contamination. Photographic proof and GPS coordinates trigger immediate volunteer and civic response.
-            </p>
-          </div>
-
-          {/* Quick Metrics Bar */}
-          <div className="flex items-center gap-3 shrink-0 overflow-x-auto pb-2 lg:pb-0">
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Hotspots Cleared</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">📍 1,240+</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-rose-50/90 border border-rose-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-rose-700 uppercase tracking-wider">Triage Speed</p>
-              <p className="text-lg font-black text-rose-900 mt-0.5">🚨 &lt; 2 Hours</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Anonymity</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">🔒 100% Private</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── MAIN WORKSPACE (FULL-WIDTH 2-COLUMN BALANCED) ── */}
-      <main className="flex-1 py-4 px-4 sm:px-6 lg:px-8 xl:px-12">
+      <main className="flex-1 pt-[88px] pb-10 px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="w-full max-w-[1550px] mx-auto space-y-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">

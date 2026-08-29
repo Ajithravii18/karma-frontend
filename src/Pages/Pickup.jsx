@@ -89,44 +89,8 @@ function SchedulePickup() {
 
       <Nav />
 
-      {/* ── HERO BANNER (FULL WIDTH) ── */}
-      <section className="pt-[96px] pb-6 px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="w-full max-w-[1550px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-emerald-100">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-100/80 border border-emerald-300/80 rounded-full shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span className="text-[11px] font-black text-emerald-800 uppercase tracking-widest">
-                Smart Eco Logistics • Doorstep Collection
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Schedule a <span className="text-emerald-600 italic">Waste & Recyclable</span> Pickup
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base max-w-3xl font-medium leading-relaxed">
-              Select your segregated waste streams and preferred time window. We connect you directly with certified volunteers for prompt zero-landfill collection.
-            </p>
-          </div>
-
-          {/* Quick Metrics Bar */}
-          <div className="flex items-center gap-3 shrink-0 overflow-x-auto pb-2 lg:pb-0">
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Avg. Response</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">⚡ &lt; 15 Mins</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">Diversion Rate</p>
-              <p className="text-lg font-black text-emerald-900 mt-0.5">🌱 98.4%</p>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md min-w-[135px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Verification</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">🛡️ 100% Eco</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── MAIN WORKSPACE (FULL-WIDTH 2-COLUMN BALANCED) ── */}
-      <main className="flex-1 py-4 px-4 sm:px-6 lg:px-8 xl:px-12">
+      <main className="flex-1 pt-[88px] pb-10 px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="w-full max-w-[1550px] mx-auto space-y-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
