@@ -121,175 +121,155 @@ function ReportLeftoverFood() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-10 relative">
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
       <Nav />
 
-      <section className="pt-[84px] pb-10 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          {/* ── LEFT PANE ── */}
-          <div className="flex flex-col justify-between bg-amber-950 text-white rounded-[2.5rem] min-h-[680px] p-8 md:p-12">
-
-            {/* Top content */}
+      <main className="flex-1 flex items-center justify-center px-4 py-8 pt-[88px]">
+        <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+          
+          {/* Card Top Banner */}
+          <div className="bg-amber-950 px-6 sm:px-8 py-5 flex items-center justify-between border-b border-amber-900/50">
             <div>
-              {/* Badge pill */}
-              <div className="bg-amber-500/20 text-amber-300 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-flex items-center gap-2 mb-10">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                Zero Hunger Initiative
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-amber-500/20 rounded-full mb-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-[9px] font-black text-amber-300 uppercase tracking-widest">Food Rescue Initiative</span>
               </div>
-
-              {/* Heading */}
-              <h1 className="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-6">
-                Turn Surplus<br />
-                into<br />
-                <span className="text-amber-400 italic">Sustainability.</span>
+              <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Turn Surplus into <span className="text-amber-400 italic">Community Impact</span>
               </h1>
-
-              {/* Subtitle */}
-              <p className="text-amber-200/60 text-base font-medium max-w-xs leading-relaxed">
-                Your contribution prevents food waste and helps local communities.
-                Fill in the specifics so our volunteers can act fast.
-              </p>
             </div>
-
-            {/* Bottom feature cards */}
-            <div className="grid grid-cols-2 gap-4 mt-12">
-              {/* Direct Impact */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div className="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
-                  <FaUtensils size={16} />
-                </div>
-                <h4 className="font-black text-white text-base mb-1">Direct Impact</h4>
-                <p className="text-xs font-medium text-amber-200/50 leading-relaxed">
-                  Meals go directly to those in need.
-                </p>
-              </div>
-
-              {/* Fast Pickup */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
-                  <FaClock size={16} />
-                </div>
-                <h4 className="font-black text-white text-base mb-1">Fast Pickup</h4>
-                <p className="text-xs font-medium text-amber-200/50 leading-relaxed">
-                  Expiry tracking ensures food safety.
-                </p>
-              </div>
+            <div className="hidden sm:flex w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 items-center justify-center text-amber-400 text-xl font-black">
+              🍲
             </div>
           </div>
 
-
-          {/* ── RIGHT PANE (FORM) ── */}
-          <div className="bg-white rounded-[2.5rem] min-h-[680px] p-8 md:p-12 flex flex-col justify-center shadow-sm border border-slate-200">
-            <form onSubmit={handleSubmit} className="space-y-6">
-
-              {/* Row 1 — Location & Quantity */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                    <FaMapMarkerAlt /> Pickup Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Restaurant / Event Name"
-                    value={placeName}
-                    onChange={(e) => setPlaceName(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all text-sm"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                    <FaUtensils /> Servings (Count)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="How many people?"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Row 2 — Category & Expiry */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                    <FaLayerGroup /> Food Category
-                  </label>
-                  <select
-                    value={foodType}
-                    onChange={(e) => setFoodType(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all text-sm cursor-pointer appearance-none"
-                  >
-                    <option value="Veg">🥦 Veg Only</option>
-                    <option value="Non-Veg">🥩 Non-Veg</option>
-                    <option value="Mix">🍲 Mixed Items</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                    <FaClock /> Best Before (Expiry)
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={expiryTime}
-                    onChange={(e) => setExpiryTime(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Map section */}
-              <div className="space-y-3">
-                <button
-                  type="button"
-                  onClick={getCurrentLocation}
-                  className="w-full py-3.5 bg-emerald-50 text-emerald-700 font-black text-[11px] uppercase tracking-widest rounded-xl border border-emerald-200 hover:bg-emerald-100 transition-all flex items-center justify-center gap-2"
-                >
-                  <FaMapMarkerAlt />
-                  {locationLoading ? "Detecting Location…" : "Pin Current Location"}
-                </button>
-                <div className="border-2 border-slate-100 rounded-2xl overflow-hidden h-[180px] w-full relative z-0">
-                  <MapContainer center={position} zoom={16} className="h-full w-full z-0">
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <Marker position={position} />
-                    <MapUpdater center={position} />
-                  </MapContainer>
-                </div>
-              </div>
-
-              {/* Additional Instructions */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                  Additional Instructions
+          {/* Form Content */}
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
+            {/* Location & Servings */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <FaMapMarkerAlt className="text-amber-500" /> Pickup Location / Venue
                 </label>
-                <textarea
-                  placeholder="E.g. Take from back gate, items are pre-packed..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all text-sm min-h-[100px] resize-none"
+                <input
+                  type="text"
+                  placeholder="Restaurant, Banquet hall, Address..."
+                  value={placeName}
+                  onChange={(e) => setPlaceName(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all"
+                  required
                 />
               </div>
 
-              {/* Submit */}
-              <div className="pt-2">
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <FaUtensils className="text-amber-500" /> Est. Servings (People Count)
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 25 people"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Food Category & Expiry */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <FaLayerGroup className="text-amber-500" /> Category
+                </label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {[
+                    { id: "Veg", label: "🥦 Veg" },
+                    { id: "Non-Veg", label: "🥩 Non-Veg" },
+                    { id: "Mix", label: "🍲 Mixed" }
+                  ].map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setFoodType(cat.id)}
+                      className={`py-2.5 px-2 rounded-xl text-xs font-black transition-all border ${
+                        foodType === cat.id
+                          ? "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/20"
+                          : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <FaClock className="text-amber-500" /> Best Before (Expiry)
+                </label>
+                <input
+                  type="datetime-local"
+                  value={expiryTime}
+                  onChange={(e) => setExpiryTime(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all cursor-pointer"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Map & Location */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <FaMapMarkerAlt className="text-amber-500" /> Exact Pinpoint
+                </label>
                 <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                  type="button"
+                  onClick={getCurrentLocation}
+                  className="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5"
                 >
-                  {loading ? "Syncing with Cloud…" : "🚀 Dispatch Report"}
+                  <span>📍</span>
+                  <span>{locationLoading ? "Detecting…" : "Auto-Pin Location"}</span>
                 </button>
               </div>
-            </form>
-          </div>
 
+              <div className="border border-slate-200 rounded-xl overflow-hidden h-[120px] w-full relative z-0 shadow-inner">
+                <MapContainer center={position} zoom={16} className="h-full w-full z-0" zoomControl={false}>
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <Marker position={position} />
+                  <MapUpdater center={position} />
+                </MapContainer>
+              </div>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-1.5 block">
+                Packaging / Handover Details <span className="text-slate-400 font-normal lowercase">(optional)</span>
+              </label>
+              <textarea
+                placeholder="E.g. Packed in hot boxes, enter from rear kitchen entrance..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={2}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all resize-none"
+              />
+            </div>
+
+            {/* Submit Action */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-white py-3.5 px-6 rounded-xl font-black text-sm uppercase tracking-wider transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {loading ? "Dispatching Report…" : "🚀 Dispatch Food Rescue"}
+              </button>
+            </div>
+          </form>
         </div>
-      </section>
+      </main>
     </div>
   );
 }

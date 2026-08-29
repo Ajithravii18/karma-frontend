@@ -208,17 +208,32 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
       <div className="w-full px-6 flex items-center relative z-10 justify-between">
 
-        {/* Logo — hidden on desktop dashboard only (sidebar takes over), always visible on mobile */}
-        <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
-          {location.pathname === "/" && !isScrolled ? (
-            <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
-              <img src={logo} className="w-7" alt="E-Karma Logo" />
-              <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
-              <img src={logo} className="w-8" alt="E-Karma Logo" />
-              <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+        {/* Left Side Group: Logo + Dashboard return */}
+        <div className="flex items-center gap-3">
+          {/* Logo — hidden on desktop dashboard only (sidebar takes over), always visible on mobile & service pages */}
+          <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
+            {location.pathname === "/" && !isScrolled ? (
+              <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
+                <img src={logo} className="w-7" alt="E-Karma Logo" />
+                <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+                <img src={logo} className="w-8" alt="E-Karma Logo" />
+                <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+              </div>
+            )}
+          </div>
+
+          {isServicePage && (
+            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+              <button
+                onClick={() => nav('/dashboard')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all active:scale-95"
+              >
+                <span>←</span>
+                <span className="hidden sm:inline">Dashboard</span>
+              </button>
             </div>
           )}
         </div>
@@ -232,6 +247,42 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
+          </div>
+        )}
+
+        {/* Service Page Switcher Tabs */}
+        {isServicePage && (
+          <div className="hidden md:flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 shadow-inner">
+            <button
+              onClick={() => nav('/pick-up')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                location.pathname === '/pick-up'
+                  ? 'bg-white text-emerald-700 shadow-sm font-black'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>♻️</span> Waste Pickup
+            </button>
+            <button
+              onClick={() => nav('/report-pollution')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                location.pathname === '/report-pollution'
+                  ? 'bg-white text-rose-700 shadow-sm font-black'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>🚨</span> Pollution Spot
+            </button>
+            <button
+              onClick={() => nav('/report-food')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                location.pathname === '/report-food'
+                  ? 'bg-white text-amber-700 shadow-sm font-black'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>🍲</span> Food Rescue
+            </button>
           </div>
         )}
 
