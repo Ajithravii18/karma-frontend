@@ -219,8 +219,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
         <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
 
-          {/* Left Side Group: Logo + Return Home */}
-          <div className="flex items-center gap-3">
+          {/* Left Side Group: Logo / Dashboard Greeting */}
+          <div className="flex items-center gap-4">
             {/* Logo */}
             <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
               {location.pathname === "/" && !isScrolled ? (
@@ -248,12 +248,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 </button>
               </div>
             )}
-          </div>
 
-          {/* Dashboard Greeting + Home & Services Shortcuts (Desktop only) */}
-          {isDashboard && (
-            <div className="hidden lg:flex items-center gap-6 ml-4">
-              <div className="flex flex-col">
+            {/* Dashboard Greeting - Leftmost on Desktop */}
+            {isDashboard && (
+              <div className="hidden lg:flex flex-col">
                 <h2 className="text-lg font-black text-slate-900 tracking-tight leading-none">
                   Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
                 </h2>
@@ -261,9 +259,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </p>
               </div>
+            )}
 
-              {/* Dashboard Nav Shortcuts (Home & Services) */}
-              <div className="flex items-center gap-2 pl-4 border-l border-slate-200">
+            {/* Dashboard Nav Shortcuts (Home & Services) */}
+            {isDashboard && (
+              <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-slate-200">
                 <button
                   onClick={handleHome}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all active:scale-95"
@@ -293,8 +293,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Desktop Service Page Switcher Tabs */}
           {isServicePage && (
