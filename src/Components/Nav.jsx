@@ -188,13 +188,13 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
   const freshUserRoleCheck = (role) => role !== "user" && role !== "" && role !== null;
 
-  const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history"];
+  const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history", "/admin"];
   const isDashboard = dashboardRoutes.some(route => location.pathname.startsWith(route));
 
   return (
     <nav className={`fixed top-0 z-[100] transition-all duration-500 font-sans ${
       isDashboard 
-        ? "w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-100 py-3 shadow-sm"
+        ? "w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-200 py-3"
         : location.pathname === "/" && !isScrolled
           ? "w-full left-0 bg-transparent py-5"
           : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
