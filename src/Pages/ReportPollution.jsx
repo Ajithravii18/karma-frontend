@@ -111,54 +111,58 @@ function PollutionReport() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col selection:bg-rose-500 selection:text-white">
+    <div className="min-h-screen bg-[#0E060A] text-slate-100 font-sans flex flex-col relative overflow-x-hidden selection:bg-rose-500 selection:text-white">
+      {/* ── AMBIENT GLOW MESHES ── */}
+      <div className="fixed top-0 left-1/4 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="fixed bottom-0 right-10 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-[160px] pointer-events-none -z-10" />
+
       <Nav />
 
       {/* ── HERO BANNER ── */}
-      <section className="pt-[92px] pb-8 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-200/80">
-        <div className="max-w-6xl mx-auto text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-rose-50 border border-rose-200/80 rounded-full">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-            <span className="text-[11px] font-black text-rose-700 uppercase tracking-widest">
-              Citizen Environmental Watchdog • Public Hazard Registry
-            </span>
+      <section className="pt-[96px] pb-6 px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="w-full max-w-[1550px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-rose-950/80">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-rose-500/10 border border-rose-500/30 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse shadow-lg shadow-rose-400/50" />
+              <span className="text-[11px] font-black text-rose-400 uppercase tracking-widest">
+                Citizen Environmental Watchdog • Public Hazard Registry
+              </span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+              Report an <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-amber-300 italic">Environmental Hazard</span>
+            </h1>
+            <p className="text-slate-400 text-sm sm:text-base max-w-3xl font-medium leading-relaxed">
+              Document open burning, toxic dumping, or water contamination. Photographic proof and GPS coordinates trigger immediate volunteer and civic response.
+            </p>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-            Report an <span className="text-rose-600 italic">Environmental Hazard</span>
-          </h1>
-
-          <p className="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
-            Document open burning, toxic dumping, or water contamination. Photographic proof and GPS coordinates trigger immediate volunteer and civic response.
-          </p>
-
-          {/* Quick Pillars */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-600">
-            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-              <span className="text-rose-500">🚨</span> Urgent Triage Response
-            </span>
-            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-              <span className="text-rose-500">🔒</span> 100% Anonymous Reporting
-            </span>
-            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-              <span className="text-rose-500">📸</span> Geotagged Visual Evidence
-            </span>
+          {/* Quick Metrics Bar */}
+          <div className="flex items-center gap-3 shrink-0 overflow-x-auto pb-2 lg:pb-0">
+            <div className="px-5 py-3 rounded-2xl bg-slate-900/80 border border-rose-950/80 backdrop-blur-xl min-w-[135px]">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Hotspots Cleared</p>
+              <p className="text-lg font-black text-white mt-0.5">📍 1,240+</p>
+            </div>
+            <div className="px-5 py-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 backdrop-blur-xl min-w-[135px]">
+              <p className="text-[10px] font-black text-rose-400 uppercase tracking-wider">Triage Speed</p>
+              <p className="text-lg font-black text-rose-300 mt-0.5">🚨 &lt; 2 Hours</p>
+            </div>
+            <div className="px-5 py-3 rounded-2xl bg-slate-900/80 border border-rose-950/80 backdrop-blur-xl min-w-[135px]">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Anonymity</p>
+              <p className="text-lg font-black text-white mt-0.5">🔒 100% Private</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── MAIN WORKSPACE (2-COLUMN BALANCED) ── */}
-      <main className="flex-1 py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto space-y-10">
+      {/* ── MAIN WORKSPACE (FULL-WIDTH 2-COLUMN BALANCED) ── */}
+      <main className="flex-1 py-4 px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="w-full max-w-[1550px] mx-auto space-y-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
             {/* ── LEFT PANE: ACTION PROTOCOL & HAZARD GUIDE ── */}
-            <div className="lg:col-span-5 bg-rose-950 text-white rounded-3xl p-7 sm:p-9 border border-rose-900 shadow-xl flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute -top-24 -left-24 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
-
-              <div className="relative z-10 space-y-8">
+            <div className="lg:col-span-5 bg-gradient-to-br from-[#1C0D13]/90 via-[#190B10]/70 to-[#12070C]/90 rounded-3xl p-7 sm:p-9 border border-rose-900/50 shadow-2xl backdrop-blur-xl flex flex-col justify-between relative overflow-hidden">
+              <div className="space-y-8 relative z-10">
                 <div>
                   <span className="text-[10px] font-black text-rose-300 uppercase tracking-widest">
                     Response Protocol
@@ -170,37 +174,37 @@ function PollutionReport() {
 
                 {/* 3 Step Guide */}
                 <div className="space-y-5">
-                  <div className="flex gap-3.5 items-start">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                      1
+                  <div className="flex gap-4 items-start">
+                    <div className="w-9 h-9 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-lg shadow-rose-500/10">
+                      01
                     </div>
                     <div>
                       <h4 className="text-sm font-black text-white">Identify & Classify</h4>
-                      <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
                         Categorize the incident by pollutant type (Air, Water, Garbage, Chemical).
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3.5 items-start">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                      2
+                  <div className="flex gap-4 items-start">
+                    <div className="w-9 h-9 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-lg shadow-rose-500/10">
+                      02
                     </div>
                     <div>
                       <h4 className="text-sm font-black text-white">Attach Visual Proof</h4>
-                      <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
                         Photos provide immediate context on volume, risk level, and equipment needed.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3.5 items-start">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                      3
+                  <div className="flex gap-4 items-start">
+                    <div className="w-9 h-9 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-lg shadow-rose-500/10">
+                      03
                     </div>
                     <div>
                       <h4 className="text-sm font-black text-white">Dispatch & Authority Alert</h4>
-                      <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
+                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
                         Automated alerts mobilize nearby green response squads and civic cells.
                       </p>
                     </div>
@@ -208,50 +212,62 @@ function PollutionReport() {
                 </div>
 
                 {/* Severity Guide */}
-                <div className="pt-2 border-t border-rose-900/80">
+                <div className="pt-4 border-t border-rose-900/80">
                   <p className="text-[10px] font-black uppercase tracking-widest text-rose-300 mb-3">
                     Priority Streams
                   </p>
-                  <div className="grid grid-cols-2 gap-2.5 text-xs">
-                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                      <span>☠️</span>
-                      <span className="font-bold text-rose-100">Chemical Waste</span>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="p-3 rounded-2xl bg-slate-950/60 border border-rose-950 flex items-center gap-2.5 hover:border-rose-900 transition-colors">
+                      <span className="text-lg">☠️</span>
+                      <div>
+                        <p className="font-black text-rose-200">Chemical Waste</p>
+                        <p className="text-[10px] text-slate-500">Toxic, Effluents</p>
+                      </div>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                      <span>💧</span>
-                      <span className="font-bold text-rose-100">Water Runoff</span>
+                    <div className="p-3 rounded-2xl bg-slate-950/60 border border-rose-950 flex items-center gap-2.5 hover:border-rose-900 transition-colors">
+                      <span className="text-lg">💧</span>
+                      <div>
+                        <p className="font-black text-rose-200">Water Runoff</p>
+                        <p className="text-[10px] text-slate-500">Rivers, Drains</p>
+                      </div>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                      <span>🗑️</span>
-                      <span className="font-bold text-rose-100">Illegal Dumpsite</span>
+                    <div className="p-3 rounded-2xl bg-slate-950/60 border border-rose-950 flex items-center gap-2.5 hover:border-rose-900 transition-colors">
+                      <span className="text-lg">🗑️</span>
+                      <div>
+                        <p className="font-black text-rose-200">Illegal Dumpsite</p>
+                        <p className="text-[10px] text-slate-500">Open Garbage</p>
+                      </div>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                      <span>💨</span>
-                      <span className="font-bold text-rose-100">Smoke & Emissions</span>
+                    <div className="p-3 rounded-2xl bg-slate-950/60 border border-rose-950 flex items-center gap-2.5 hover:border-rose-900 transition-colors">
+                      <span className="text-lg">💨</span>
+                      <div>
+                        <p className="font-black text-rose-200">Smoke & Emissions</p>
+                        <p className="text-[10px] text-slate-500">Open Burning</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Guarantee */}
-              <div className="pt-6 mt-6 border-t border-rose-900 text-[11px] font-bold text-rose-300 flex items-center justify-between relative z-10">
+              <div className="pt-6 mt-6 border-t border-rose-900/80 text-[11px] font-bold text-rose-300 flex items-center justify-between relative z-10">
                 <span className="text-rose-400">🔒 Whistleblower Privacy</span>
                 <span>Encrypted Transmissions</span>
               </div>
             </div>
 
             {/* ── RIGHT PANE: INCIDENT FORM ── */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/80 shadow-xl flex flex-col justify-center">
-              <div className="pb-5 border-b border-slate-100 mb-6 flex items-center justify-between">
+            <div className="lg:col-span-7 bg-gradient-to-br from-[#1C0D13]/95 via-[#190B10]/85 to-[#12070C]/95 rounded-3xl p-7 sm:p-9 border border-rose-900/50 shadow-2xl backdrop-blur-xl flex flex-col justify-center">
+              <div className="pb-5 border-b border-rose-950/80 mb-6 flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                  <h3 className="text-xl font-black text-white tracking-tight">
                     Incident Report Details
                   </h3>
                   <p className="text-xs text-slate-400 font-medium mt-0.5">
                     Broadcast accurate information to dispatch teams.
                   </p>
                 </div>
-                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                <span className="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/30">
                   Direct Escalation
                 </span>
               </div>
@@ -260,34 +276,34 @@ function PollutionReport() {
                 {/* Category & Evidence Upload */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
-                      <FaExclamationTriangle className="text-rose-500" /> Incident Category
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
+                      <FaExclamationTriangle className="text-rose-400" /> Incident Category
                     </label>
                     <select
                       value={pollutionType}
                       onChange={(e) => setPollutionType(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 outline-none transition-all cursor-pointer"
+                      className="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-3 text-sm font-bold text-slate-200 focus:bg-slate-950 focus:border-rose-400 focus:ring-4 focus:ring-rose-500/20 outline-none transition-all cursor-pointer"
                       required
                     >
-                      <option value="">Select Category...</option>
-                      <option value="Air Pollution">💨 Air Pollution & Smoke</option>
-                      <option value="Water Contamination">💧 Water Contamination</option>
-                      <option value="Illegal Garbage Dump">🗑️ Illegal Garbage Dump</option>
-                      <option value="Chemical/Toxic Waste">☠️ Chemical / Toxic Waste</option>
-                      <option value="Noise Pollution">📢 Industrial Noise</option>
+                      <option value="" className="bg-slate-900 text-slate-400">Select Category...</option>
+                      <option value="Air Pollution" className="bg-slate-900 text-white">💨 Air Pollution & Smoke</option>
+                      <option value="Water Contamination" className="bg-slate-900 text-white">💧 Water Contamination</option>
+                      <option value="Illegal Garbage Dump" className="bg-slate-900 text-white">🗑️ Illegal Garbage Dump</option>
+                      <option value="Chemical/Toxic Waste" className="bg-slate-900 text-white">☠️ Chemical / Toxic Waste</option>
+                      <option value="Noise Pollution" className="bg-slate-900 text-white">📢 Industrial Noise</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
-                      <FaCamera className="text-rose-500" /> Evidence Photos <span className="text-slate-400 font-normal lowercase">(max 4)</span>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
+                      <FaCamera className="text-rose-400" /> Evidence Photos <span className="text-slate-500 font-normal lowercase">(max 4)</span>
                     </label>
                     <div
                       onClick={() => fileInputRef.current.click()}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-center cursor-pointer hover:bg-rose-50/50 hover:border-rose-300 transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-3 text-center cursor-pointer hover:bg-rose-950/30 hover:border-rose-500/40 transition-all flex items-center justify-center gap-2"
                     >
                       <FaCamera className="text-slate-400" size={14} />
-                      <span className="text-xs font-bold text-slate-600">
+                      <span className="text-xs font-bold text-slate-300">
                         {photos.length > 0 ? `${photos.length}/4 Photos Added` : "Attach Photos"}
                       </span>
                     </div>
@@ -306,7 +322,7 @@ function PollutionReport() {
                 {photos.length > 0 && (
                   <div className="grid grid-cols-4 gap-2.5">
                     {photos.map((file, index) => (
-                      <div key={index} className="relative aspect-video rounded-2xl overflow-hidden border border-slate-200 group shadow-sm">
+                      <div key={index} className="relative aspect-video rounded-2xl overflow-hidden border border-slate-800 group shadow-sm">
                         <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
                         <button
                           type="button"
@@ -322,7 +338,7 @@ function PollutionReport() {
 
                 {/* Description */}
                 <div>
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1 block">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-300 mb-1 block">
                     Detailed Observation & Landmark Notes
                   </label>
                   <textarea
@@ -330,7 +346,7 @@ function PollutionReport() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={2}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 outline-none transition-all resize-none"
+                    className="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-sm font-medium text-white placeholder-slate-500 focus:bg-slate-950 focus:border-rose-400 focus:ring-4 focus:ring-rose-500/20 outline-none transition-all resize-none"
                     required
                   />
                 </div>
@@ -338,16 +354,16 @@ function PollutionReport() {
                 {/* Map & Coordinates */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                      <FaMapMarkerAlt className="text-rose-500" /> Precise Hazard Coordinates
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                      <FaMapMarkerAlt className="text-rose-400" /> Precise Hazard Coordinates
                     </label>
                     <button
                       type="button"
                       onClick={getLocation}
                       className={`text-xs font-bold flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all ${
                         locationStatus === "success"
-                          ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
-                          : "text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100"
+                          ? "text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 shadow-sm"
+                          : "text-rose-300 bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30"
                       }`}
                     >
                       <FaCrosshairs className={locationStatus === "loading" ? "animate-spin" : ""} size={11} />
@@ -355,7 +371,7 @@ function PollutionReport() {
                     </button>
                   </div>
 
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden h-[135px] w-full relative z-0 shadow-inner">
+                  <div className="border border-slate-800 rounded-2xl overflow-hidden h-[135px] w-full relative z-0 shadow-inner">
                     <MapContainer
                       center={[location.lat, location.lng]}
                       zoom={location.lat === 20.5937 ? 5 : 16}
@@ -374,7 +390,7 @@ function PollutionReport() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white py-3.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider transition-all shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 active:scale-[0.99] text-white font-black py-3.5 px-6 rounded-2xl text-sm uppercase tracking-wider transition-all shadow-xl shadow-rose-600/25 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {submitting ? "Broadcasting Dossier..." : "🚨 Broadcast Pollution Report"}
                   </button>
@@ -385,38 +401,38 @@ function PollutionReport() {
           </div>
 
           {/* ── BOTTOM FEATURE GUARANTEE STRIP ── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pb-6">
+            <div className="bg-slate-900/60 rounded-3xl p-6 border border-rose-950/80 shadow-lg backdrop-blur-xl flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center text-lg shrink-0">
                 <FaBolt />
               </div>
               <div>
-                <h4 className="text-sm font-black text-slate-800">Rapid Triage Protocol</h4>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                <h4 className="text-sm font-black text-white">Rapid Triage Protocol</h4>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   High-risk hazardous reports are triaged and routed to civic officers within 2 hours.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+            <div className="bg-slate-900/60 rounded-3xl p-6 border border-rose-950/80 shadow-lg backdrop-blur-xl flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg shrink-0">
                 <FaCamera />
               </div>
               <div>
-                <h4 className="text-sm font-black text-slate-800">Verified Photo Proof</h4>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                <h4 className="text-sm font-black text-white">Verified Photo Proof</h4>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   Visual evidence is cryptographically timestamped and geotagged for verified authority action.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg shrink-0">
+            <div className="bg-slate-900/60 rounded-3xl p-6 border border-rose-950/80 shadow-lg backdrop-blur-xl flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-lg shrink-0">
                 <FaShieldAlt />
               </div>
               <div>
-                <h4 className="text-sm font-black text-slate-800">Whistleblower Protection</h4>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                <h4 className="text-sm font-black text-white">Whistleblower Protection</h4>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                   Citizen identities remain strictly confidential and protected across all public logs.
                 </p>
               </div>

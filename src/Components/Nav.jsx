@@ -200,7 +200,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
       isDashboard
         ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-200"
         : isServicePage
-          ? "h-[68px] w-full left-0 bg-white border-b border-slate-200"
+          ? "h-[68px] w-full left-0 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80"
           : location.pathname === "/" && !isScrolled
             ? "w-full left-0 bg-transparent py-5"
             : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
@@ -217,6 +217,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                 <img src={logo} className="w-7" alt="E-Karma Logo" />
                 <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
               </div>
+            ) : isServicePage ? (
+              <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+                <img src={logo} className="w-8" alt="E-Karma Logo" />
+                <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+              </div>
             ) : (
               <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
                 <img src={logo} className="w-8" alt="E-Karma Logo" />
@@ -226,10 +231,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           </div>
 
           {isServicePage && (
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+            <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
               <button
                 onClick={handleHome}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition-all active:scale-95"
               >
                 <span>←</span>
                 <span className="hidden sm:inline">Home</span>
@@ -252,33 +257,33 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
         {/* Service Page Switcher Tabs */}
         {isServicePage && (
-          <div className="hidden md:flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 shadow-inner">
+          <div className="hidden md:flex items-center bg-slate-900/90 p-1 rounded-2xl border border-slate-800 shadow-inner">
             <button
               onClick={() => nav('/pick-up')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
                 location.pathname === '/pick-up'
-                  ? 'bg-white text-emerald-700 shadow-sm font-black'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm font-black'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <span>♻️</span> Waste Pickup
             </button>
             <button
               onClick={() => nav('/report-pollution')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
                 location.pathname === '/report-pollution'
-                  ? 'bg-white text-rose-700 shadow-sm font-black'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-sm font-black'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <span>🚨</span> Pollution Spot
             </button>
             <button
               onClick={() => nav('/report-food')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
                 location.pathname === '/report-food'
-                  ? 'bg-white text-amber-700 shadow-sm font-black'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm font-black'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <span>🍲</span> Food Rescue
@@ -321,12 +326,11 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                       }
                       nav(service.path);
                     }}
-                    className="flex items-start gap-3 w-full text-left p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0"
+                    className="flex items-center justify-between w-full p-4 hover:bg-slate-50 transition border-b border-slate-100 last:border-0 text-left group/item"
                   >
-                    <div className="mt-0.5 text-green-500">{service.icon}</div>
                     <div>
-                      <p className="font-bold text-sm text-slate-700">{service.label}</p>
-                      <p className="text-[10px] font-medium text-slate-500 mt-0.5 leading-tight">{service.desc}</p>
+                      <p className="font-bold text-slate-800 text-sm group-hover/item:text-green-600 transition">{service.label}</p>
+                      <p className="text-xs text-slate-500">{service.desc}</p>
                     </div>
                   </button>
                 ))}
@@ -346,7 +350,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   className={`relative p-2.5 rounded-xl transition-all cursor-pointer ${
                     location.pathname === "/" && !isScrolled
                       ? "bg-white/10 text-white/90 hover:bg-white/20"
-                      : "bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50 border border-slate-200"
+                      : isServicePage
+                        ? "bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800"
+                        : "bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50 border border-slate-200"
                   }`}
                 >
                   <FaBell size={18} />
@@ -390,19 +396,21 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   className={`flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border ${
                     location.pathname === "/" && !isScrolled
                       ? "bg-white/10 shadow-lg border-white/20"
-                      : "bg-white border-slate-200 shadow-sm hover:border-slate-300"
+                      : isServicePage
+                        ? "bg-slate-900 border-slate-800 text-white shadow-sm hover:border-slate-700"
+                        : "bg-white border-slate-200 shadow-sm hover:border-slate-300"
                   }`}
                 >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-green-500'}`}>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-500'}`}>
                     {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
                   </div>
-                  <span className={`font-bold text-sm hidden lg:inline ${location.pathname === "/" && !isScrolled ? "text-white" : "text-slate-700"}`}>{userName}</span>
-                  <FaChevronDown className={`text-[10px] ${location.pathname === "/" && !isScrolled ? "text-white/60" : "text-slate-400"} transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                  <span className={`font-bold text-sm hidden lg:inline ${location.pathname === "/" && !isScrolled || isServicePage ? "text-white" : "text-slate-700"}`}>{userName}</span>
+                  <FaChevronDown className={`text-[10px] ${location.pathname === "/" && !isScrolled || isServicePage ? "text-white/60" : "text-slate-400"} transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                 </button>
                 {showDropdown && (
                   <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2">
                     <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-slate-50 text-slate-700 font-bold text-sm transition border-b border-slate-100">
-                      <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-green-600"} />
+                      <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-emerald-600"} />
                       {userRole === 'admin' ? "Admin Console" : "Dashboard"}
                     </button>
                     <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-red-50 text-red-600 font-bold text-sm transition">
