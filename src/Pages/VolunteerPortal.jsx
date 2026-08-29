@@ -45,6 +45,7 @@ const FoodTimer = ({ expiryTime }) => {
 };
 
 const VolunteerPortal = () => {
+  const [activeTab, setActiveTab] = useState("missions");
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -431,15 +432,15 @@ const VolunteerPortal = () => {
             ].map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setSectorFilter(tab.id)}
+                onClick={() => { setSectorFilter(tab.id); setActiveTab("missions"); }}
                 className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
-                  sectorFilter === tab.id
+                  sectorFilter === tab.id && activeTab === "missions"
                     ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
                     : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent"
                 }`}
               >
                 <div className={`p-2 rounded-lg transition-colors duration-200 ${
-                  sectorFilter === tab.id 
+                  sectorFilter === tab.id && activeTab === "missions"
                     ? "bg-white/20 text-white" 
                     : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"
                 }`}>
@@ -458,17 +459,11 @@ const VolunteerPortal = () => {
             </button>
 
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-4">Account Settings</p>
-            <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent">
-              <div className="p-2 rounded-lg transition-colors duration-200 bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600">
+            <button onClick={() => setActiveTab('profile')} className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${activeTab === 'profile' ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent"}`}>
+              <div className={`p-2 rounded-lg transition-colors duration-200 ${activeTab === 'profile' ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"}`}>
                 <FaUserShield size={14} />
               </div>
-              Update Phone
-            </button>
-            <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-rose-50 hover:text-rose-600 border border-transparent">
-              <div className="p-2 rounded-lg transition-colors duration-200 bg-slate-100 text-slate-400 group-hover:bg-rose-100/50 group-hover:text-rose-600">
-                <FaTrashAlt size={14} />
-              </div>
-              Delete Account
+              Profile
             </button>
           </nav>
           
@@ -586,148 +581,189 @@ const VolunteerPortal = () => {
             </div>
             <FaArrowRight className="ml-auto group-hover:translate-x-2 transition-transform" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
-              <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg"><FaUserShield /></div>
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Update Phone</p>
-            </button>
-            <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className="bg-white border border-rose-100 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-rose-50 transition-all">
-              <div className="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-lg"><FaTrashAlt /></div>
-              <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest">Delete Account</p>
-            </button>
+          <div className="grid grid-cols-1 gap-4">
+            {activeTab === 'missions' ? (
+              <button onClick={() => setActiveTab('profile')} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
+                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg"><FaUserShield /></div>
+                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">My Profile</p>
+              </button>
+            ) : (
+              <button onClick={() => setActiveTab('missions')} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
+                <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg"><FaColumns /></div>
+                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Back to Missions</p>
+              </button>
+            )}
           </div>
         </div>
 
-        {/* 🔒 SECURITY MODALS (INLINE) */}
-        {phoneState.show && (
-          <div className="mb-8 p-8 bg-white border border-indigo-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-            <h4 className="text-xl font-black text-indigo-900 mb-4 flex items-center gap-3">
-              <FaSync className={phoneState.loading ? 'animate-spin' : ''} /> Update Contact Number
-            </h4>
-            {phoneState.step === 1 ? (
-              <div className="flex flex-wrap gap-4 items-end">
-                <div className="flex-1 min-w-[200px]">
-                  <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">New Phone Number (+91...)</label>
-                  <input
-                    type="tel" placeholder="+91..."
-                    value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                    className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-                <button
-                  onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                  className="bg-indigo-600 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-slate-900 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50"
-                >
-                  {phoneState.loading ? "Processing..." : "Dispatch OTP"}
-                </button>
+        {activeTab === 'profile' ? (
+          <div className="animate-in fade-in duration-300">
+            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase mb-8">My <span className="text-emerald-500 font-thin italic">Profile</span></h1>
+            
+            <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm mb-8 flex flex-col md:flex-row items-center gap-6">
+              <div className="w-24 h-24 rounded-[2rem] bg-indigo-100 text-indigo-600 flex items-center justify-center text-4xl font-black shrink-0 shadow-inner">
+                {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
               </div>
-            ) : (
-              <div className="flex flex-wrap gap-4 items-end">
-                <div className="flex-1 min-w-[200px]">
-                  <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">Verification Code (sent to {phoneState.newPhone})</label>
-                  <div className="flex justify-between gap-2 max-w-[320px] mx-auto">
-                    {[0, 1, 2, 3, 4, 5].map((i) => (
-                      <input
-                        key={i}
-                        type="text"
-                        maxLength="1"
-                        value={phoneState.otp[i] || ""}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          let newOtp = phoneState.otp.split("");
-                          newOtp[i] = val;
-                          setPhoneState({ ...phoneState, otp: newOtp.join("") });
-                          if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                        }}
-                        className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-indigo-100 rounded-xl font-black text-slate-800 text-center outline-none focus:border-indigo-500 transition-all shadow-sm text-lg"
-                      />
-                    ))}
-                  </div>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-black text-slate-900">{volunteerInfo.name || "Volunteer"}</h3>
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mt-1">Volunteer ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-4">
+                  <span className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 border border-emerald-100"><FaStar /> {volunteerInfo.averageRating || "0.0"} Rating</span>
+                  <span className="bg-slate-50 text-slate-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 border border-slate-200"><FaPhoneAlt size={10} /> {volunteerInfo.phone || "No Phone"}</span>
                 </div>
-                <button
-                  onClick={handleVerifyPhone} disabled={phoneState.loading}
-                  className="bg-slate-900 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-indigo-600 transition-all shadow-lg disabled:opacity-50"
-                >
-                  {phoneState.loading ? "Verifying..." : "Confirm Identity"}
-                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className={`border p-6 rounded-[2rem] shadow-sm flex flex-col items-start gap-3 transition-all text-left ${phoneState.show ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
+                <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl"><FaSync /></div>
+                <div>
+                  <h4 className="text-lg font-black text-indigo-900">Update Contact</h4>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Change your registered phone number</p>
+                </div>
+              </button>
+              
+              <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className={`border p-6 rounded-[2rem] shadow-sm flex flex-col items-start gap-3 transition-all text-left ${deleteState.show ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
+                <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-xl"><FaTrashAlt /></div>
+                <div>
+                  <h4 className="text-lg font-black text-rose-900">Delete Account</h4>
+                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mt-1">Permanently remove your identity</p>
+                </div>
+              </button>
+            </div>
+
+            {/* 🔒 SECURITY MODALS (INLINE) */}
+            {phoneState.show && (
+              <div className="mb-8 p-8 bg-white border border-indigo-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                <h4 className="text-xl font-black text-indigo-900 mb-4 flex items-center gap-3">
+                  <FaSync className={phoneState.loading ? 'animate-spin' : ''} /> Update Contact Number
+                </h4>
+                {phoneState.step === 1 ? (
+                  <div className="flex flex-wrap gap-4 items-end">
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">New Phone Number (+91...)</label>
+                      <input
+                        type="tel" placeholder="+91..."
+                        value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
+                        className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <button
+                      onClick={handleSendPhoneOtp} disabled={phoneState.loading}
+                      className="bg-indigo-600 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-slate-900 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50"
+                    >
+                      {phoneState.loading ? "Processing..." : "Dispatch OTP"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-4 items-end">
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">Verification Code (sent to {phoneState.newPhone})</label>
+                      <div className="flex justify-between gap-2 max-w-[320px] mx-auto">
+                        {[0, 1, 2, 3, 4, 5].map((i) => (
+                          <input
+                            key={i}
+                            type="text"
+                            maxLength="1"
+                            value={phoneState.otp[i] || ""}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/[^0-9]/g, "");
+                              let newOtp = phoneState.otp.split("");
+                              newOtp[i] = val;
+                              setPhoneState({ ...phoneState, otp: newOtp.join("") });
+                              if (val && e.target.nextSibling) e.target.nextSibling.focus();
+                            }}
+                            className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-indigo-100 rounded-xl font-black text-slate-800 text-center outline-none focus:border-indigo-500 transition-all shadow-sm text-lg"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleVerifyPhone} disabled={phoneState.loading}
+                      className="bg-slate-900 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-indigo-600 transition-all shadow-lg disabled:opacity-50"
+                    >
+                      {phoneState.loading ? "Verifying..." : "Confirm Identity"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {deleteState.show && (
+              <div className="mb-8 p-8 bg-rose-50 border border-rose-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                <h4 className="text-xl font-black text-rose-900 mb-2">Account Deletion Protocol</h4>
+                <p className="text-rose-500 font-bold text-[10px] uppercase tracking-widest mb-6">Mission data will be archived, identity will be purged.</p>
+
+                {deleteState.step !== 2 ? (
+                  <div className="space-y-4">
+                    <textarea
+                      placeholder="Reason for deletion... (Mission Debrief)"
+                      value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
+                      className="w-full bg-white border-none rounded-3xl p-6 font-medium outline-none focus:ring-2 focus:ring-rose-500 min-h-[120px] shadow-inner"
+                    />
+                    <button
+                      onClick={handleDeleteRequest} disabled={deleteState.loading}
+                      className="w-full bg-rose-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all shadow-lg shadow-rose-200 disabled:opacity-50"
+                    >
+                      {deleteState.loading ? "Authenticating..." : "Request Deletion OTP"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex justify-between gap-2 max-w-[350px] mx-auto">
+                      {[0, 1, 2, 3, 4, 5].map((i) => (
+                        <input
+                          key={i}
+                          type="text"
+                          maxLength="1"
+                          value={deleteState.otp[i] || ""}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, "");
+                            let newOtp = deleteState.otp.split("");
+                            newOtp[i] = val;
+                            setDeleteState({ ...deleteState, otp: newOtp.join("") });
+                            if (val && e.target.nextSibling) e.target.nextSibling.focus();
+                          }}
+                          className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-rose-900 text-center outline-none focus:border-rose-900 transition-all shadow-sm text-lg"
+                        />
+                      ))}
+                    </div>
+                    <button
+                      onClick={handleFinalDelete} disabled={deleteState.loading}
+                      className="w-full bg-slate-900 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-black transition-all shadow-lg disabled:opacity-50"
+                    >
+                      {deleteState.loading ? "Purging..." : "CONFIRM PERMANENT DELETION"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-
-        {deleteState.show && (
-          <div className="mb-8 p-8 bg-rose-50 border border-rose-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-            <h4 className="text-xl font-black text-rose-900 mb-2">Account Deletion Protocol</h4>
-            <p className="text-rose-500 font-bold text-[10px] uppercase tracking-widest mb-6">Mission data will be archived, identity will be purged.</p>
-
-            {deleteState.step !== 2 ? (
-              <div className="space-y-4">
-                <textarea
-                  placeholder="Reason for deletion... (Mission Debrief)"
-                  value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
-                  className="w-full bg-white border-none rounded-3xl p-6 font-medium outline-none focus:ring-2 focus:ring-rose-500 min-h-[120px] shadow-inner"
-                />
-                <button
-                  onClick={handleDeleteRequest} disabled={deleteState.loading}
-                  className="w-full bg-rose-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all shadow-lg shadow-rose-200 disabled:opacity-50"
-                >
-                  {deleteState.loading ? "Authenticating..." : "Request Deletion OTP"}
-                </button>
+        ) : (
+          <>
+            {/* MISSION CONTROL */}
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
+              <div>
+                <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
+                <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
+                  {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
+                </p>
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex justify-between gap-2 max-w-[350px] mx-auto">
-                  {[0, 1, 2, 3, 4, 5].map((i) => (
-                    <input
-                      key={i}
-                      type="text"
-                      maxLength="1"
-                      value={deleteState.otp[i] || ""}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9]/g, "");
-                        let newOtp = deleteState.otp.split("");
-                        newOtp[i] = val;
-                        setDeleteState({ ...deleteState, otp: newOtp.join("") });
-                        if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                      }}
-                      className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-rose-900 text-center outline-none focus:border-rose-900 transition-all shadow-sm text-lg"
-                    />
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
+                {/* Mobile Only Sector Filters */}
+                <div className="flex lg:hidden bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
+                  {["All Sectors", "Food Only", "Waste Only", "Pollution Only"].map(s => (
+                    <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
                   ))}
                 </div>
-                <button
-                  onClick={handleFinalDelete} disabled={deleteState.loading}
-                  className="w-full bg-slate-900 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-black transition-all shadow-lg disabled:opacity-50"
-                >
-                  {deleteState.loading ? "Purging..." : "CONFIRM PERMANENT DELETION"}
-                </button>
+                <div className="flex bg-slate-100 p-1 rounded-xl justify-between sm:justify-start">
+                  {["All", "Pending", "Completed"].map(f => (
+                    <button key={f} onClick={() => setStatusFilter(f)} className={`flex-1 sm:flex-none px-4 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all ${statusFilter === f ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{f}</button>
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* MISSION CONTROL */}
-        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
-          <div>
-            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
-            <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
-              {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
-            {/* Mobile Only Sector Filters */}
-            <div className="flex lg:hidden bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
-              {["All Sectors", "Food Only", "Waste Only", "Pollution Only"].map(s => (
-                <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
-              ))}
             </div>
-            <div className="flex bg-slate-100 p-1 rounded-xl justify-between sm:justify-start">
-              {["All", "Pending", "Completed"].map(f => (
-                <button key={f} onClick={() => setStatusFilter(f)} className={`flex-1 sm:flex-none px-4 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all ${statusFilter === f ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{f}</button>
-              ))}
-            </div>
-          </div>
-        </div>
 
         {/* MISSIONS DISPLAY */}
         <div className="space-y-6">
@@ -958,6 +994,8 @@ const VolunteerPortal = () => {
             </div>
           )}
         </div>
+        </>
+      )}
       </div>
 
       {/* 🌟 VOLUNTEER -> USER REVIEW MODAL */}
