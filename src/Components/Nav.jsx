@@ -272,26 +272,28 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <span>Home</span>
                 </button>
 
-                {/* Services Dropdown in Dashboard */}
-                <div className="relative group/dashservices">
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all">
-                    <FaConciergeBell className="text-emerald-600" />
-                    <span>Services</span>
-                    <FaChevronDown className="text-[9px] text-slate-400" />
-                  </button>
-                  <div className="absolute left-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover/dashservices:opacity-100 group-hover/dashservices:visible transition-all duration-200 transform group-hover/dashservices:translate-y-0 translate-y-2 z-50 overflow-hidden text-slate-800">
-                    {services.map((service, index) => (
-                      <button
-                        key={index}
-                        onClick={() => nav(service.path)}
-                        className="flex items-center gap-3 w-full p-3 hover:bg-emerald-50/60 transition border-b border-slate-100 last:border-0 text-left"
-                      >
-                        <span className="text-base">{service.icon}</span>
-                        <p className="font-bold text-slate-800 text-xs hover:text-emerald-700">{service.label}</p>
-                      </button>
-                    ))}
+                {/* Services Dropdown in Dashboard - Citizen only */}
+                {userRole !== "admin" && userRole !== "volunteer" && (
+                  <div className="relative group/dashservices">
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all">
+                      <FaConciergeBell className="text-emerald-600" />
+                      <span>Services</span>
+                      <FaChevronDown className="text-[9px] text-slate-400" />
+                    </button>
+                    <div className="absolute left-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover/dashservices:opacity-100 group-hover/dashservices:visible transition-all duration-200 transform group-hover/dashservices:translate-y-0 translate-y-2 z-50 overflow-hidden text-slate-800">
+                      {services.map((service, index) => (
+                        <button
+                          key={index}
+                          onClick={() => nav(service.path)}
+                          className="flex items-center gap-3 w-full p-3 hover:bg-emerald-50/60 transition border-b border-slate-100 last:border-0 text-left"
+                        >
+                          <span className="text-base">{service.icon}</span>
+                          <p className="font-bold text-slate-800 text-xs hover:text-emerald-700">{service.label}</p>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>

@@ -590,15 +590,35 @@ const Dashboard = () => {
         <div className="md:hidden space-y-4">
           {list.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(item => renderMobileCard(item, type))}
         </div>
-        {list.length > itemsPerPage && (
-          <div className="flex justify-center items-center gap-3 py-8">
-            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
-              className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:border-green-400 hover:text-green-600 disabled:opacity-30 transition-all text-sm font-bold">‹</button>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              <span className="text-slate-800">{currentPage}</span> / {Math.ceil(list.length / itemsPerPage)}
-            </span>
-            <button onClick={() => setCurrentPage(p => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))} disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:border-green-400 hover:text-green-600 disabled:opacity-30 transition-all text-sm font-bold">›</button>
+
+        {/* Pagination Controls */}
+        {Math.ceil(list.length / itemsPerPage) > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50/80 border border-slate-200/80 rounded-2xl mt-4">
+            <p className="text-xs font-medium text-slate-500">
+              Showing <span className="font-bold text-slate-800">{(currentPage - 1) * itemsPerPage + 1}</span> to{" "}
+              <span className="font-bold text-slate-800">{Math.min(currentPage * itemsPerPage, list.length)}</span> of{" "}
+              <span className="font-bold text-slate-800">{list.length}</span> records
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+              >
+                ← Previous
+              </button>
+              <span className="text-xs font-black text-slate-600 px-2">
+                Page {currentPage} of {Math.ceil(list.length / itemsPerPage)}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(Math.ceil(list.length / itemsPerPage), p + 1))}
+                disabled={currentPage === Math.ceil(list.length / itemsPerPage)}
+                className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+              >
+                Next →
+              </button>
+            </div>
           </div>
         )}
       </>

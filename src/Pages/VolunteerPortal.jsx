@@ -416,8 +416,13 @@ const VolunteerPortal = () => {
     return isMine && ["completed", "resolved", "delivered", "success"].includes(t.status?.toLowerCase());
   }).length;
 
+  const totalPages = Math.ceil(visibleTasks.length / itemsPerPage);
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const currentTasks = visibleTasks.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       <Nav />
 
       {/* ── SaaS SIDEBAR ── */}
@@ -432,218 +437,243 @@ const VolunteerPortal = () => {
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             {[
-              { id: "All Sectors", icon: FaColumns, label: "All Missions" },
-              { id: "Waste Only", icon: FaTrashAlt, label: "Waste Control" },
-              { id: "Pollution Only", icon: FaExclamationTriangle, label: "Pollution Cases" },
-              { id: "Food Only", icon: FaUtensils, label: "Food Rescues" }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => { setSectorFilter(tab.id); setActiveTab("missions"); }}
-                className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
-                  sectorFilter === tab.id && activeTab === "missions"
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent"
-                }`}
-              >
-                <div className={`p-2 rounded-lg transition-colors duration-200 ${
-                  sectorFilter === tab.id && activeTab === "missions"
-                    ? "bg-white/20 text-white" 
-                    : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"
-                }`}>
-                  <tab.icon size={14} />
-                </div>
-                {tab.label}
-              </button>
-            ))}
+              { id: "All Sectors", icon: FaColumns, label: "All Missions", color: "text-emerald-500", bg: "bg-emerald-100/50" },
+              { id: "Waste Only", icon: FaTrashAlt, label: "Waste Control", color: "text-emerald-600", bg: "bg-emerald-100/50" },
+              { id: "Pollution Only", icon: FaExclamationTriangle, label: "Pollution Cases", color: "text-rose-500", bg: "bg-rose-100/50" },
+              { id: "Food Only", icon: FaUtensils, label: "Food Rescues", color: "text-amber-500", bg: "bg-amber-100/50" }
+            ].map(tab => {
+              const isActive = sectorFilter === tab.id && activeTab === "missions";
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => { setSectorFilter(tab.id); setActiveTab("missions"); }}
+                  className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
+                    isActive
+                      ? "bg-slate-900 text-white shadow-sm"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+                  }`}
+                >
+                  <div className={`p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 ${
+                    isActive
+                      ? "bg-white/20 text-white" 
+                      : `bg-slate-100 text-slate-400 group-hover:${tab.bg} group-hover:${tab.color}`
+                  }`}>
+                    <tab.icon size={14} />
+                  </div>
+                  {tab.label}
+                </button>
+              );
+            })}
             
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-4">History</p>
-            <button onClick={() => window.location.href = "/volunteer-history"} className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent">
-              <div className="p-2 rounded-lg transition-colors duration-200 bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600">
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-6">History</p>
+            <button
+              onClick={() => navigate("/volunteer-history")}
+              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+            >
+              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-400 group-hover:bg-emerald-100/50 group-hover:text-emerald-600">
                 <FaCheckCircle size={14} />
               </div>
               Completed Log
             </button>
 
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-4">Account Settings</p>
-            <button onClick={() => setActiveTab('profile')} className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${activeTab === 'profile' ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600 border border-transparent"}`}>
-              <div className={`p-2 rounded-lg transition-colors duration-200 ${activeTab === 'profile' ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"}`}>
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-6">Account</p>
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
+                activeTab === 'profile'
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+              }`}
+            >
+              <div className={`p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 ${
+                activeTab === 'profile'
+                  ? "bg-white/20 text-white"
+                  : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"
+              }`}>
                 <FaUserShield size={14} />
               </div>
-              Profile
+              Profile & Security
             </button>
           </nav>
           
           <div className="p-4 border-t border-slate-100">
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3">Performance Score</p>
-              <div className="flex items-center gap-2 mb-2">
-                <FaStar className="text-amber-500 text-lg" />
-                <span className="text-xl font-black text-slate-800">{volunteerInfo.averageRating || "0.0"}</span>
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">Performance Score</p>
+              <div className="flex items-center gap-2 mb-1">
+                <FaStar className="text-amber-500 text-base" />
+                <span className="text-lg font-black text-slate-800">{volunteerInfo.averageRating || "0.0"}</span>
               </div>
-              <p className="text-[10px] text-indigo-600 font-bold">From {volunteerInfo.reviewCount || 0} Reviews</p>
+              <p className="text-[10px] text-slate-500 font-medium">From {volunteerInfo.reviewCount || 0} citizen reviews</p>
             </div>
           </div>
         </aside>
 
-        <main className="flex-1 lg:ml-64 w-full pb-24 lg:pb-0">
+        {/* ── MAIN CONTENT AREA ── */}
+        <main className="flex-1 lg:ml-64 w-full p-4 sm:p-6 lg:p-8 min-w-0 pb-24 lg:pb-8">
 
-      {/* ===== CAMERA / GALLERY PICKER MODAL ===== */}
-      {photoModal.open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
-          <div className="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-100">
-              <div>
-                <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Proof of Delivery</p>
-                <h3 className="text-xl font-black text-slate-900">Upload Photo</h3>
-              </div>
-              <button onClick={() => setPhotoModal({ open: false, taskId: null, preview: null, file: null, uploading: false })} className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-all">
-                <FaTimes size={14} />
-              </button>
-            </div>
-
-            {/* Preview */}
-            {photoModal.preview ? (
-              <div className="relative mx-6 mt-6 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-inner" style={{ height: '200px' }}>
-                <img src={photoModal.preview} alt="Preview" className="w-full h-full object-cover" />
-                <button
-                  onClick={() => setPhotoModal(prev => ({ ...prev, preview: null, file: null }))}
-                  className="absolute top-2 right-2 w-8 h-8 bg-black/60 text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-all"
-                >
-                  <FaTimes size={10} />
-                </button>
-              </div>
-            ) : (
-              /* Picker Buttons */
-              <div className="grid grid-cols-2 gap-4 p-6">
-                {/* Camera Option */}
-                <button
-                  onClick={() => cameraInputRef.current?.click()}
-                  className="flex flex-col items-center gap-3 p-6 bg-emerald-50 hover:bg-emerald-100 rounded-2xl border-2 border-emerald-100 hover:border-emerald-300 transition-all group"
-                >
-                  <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                    <FaCamera size={22} />
+          {/* ===== CAMERA / GALLERY PICKER MODAL ===== */}
+          {photoModal.open && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
+                {/* Header */}
+                <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50">
+                  <div>
+                    <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Proof of Delivery</p>
+                    <h3 className="text-base font-black text-slate-900">Upload Delivery Photo</h3>
                   </div>
-                  <div className="text-center">
-                    <p className="font-black text-slate-800 text-sm">Camera</p>
-                    <p className="text-[10px] text-slate-400 font-semibold">Take a live photo</p>
-                  </div>
-                </button>
-
-                {/* Gallery Option */}
-                <button
-                  onClick={() => galleryInputRef.current?.click()}
-                  className="flex flex-col items-center gap-3 p-6 bg-indigo-50 hover:bg-indigo-100 rounded-2xl border-2 border-indigo-100 hover:border-indigo-300 transition-all group"
-                >
-                  <div className="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                    <FaImages size={22} />
-                  </div>
-                  <div className="text-center">
-                    <p className="font-black text-slate-800 text-sm">Gallery</p>
-                    <p className="text-[10px] text-slate-400 font-semibold">Pick from library</p>
-                  </div>
-                </button>
-              </div>
-            )}
-
-            {/* Hidden Inputs */}
-            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileSelect} className="hidden" />
-            <input ref={galleryInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
-
-            {/* Submit Button (shown after preview) */}
-            {photoModal.preview && (
-              <div className="p-6">
-                <button
-                  onClick={submitDeliveryPhoto}
-                  disabled={photoModal.uploading}
-                  className="w-full py-4 bg-emerald-600 text-white font-black text-[11px] uppercase tracking-widest rounded-2xl hover:bg-slate-900 transition-all shadow-xl shadow-emerald-200 flex items-center justify-center gap-3 disabled:bg-slate-300"
-                >
-                  {photoModal.uploading ? (
-                    <><FaSync className="animate-spin" /> Uploading...</>
-                  ) : (
-                    <><FaUpload /> Confirm Delivery</>
-                  )}
-                </button>
-                <button
-                  onClick={() => setPhotoModal(prev => ({ ...prev, preview: null, file: null }))}
-                  className="w-full mt-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-all"
-                >
-                  Retake Photo
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      <div className="max-w-[1400px] mx-auto pt-8 lg:pt-10 px-4 sm:px-6">
-
-
-
-        {activeTab === 'profile' ? (
-          <div className="animate-in fade-in duration-300">
-            <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase mb-8">My <span className="text-emerald-500 font-thin italic">Profile</span></h1>
-            
-            <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm mb-8 flex flex-col md:flex-row items-center gap-6">
-              <div className="w-24 h-24 rounded-[2rem] bg-indigo-100 text-indigo-600 flex items-center justify-center text-4xl font-black shrink-0 shadow-inner">
-                {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-black text-slate-900">{volunteerInfo.name || "Volunteer"}</h3>
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mt-1">Volunteer ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-4">
-                  <span className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 border border-emerald-100"><FaStar /> {volunteerInfo.averageRating || "0.0"} Rating</span>
-                  <span className="bg-slate-50 text-slate-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 border border-slate-200"><FaPhoneAlt size={10} /> {volunteerInfo.phone || "No Phone"}</span>
+                  <button onClick={() => setPhotoModal({ open: false, taskId: null, preview: null, file: null, uploading: false })} className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all">
+                    <FaTimes size={12} />
+                  </button>
                 </div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <button onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })} className={`border p-6 rounded-[2rem] shadow-sm flex flex-col items-start gap-3 transition-all text-left ${phoneState.show ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
-                <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl"><FaSync /></div>
-                <div>
-                  <h4 className="text-lg font-black text-indigo-900">Update Contact</h4>
-                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Change your registered phone number</p>
-                </div>
-              </button>
-              
-              <button onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })} className={`border p-6 rounded-[2rem] shadow-sm flex flex-col items-start gap-3 transition-all text-left ${deleteState.show ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200 hover:bg-slate-50'}`}>
-                <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-xl"><FaTrashAlt /></div>
-                <div>
-                  <h4 className="text-lg font-black text-rose-900">Delete Account</h4>
-                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mt-1">Permanently remove your identity</p>
-                </div>
-              </button>
-            </div>
-
-            {/* 🔒 SECURITY MODALS (INLINE) */}
-            {phoneState.show && (
-              <div className="mb-8 p-8 bg-white border border-indigo-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-                <h4 className="text-xl font-black text-indigo-900 mb-4 flex items-center gap-3">
-                  <FaSync className={phoneState.loading ? 'animate-spin' : ''} /> Update Contact Number
-                </h4>
-                {phoneState.step === 1 ? (
-                  <div className="flex flex-wrap gap-4 items-end">
-                    <div className="flex-1 min-w-[200px]">
-                      <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">New Phone Number (+91...)</label>
-                      <input
-                        type="tel" placeholder="+91..."
-                        value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                        className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                    </div>
+                {/* Preview */}
+                {photoModal.preview ? (
+                  <div className="relative m-5 rounded-2xl overflow-hidden border-2 border-slate-200" style={{ height: '200px' }}>
+                    <img src={photoModal.preview} alt="Preview" className="w-full h-full object-cover" />
                     <button
-                      onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                      className="bg-indigo-600 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-slate-900 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50"
+                      onClick={() => setPhotoModal(prev => ({ ...prev, preview: null, file: null }))}
+                      className="absolute top-2 right-2 w-7 h-7 bg-black/70 text-white rounded-full flex items-center justify-center hover:bg-black transition-all"
                     >
-                      {phoneState.loading ? "Processing..." : "Dispatch OTP"}
+                      <FaTimes size={10} />
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap gap-4 items-end">
-                    <div className="flex-1 min-w-[200px]">
-                      <label className="text-[10px] font-black text-slate-400 uppercase mb-2 block">Verification Code (sent to {phoneState.newPhone})</label>
-                      <div className="flex justify-between gap-2 max-w-[320px] mx-auto">
+                  /* Picker Buttons */
+                  <div className="grid grid-cols-2 gap-3 p-5">
+                    {/* Camera Option */}
+                    <button
+                      onClick={() => cameraInputRef.current?.click()}
+                      className="flex flex-col items-center gap-2 p-5 bg-emerald-50/70 hover:bg-emerald-100 rounded-2xl border border-emerald-200 transition-all group"
+                    >
+                      <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                        <FaCamera size={18} />
+                      </div>
+                      <div className="text-center">
+                        <p className="font-bold text-slate-800 text-xs">Camera</p>
+                        <p className="text-[9px] text-slate-400 font-medium">Take a photo</p>
+                      </div>
+                    </button>
+
+                    {/* Gallery Option */}
+                    <button
+                      onClick={() => galleryInputRef.current?.click()}
+                      className="flex flex-col items-center gap-2 p-5 bg-indigo-50/70 hover:bg-indigo-100 rounded-2xl border border-indigo-200 transition-all group"
+                    >
+                      <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                        <FaImages size={18} />
+                      </div>
+                      <div className="text-center">
+                        <p className="font-bold text-slate-800 text-xs">Gallery</p>
+                        <p className="text-[9px] text-slate-400 font-medium">Pick from files</p>
+                      </div>
+                    </button>
+                  </div>
+                )}
+
+                {/* Hidden Inputs */}
+                <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileSelect} className="hidden" />
+                <input ref={galleryInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
+
+                {/* Submit Button (shown after preview) */}
+                {photoModal.preview && (
+                  <div className="p-5 pt-0 space-y-2">
+                    <button
+                      onClick={submitDeliveryPhoto}
+                      disabled={photoModal.uploading}
+                      className="w-full py-3 bg-emerald-600 text-white font-black text-xs uppercase tracking-wider rounded-xl hover:bg-emerald-700 transition-all shadow-sm flex items-center justify-center gap-2 disabled:bg-slate-300"
+                    >
+                      {photoModal.uploading ? (
+                        <><FaSync className="animate-spin" /> Uploading...</>
+                      ) : (
+                        <><FaUpload /> Confirm Delivery</>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setPhotoModal(prev => ({ ...prev, preview: null, file: null }))}
+                      className="w-full py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider hover:text-slate-600 transition-all"
+                    >
+                      Retake Photo
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'profile' ? (
+            /* ── PROFILE & SECURITY TAB ── */
+            <div className="space-y-6 animate-in fade-in duration-200 max-w-4xl">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Volunteer <span className="text-emerald-600">Profile</span></h1>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Manage your registered phone number, verified metrics, and credentials.</p>
+              </div>
+              
+              <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs flex flex-col sm:flex-row items-center gap-5">
+                <div className="w-20 h-20 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-3xl font-black shrink-0 border border-indigo-200">
+                  {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
+                </div>
+                <div className="text-center sm:text-left flex-1">
+                  <h3 className="text-xl font-black text-slate-900">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-0.5">Volunteer ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3">
+                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-emerald-200">
+                      <FaStar className="text-amber-500" /> {volunteerInfo.averageRating || "0.0"} Rating
+                    </span>
+                    <span className="bg-slate-50 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-200">
+                      <FaPhoneAlt size={10} className="text-slate-400" /> {volunteerInfo.phone || "No Phone"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button
+                  onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
+                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${phoneState.show ? 'bg-indigo-50/70 border-indigo-300' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                >
+                  <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-base"><FaSync /></div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Update Contact Number</h4>
+                    <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP</p>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
+                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${deleteState.show ? 'bg-rose-50/70 border-rose-300' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                >
+                  <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-base"><FaTrashAlt /></div>
+                  <div>
+                    <h4 className="text-sm font-bold text-rose-900">Delete Account</h4>
+                    <p className="text-[10px] text-rose-600 font-medium mt-0.5">Permanently purge your volunteer account</p>
+                  </div>
+                </button>
+              </div>
+
+              {/* Contact Number Modal / Step */}
+              {phoneState.show && (
+                <div className="p-6 bg-white border border-indigo-200 rounded-2xl shadow-sm space-y-4">
+                  <h4 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <FaSync className={`text-indigo-600 ${phoneState.loading ? 'animate-spin' : ''}`} /> Update Registered Phone
+                  </h4>
+                  {phoneState.step === 1 ? (
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <input
+                        type="tel" placeholder="+91..."
+                        value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 outline-none focus:border-indigo-500 transition-all"
+                      />
+                      <button
+                        onClick={handleSendPhoneOtp} disabled={phoneState.loading}
+                        className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition-all shadow-sm disabled:opacity-50"
+                      >
+                        {phoneState.loading ? "Sending..." : "Send OTP"}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-xs text-slate-500 font-medium">Enter the 6-digit code sent to {phoneState.newPhone}:</p>
+                      <div className="flex gap-2">
                         {[0, 1, 2, 3, 4, 5].map((i) => (
                           <input
                             key={i}
@@ -657,430 +687,540 @@ const VolunteerPortal = () => {
                               setPhoneState({ ...phoneState, otp: newOtp.join("") });
                               if (val && e.target.nextSibling) e.target.nextSibling.focus();
                             }}
-                            className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-indigo-100 rounded-xl font-black text-slate-800 text-center outline-none focus:border-indigo-500 transition-all shadow-sm text-lg"
+                            className="w-10 h-10 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 text-center outline-none focus:border-indigo-500 transition-all text-sm"
                           />
                         ))}
                       </div>
-                    </div>
-                    <button
-                      onClick={handleVerifyPhone} disabled={phoneState.loading}
-                      className="bg-slate-900 text-white px-10 py-4.5 rounded-2xl text-[11px] font-black uppercase hover:bg-indigo-600 transition-all shadow-lg disabled:opacity-50"
-                    >
-                      {phoneState.loading ? "Verifying..." : "Confirm Identity"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {deleteState.show && (
-              <div className="mb-8 p-8 bg-rose-50 border border-rose-100 rounded-[3rem] shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-                <h4 className="text-xl font-black text-rose-900 mb-2">Account Deletion Protocol</h4>
-                <p className="text-rose-500 font-bold text-[10px] uppercase tracking-widest mb-6">Mission data will be archived, identity will be purged.</p>
-
-                {deleteState.step !== 2 ? (
-                  <div className="space-y-4">
-                    <textarea
-                      placeholder="Reason for deletion... (Mission Debrief)"
-                      value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
-                      className="w-full bg-white border-none rounded-3xl p-6 font-medium outline-none focus:ring-2 focus:ring-rose-500 min-h-[120px] shadow-inner"
-                    />
-                    <button
-                      onClick={handleDeleteRequest} disabled={deleteState.loading}
-                      className="w-full bg-rose-600 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-rose-700 transition-all shadow-lg shadow-rose-200 disabled:opacity-50"
-                    >
-                      {deleteState.loading ? "Authenticating..." : "Request Deletion OTP"}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex justify-between gap-2 max-w-[350px] mx-auto">
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <input
-                          key={i}
-                          type="text"
-                          maxLength="1"
-                          value={deleteState.otp[i] || ""}
-                          onChange={(e) => {
-                            const val = e.target.value.replace(/[^0-9]/g, "");
-                            let newOtp = deleteState.otp.split("");
-                            newOtp[i] = val;
-                            setDeleteState({ ...deleteState, otp: newOtp.join("") });
-                            if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                          }}
-                          className="w-10 h-10 md:w-12 md:h-12 bg-white border-2 border-rose-200 rounded-xl font-black text-rose-900 text-center outline-none focus:border-rose-900 transition-all shadow-sm text-lg"
-                        />
-                      ))}
-                    </div>
-                    <button
-                      onClick={handleFinalDelete} disabled={deleteState.loading}
-                      className="w-full bg-slate-900 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-black transition-all shadow-lg disabled:opacity-50"
-                    >
-                      {deleteState.loading ? "Purging..." : "CONFIRM PERMANENT DELETION"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        ) : (
-          <>
-            {/* MISSION CONTROL */}
-            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-8 lg:mb-10 gap-6">
-              <div>
-                <h1 className="text-3xl lg:text-5xl font-black tracking-tight text-slate-900 uppercase">Operations <span className="text-emerald-500 font-thin italic">Board</span></h1>
-                <p className="text-slate-400 font-bold text-[10px] lg:text-xs mt-2 uppercase tracking-widest flex items-center gap-2">
-                  {isSyncing ? <><FaSync className="animate-spin" /> Live Syncing...</> : "Sector Optimized"}
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4 bg-white p-2 lg:p-2.5 rounded-[1.5rem] lg:rounded-[2.2rem] border border-slate-200 shadow-sm w-full xl:w-auto">
-                {/* Mobile Only Sector Filters */}
-                <div className="flex lg:hidden bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar">
-                  {["All Sectors", "Food Only", "Waste Only", "Pollution Only"].map(s => (
-                    <button key={s} onClick={() => setSectorFilter(s)} className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase transition-all whitespace-nowrap ${sectorFilter === s ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{s.split(' ')[0]}</button>
-                  ))}
-                </div>
-                <div className="flex bg-slate-100 p-1 rounded-xl justify-between sm:justify-start">
-                  {["All", "Pending", "Completed"].map(f => (
-                    <button key={f} onClick={() => setStatusFilter(f)} className={`flex-1 sm:flex-none px-4 lg:px-5 py-2 rounded-lg text-[8px] lg:text-[9px] font-black uppercase transition-all ${statusFilter === f ? "bg-slate-900 text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>{f}</button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-        {/* MISSIONS DISPLAY */}
-        <div className="space-y-6">
-          {/* DESKTOP TABLE VIEW */}
-          <div className="hidden lg:block bg-white border border-slate-200 rounded-[3.5rem] overflow-hidden shadow-2xl">
-            <table className="w-full text-left">
-              <thead className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
-                <tr>
-                  <th className="p-8 text-[11px] font-black uppercase text-slate-400">Sector</th>
-                  <th className="p-8 text-[11px] font-black uppercase text-slate-400">Intelligence</th>
-                  <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-center">Time</th>
-                  <th className="p-8 text-[11px] font-black uppercase text-slate-400 text-right">Operational Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {visibleTasks.length > 0 ? visibleTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((task) => {
-                  const status = (task.status || "").toLowerCase();
-                  const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
-                  const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
-
-                  return (
-                    <tr key={task._id} className={`group transition-all ${isFinished ? 'opacity-50' : assignedToMe ? 'bg-emerald-50/30' : 'hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50'}`}>
-                      <td className="p-8">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
-                          {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
-                        </div>
-                      </td>
-                      <td className="p-8">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
-                            {task.isFood ? "Food Bank" : task.isPollution ? "Environment" : "Logistics"}
-                          </span>
-                          {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
-                        </div>
-                        <h3 className="text-xl font-black text-slate-900 leading-tight">
-                          {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
-                          {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500">{task.quantity} ppl</span>}
-                        </h3>
-                        <div className="flex items-center gap-4 mt-2">
-                          <button onClick={() => handleNavigation(task)} className="text-[10px] font-black text-indigo-500 flex items-center gap-1 uppercase hover:underline"><FaDirections /> GPS</button>
-                          <a href={`tel:${task.userPhone || task.userId?.phone}`} className="text-[10px] font-black text-slate-400 flex items-center gap-1 uppercase hover:text-slate-600"><FaPhoneAlt size={9} /> Contact</a>
-                        </div>
-                      </td>
-                      <td className="p-8 text-center">
-                        <div className="text-[9px] font-black text-slate-500 uppercase">
-                          {new Date(task.createdAt).toLocaleDateString()} <br />
-                          <span className="text-slate-400">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        </div>
-                      </td>
-                      <td className="p-8 text-right">
-                        {isFinished ? (
-                          task.review ? (
-                            <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-500 rounded-2xl text-[10px] font-black uppercase border border-slate-200 opacity-60">
-                              <FaCheckCircle size={10} /> Feedback Logged
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setReviewModal({ show: true, item: task, type: '', rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
-                              className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-6 py-3 rounded-2xl font-black text-[10px] uppercase inline-flex items-center gap-2 hover:bg-emerald-600 hover:text-white transition-all shadow-sm active:scale-95"
-                            >
-                              <FaStar /> Review Citizen
-                            </button>
-                          )
-                        ) : (!assignedToMe && !task.assignedVolunteer) ? (
-                          <button
-                            onClick={() => handleClaim(task)}
-                            disabled={isVolunteerBusy}
-                            className={`px-8 py-4 rounded-2xl font-black text-[11px] uppercase transition-all ${isVolunteerBusy ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white hover:scale-105 shadow-lg'}`}
-                          >
-                            {isVolunteerBusy ? "Occupied" : "Claim Mission"}
-                          </button>
-                        ) : assignedToMe ? (
-                          <div className="flex flex-col items-end gap-2">
-                            {task.isPollution ? (
-                              <button onClick={() => handleAction(task._id, 'resolve')} className="bg-rose-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-rose-700">Resolve Issue</button>
-                            ) : task.isFood ? (
-                              status === "claimed" ? (
-                                <button onClick={() => handleAction(task._id, 'collect_food')} className="bg-amber-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg hover:bg-amber-600 flex items-center gap-2">
-                                  <FaTruckLoading className="inline mr-2" /> Mark Collected
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor to confirm collection...")}
-                                  className={`${task.donorConfirmedCollection ? 'bg-emerald-600 hover:bg-slate-900' : 'bg-slate-300 cursor-not-allowed'} text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg flex items-center gap-2 transition-all`}
-                                >
-                                  <FaCamera /> {task.donorConfirmedCollection ? "Mark Delivered" : "Waiting Verification"}
-                                </button>
-                              )
-                            ) : status === "claimed" ? (
-                              <button onClick={() => handleAction(task._id, 'arrival')} className="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg"><FaTruckLoading className="inline mr-2" /> Arrived</button>
-                            ) : (status === "arrived" && !task.isPaid) ? (
-                              <div className="text-amber-500 font-black text-[10px] uppercase animate-pulse">Payment Verification Required</div>
-                            ) : (
-                              <button onClick={() => handleAction(task._id, 'complete')} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase shadow-lg">Complete Mission</button>
-                            )}
-                            <div className="flex gap-2">
-                              <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-[9px] font-black text-slate-400 hover:text-rose-500 uppercase tracking-widest hover:underline px-2">Abort Mission</button>
-                              <button onClick={() => handleFlagReport(task._id)} className="text-[9px] font-black text-rose-600 hover:text-rose-700 uppercase tracking-widest hover:underline px-2 border-l border-slate-200">🚩 Fraudulent Report</button>
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-[10px] font-black text-slate-400 uppercase italic">Claimed by another agent</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                }) : (
-                  <tr>
-                    <td colSpan="4" className="py-20 text-center text-slate-300 font-black uppercase text-xs tracking-widest">No Sector Intelligence Available</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* MOBILE CARD VIEW */}
-          <div className="lg:hidden space-y-4">
-            {visibleTasks.length > 0 ? visibleTasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((task) => {
-              const status = (task.status || "").toLowerCase();
-              const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
-              const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
-
-              return (
-                <div key={task._id} className={`bg-white rounded-[2rem] p-6 shadow-xl border border-slate-100 transition-all ${isFinished ? 'opacity-60 grayscale-[0.5]' : assignedToMe ? 'ring-2 ring-emerald-500/20 bg-emerald-50/10' : ''}`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg shadow-sm ${task.isFood ? 'bg-emerald-100 text-emerald-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-slate-900 text-white'}`}>
-                      {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[8px] font-black text-slate-300 uppercase tracking-tighter mb-0.5">{new Date(task.createdAt).toLocaleDateString()}</p>
-                      <p className="text-[9px] font-black text-slate-500 uppercase">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest px-2 py-0.5 bg-emerald-50 rounded">
-                        {task.isFood ? "Food Bank" : task.isPollution ? "Environment" : "Logistics"}
-                      </span>
-                      {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
-                    </div>
-                    <h3 className="text-xl font-black text-slate-900 mb-1">
-                      {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
-                      {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">{task.quantity} ppl</span>}
-                    </h3>
-                    <button onClick={() => handleNavigation(task)} className="text-[10px] font-black text-indigo-500 flex items-center gap-1.5 uppercase hover:underline mb-2">
-                        <FaDirections /> Open GPS Navigation
-                    </button>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    {isFinished ? (
-                      <div className="flex items-center gap-2 px-6 py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 rounded-2xl text-[9px] font-black uppercase border border-slate-100 italic justify-center">
-                        Mission Resolved Successfully
-                      </div>
-                    ) : (!assignedToMe && !task.assignedVolunteer) ? (
                       <button
-                        onClick={() => handleClaim(task)}
-                        disabled={isVolunteerBusy}
-                        className={`w-full py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isVolunteerBusy ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white active:scale-95 shadow-lg shadow-slate-200'}`}
+                        onClick={handleVerifyPhone} disabled={phoneState.loading}
+                        className="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-sm disabled:opacity-50"
                       >
-                        {isVolunteerBusy ? "Other Protocol Active" : "Initiate Claim"}
+                        {phoneState.loading ? "Verifying..." : "Verify & Save"}
                       </button>
-                    ) : assignedToMe ? (
-                      <div className="space-y-3">
-                          {task.isPollution ? (
-                            <button onClick={() => handleAction(task._id, 'resolve')} className="w-full bg-rose-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95">Resolve Hazard</button>
-                          ) : task.isFood ? (
-                            status === "claimed" ? (
-                              <button onClick={() => handleAction(task._id, 'collect_food')} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                                <FaTruckLoading /> Mark Collected
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor verification...")}
-                                className={`w-full ${task.donorConfirmedCollection ? 'bg-emerald-600' : 'bg-slate-300 cursor-not-allowed'} text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2 transition-all`}
-                              >
-                                <FaCamera /> {task.donorConfirmedCollection ? "Mark Delivered" : "Awaiting Donor Sync"}
-                              </button>
-                            )
-                          ) : status === "claimed" ? (
-                            <button onClick={() => handleAction(task._id, 'arrival')} className="w-full bg-orange-500 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                                <FaTruckLoading /> Confirm Arrival
-                            </button>
-                          ) : (status === "arrived" && !task.isPaid) ? (
-                            <div className="py-4 bg-amber-50 border border-amber-100 text-amber-600 font-black text-[9px] uppercase text-center rounded-2xl animate-pulse">Wait: Citizen Payment Pending</div>
-                          ) : (
-                            <button onClick={() => handleAction(task._id, 'complete')} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95">Complete Mission</button>
-                          )}
-                          <div className="flex gap-2">
-                            <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="flex-1 py-3 text-[8px] font-black text-slate-400 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-xl uppercase tracking-widest border border-slate-100 hover:text-rose-500 transition-colors">Abort</button>
-                            <button onClick={() => handleFlagReport(task._id)} className="flex-1 py-3 text-[8px] font-black text-rose-600 bg-rose-50 rounded-xl uppercase tracking-widest border border-rose-100">Flag Fraud</button>
-                          </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Deletion confirmation step */}
+              {deleteState.show && (
+                <div className="p-6 bg-rose-50/60 border border-rose-200 rounded-2xl shadow-sm space-y-3">
+                  <h4 className="text-base font-bold text-rose-900">Account Deletion Protocol</h4>
+                  <p className="text-xs text-rose-600 font-medium">Mission data will be archived, identity will be permanently purged.</p>
+
+                  {deleteState.step !== 2 ? (
+                    <div className="space-y-3">
+                      <textarea
+                        placeholder="Reason for deletion..."
+                        value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
+                        className="w-full bg-white border border-rose-200 rounded-xl p-3 text-xs font-medium outline-none focus:border-rose-500 min-h-[80px]"
+                      />
+                      <button
+                        onClick={handleDeleteRequest} disabled={deleteState.loading}
+                        className="bg-rose-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-700 transition-all shadow-sm disabled:opacity-50"
+                      >
+                        {deleteState.loading ? "Requesting OTP..." : "Request Deletion OTP"}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        {[0, 1, 2, 3, 4, 5].map((i) => (
+                          <input
+                            key={i}
+                            type="text"
+                            maxLength="1"
+                            value={deleteState.otp[i] || ""}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/[^0-9]/g, "");
+                              let newOtp = deleteState.otp.split("");
+                              newOtp[i] = val;
+                              setDeleteState({ ...deleteState, otp: newOtp.join("") });
+                              if (val && e.target.nextSibling) e.target.nextSibling.focus();
+                            }}
+                            className="w-10 h-10 bg-white border border-rose-300 rounded-xl font-bold text-rose-900 text-center outline-none focus:border-rose-500 text-sm"
+                          />
+                        ))}
                       </div>
-                    ) : (
-                      <div className="py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 font-black text-[9px] uppercase text-center rounded-2xl border border-slate-100">Sector Claimed: Another Agent Active</div>
-                    )}
+                      <button
+                        onClick={handleFinalDelete} disabled={deleteState.loading}
+                        className="bg-rose-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-800 transition-all shadow-sm disabled:opacity-50"
+                      >
+                        {deleteState.loading ? "Purging..." : "Confirm Permanent Deletion"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ── MISSIONS OPERATIONS BOARD ── */
+            <div className="space-y-6 animate-in fade-in duration-200">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Operations <span className="text-emerald-600">Board</span></h1>
+                  <p className="text-xs font-semibold text-slate-500 mt-1 flex items-center gap-2">
+                    {isSyncing ? <span className="text-emerald-600 flex items-center gap-1 font-bold"><FaSync className="animate-spin" size={10} /> Live Syncing...</span> : "GPS-Routed Volunteer Dispatch & Claim Hub"}
+                  </p>
+                </div>
+
+                {/* Quick Metric Badges */}
+                <div className="flex items-center gap-2.5">
+                  <div className="bg-white border border-slate-200/80 rounded-xl px-3.5 py-2 shadow-xs">
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">In Sector</p>
+                    <p className="text-sm font-black text-slate-800">{visibleTasks.length}</p>
+                  </div>
+                  <div className="bg-white border border-slate-200/80 rounded-xl px-3.5 py-2 shadow-xs">
+                    <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Active</p>
+                    <p className="text-sm font-black text-emerald-700">{activeTask ? "1" : "0"}</p>
+                  </div>
+                  <div className="bg-white border border-slate-200/80 rounded-xl px-3.5 py-2 shadow-xs">
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Completed</p>
+                    <p className="text-sm font-black text-slate-800">{myCompletedCount}</p>
                   </div>
                 </div>
-              )
-            }) : (
-              <div className="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
-                  <p className="text-slate-300 font-black uppercase text-[10px] tracking-widest">No Sector Intelligence Available</p>
               </div>
-            )}
-          </div>
-          
-          {/* Pagination Controls */}
-          {visibleTasks.length > itemsPerPage && (
-            <div className="flex justify-center items-center gap-4 py-8">
-              <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
-              >
-                <span className="font-black">&lt;</span>
-              </button>
-              <span className="text-xs font-black uppercase tracking-widest text-slate-400">
-                Page <span className="text-indigo-600 text-sm mx-1">{currentPage}</span> of {Math.ceil(visibleTasks.length / itemsPerPage)}
-              </span>
-              <button 
-                onClick={() => setCurrentPage(p => Math.min(Math.ceil(visibleTasks.length / itemsPerPage), p + 1))}
-                disabled={currentPage === Math.ceil(visibleTasks.length / itemsPerPage)}
-                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 disabled:hover:border-slate-100 disabled:hover:text-slate-500 transition-all shadow-sm"
-              >
-                <span className="font-black">&gt;</span>
-              </button>
-            </div>
-          )}
-        </div>
-        </>
-      )}
-      </div>
 
-      {/* 🌟 VOLUNTEER -> USER REVIEW MODAL */}
-      {reviewModal.show && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-6 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-3xl overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
-            <div className="bg-emerald-50 p-8 flex justify-between items-center border-b border-emerald-100">
-              <div>
-                <h3 className="text-xl font-black text-emerald-900 tracking-tight">Citizen Debrief</h3>
-                <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Rate the citizen & Report issues</p>
-              </div>
-              <button
-                onClick={() => setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-emerald-900 hover:rotate-90 transition-transform shadow-sm"
-              >
-                <FaTimes />
-              </button>
-            </div>
-
-            <div className="p-8 space-y-8">
-              {/* Star Rating */}
-              <div className="text-center space-y-4">
-                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Citizen Cooperation</p>
-                <div className="flex justify-center gap-2">
-                  {[1, 2, 3, 4, 5].map((s) => (
+              {/* Filters Bar */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs">
+                {/* Sector Switcher on Mobile/Desktop */}
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar p-0.5 bg-slate-100 rounded-xl">
+                  {["All Sectors", "Waste Only", "Pollution Only", "Food Only"].map(s => (
                     <button
                       key={s}
-                      onClick={() => setReviewModal(prev => ({ ...prev, rating: s }))}
-                      className={`text-3xl transition-all transform active:scale-75 ${reviewModal.rating >= s ? "text-emerald-500 scale-110" : "text-slate-200 hover:text-emerald-200"}`}
+                      onClick={() => setSectorFilter(s)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                        sectorFilter === s
+                          ? "bg-white text-slate-900 shadow-xs"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
                     >
-                      <FaStar />
+                      {s.replace(" Only", "")}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Status Switcher */}
+                <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-xl">
+                  {["All", "Pending", "Completed"].map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setStatusFilter(f)}
+                      className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        statusFilter === f
+                          ? "bg-slate-900 text-white shadow-xs"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      {f}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Feedback Comment */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mission Notes</label>
-                <textarea
-                  placeholder="Notes about this mission or citizen behavior..."
-                  value={reviewModal.comment}
-                  onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
-                  className="w-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-2 border-slate-100 rounded-2xl p-4 font-bold text-slate-700 outline-none focus:border-emerald-400 transition-all min-h-[100px]"
-                />
-              </div>
+              {/* Desktop Missions Table */}
+              <div className="hidden lg:block bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+                <div className="overflow-x-auto custom-scrollbar">
+                  <table className="w-full text-left">
+                    <thead className="bg-slate-50/80 border-b border-slate-200/80">
+                      <tr>
+                        <th className="py-3.5 px-5 text-[10px] font-black uppercase tracking-wider text-slate-400">Sector</th>
+                        <th className="py-3.5 px-5 text-[10px] font-black uppercase tracking-wider text-slate-400">Mission Intelligence</th>
+                        <th className="py-3.5 px-5 text-[10px] font-black uppercase tracking-wider text-slate-400 text-center">Timestamp</th>
+                        <th className="py-3.5 px-5 text-[10px] font-black uppercase tracking-wider text-slate-400 text-right">Action & Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {currentTasks.length > 0 ? (
+                        currentTasks.map((task) => {
+                          const status = (task.status || "").toLowerCase();
+                          const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
+                          const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
 
-              {/* Report Issue Toggle */}
-              <div className="pt-4 border-t border-slate-100">
-                <button
-                  onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all ${reviewModal.isReport ? "bg-rose-50 text-rose-700 shadow-inner" : "bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-400 hover:bg-slate-100"}`}
-                >
-                  <span className="text-[11px] font-black uppercase flex items-center gap-2">
-                    <FaExclamationTriangle /> Citizen Misconduct Report
-                  </span>
-                  <div className={`w-4 h-4 rounded-full border-2 transition-all ${reviewModal.isReport ? "bg-rose-500 border-rose-500" : "border-slate-300"}`}></div>
-                </button>
+                          return (
+                            <tr key={task._id} className={`hover:bg-slate-50/60 transition-colors ${isFinished ? 'opacity-60 bg-slate-50/30' : assignedToMe ? 'bg-emerald-50/40' : ''}`}>
+                              <td className="py-4 px-5">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-base shadow-xs ${
+                                  task.isFood ? 'bg-amber-100 text-amber-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-700'
+                                }`}>
+                                  {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
+                                </div>
+                              </td>
+                              <td className="py-4 px-5">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
+                                    task.isFood ? "bg-amber-50 text-amber-700 border border-amber-200" : task.isPollution ? "bg-rose-50 text-rose-700 border border-rose-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                  }`}>
+                                    {task.isFood ? "Food Rescue" : task.isPollution ? "Pollution Hazard" : "Waste Pickup"}
+                                  </span>
+                                  {task.isFood && !isFinished && <FoodTimer expiryTime={task.expiryTime} />}
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                                  {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
+                                  {task.isFood && <span className="ml-2 text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded border border-slate-200">{task.quantity} servings</span>}
+                                </h3>
+                                <div className="flex items-center gap-3 mt-1.5">
+                                  <button onClick={() => handleNavigation(task)} className="text-[10px] font-bold text-emerald-600 flex items-center gap-1 hover:underline">
+                                    <FaDirections /> GPS Navigation
+                                  </button>
+                                  {(task.userPhone || task.userId?.phone) && (
+                                    <a href={`tel:${task.userPhone || task.userId?.phone}`} className="text-[10px] font-bold text-slate-500 flex items-center gap-1 hover:text-slate-800">
+                                      <FaPhoneAlt size={9} /> Contact Citizen
+                                    </a>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-4 px-5 text-center">
+                                <p className="text-xs font-bold text-slate-700">{new Date(task.createdAt).toLocaleDateString()}</p>
+                                <p className="text-[10px] text-slate-400 font-medium">{new Date(task.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                              </td>
+                              <td className="py-4 px-5 text-right">
+                                {isFinished ? (
+                                  task.review ? (
+                                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-bold uppercase border border-slate-200">
+                                      <FaCheckCircle size={10} className="text-emerald-500" /> Feedback Logged
+                                    </div>
+                                  ) : (
+                                    <button
+                                      onClick={() => setReviewModal({ show: true, item: task, type: '', rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                                      className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-lg font-bold text-xs inline-flex items-center gap-1.5 hover:bg-emerald-600 hover:text-white transition-all shadow-xs active:scale-95"
+                                    >
+                                      <FaStar className="text-amber-500" /> Review Citizen
+                                    </button>
+                                  )
+                                ) : (!assignedToMe && !task.assignedVolunteer) ? (
+                                  <button
+                                    onClick={() => handleClaim(task)}
+                                    disabled={isVolunteerBusy}
+                                    className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-sm ${
+                                      isVolunteerBusy ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white active:scale-95'
+                                    }`}
+                                  >
+                                    {isVolunteerBusy ? "Occupied" : "Claim Mission"}
+                                  </button>
+                                ) : assignedToMe ? (
+                                  <div className="flex flex-col items-end gap-1.5">
+                                    {task.isPollution ? (
+                                      <button onClick={() => handleAction(task._id, 'resolve')} className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1.5 rounded-lg font-bold text-xs uppercase shadow-sm">Resolve Hazard</button>
+                                    ) : task.isFood ? (
+                                      status === "claimed" ? (
+                                        <button onClick={() => handleAction(task._id, 'collect_food')} className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-1.5 rounded-lg font-bold text-xs uppercase shadow-sm flex items-center gap-1.5">
+                                          <FaTruckLoading /> Mark Collected
+                                        </button>
+                                      ) : (
+                                        <button
+                                          onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor to confirm collection...")}
+                                          className={`${task.donorConfirmedCollection ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-300 cursor-not-allowed'} text-white px-4 py-1.5 rounded-lg font-bold text-xs uppercase shadow-sm flex items-center gap-1.5 transition-all`}
+                                        >
+                                          <FaCamera /> {task.donorConfirmedCollection ? "Deliver & Photo" : "Waiting Confirmation"}
+                                        </button>
+                                      )
+                                    ) : status === "claimed" ? (
+                                      <button onClick={() => handleAction(task._id, 'arrival')} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-lg font-bold text-xs uppercase shadow-sm flex items-center gap-1.5">
+                                        <FaTruckLoading /> Arrived at Location
+                                      </button>
+                                    ) : (status === "arrived" && !task.isPaid) ? (
+                                      <div className="text-amber-600 font-bold text-[10px] uppercase bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">Citizen Payment Pending</div>
+                                    ) : (
+                                      <button onClick={() => handleAction(task._id, 'complete')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-bold text-xs uppercase shadow-sm">Complete Mission</button>
+                                    )}
+                                    <div className="flex items-center gap-2">
+                                      <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-[10px] font-bold text-slate-400 hover:text-rose-600 hover:underline">Abort</button>
+                                      <span className="text-slate-300">•</span>
+                                      <button onClick={() => handleFlagReport(task._id)} className="text-[10px] font-bold text-rose-600 hover:underline">Flag Fraud</button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-xs font-medium text-slate-400 italic">Claimed by another</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="4" className="py-16 text-center text-slate-400">
+                            <FaColumns size={24} className="mx-auto mb-2 text-slate-300" />
+                            <p className="text-xs font-bold uppercase tracking-wider">No Missions Available</p>
+                            <p className="text-[11px] text-slate-400 mt-1">Check back later or adjust your sector filter.</p>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
 
-                {reviewModal.isReport && (
-                  <div className="mt-4 animate-in slide-in-from-top-2 duration-200">
-                    <textarea
-                      placeholder="Describe the problem with the citizen (required)..."
-                      required
-                      value={reviewModal.reportReason}
-                      onChange={(e) => setReviewModal(prev => ({ ...prev, reportReason: e.target.value }))}
-                      className="w-full bg-rose-50/50 border-2 border-rose-100 rounded-2xl p-4 font-bold text-rose-900 outline-none focus:border-rose-400 transition-all"
-                    />
+                {/* Desktop Table Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50/80 border-t border-slate-200/80">
+                    <p className="text-xs font-medium text-slate-500">
+                      Showing <span className="font-bold text-slate-800">{indexOfFirstItem + 1}</span> to{" "}
+                      <span className="font-bold text-slate-800">{Math.min(indexOfLastItem, visibleTasks.length)}</span> of{" "}
+                      <span className="font-bold text-slate-800">{visibleTasks.length}</span> missions
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+                      >
+                        ← Previous
+                      </button>
+                      <span className="text-xs font-black text-slate-600 px-2">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+                      >
+                        Next →
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
-              <button
-                onClick={handleReviewSubmit}
-                disabled={reviewModal.loading}
-                className="w-full bg-slate-900 text-white py-5 rounded-2xl text-[11px] font-black uppercase hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50"
-              >
-                {reviewModal.loading ? "Processing..." : "Submit Identity Review"}
-              </button>
+              {/* Mobile Missions Cards */}
+              <div className="lg:hidden space-y-3">
+                {currentTasks.length > 0 ? (
+                  currentTasks.map((task) => {
+                    const status = (task.status || "").toLowerCase();
+                    const assignedToMe = task.assignedVolunteer && String(task.assignedVolunteer) === String(currentVolunteerId);
+                    const isFinished = ["completed", "resolved", "delivered", "success"].includes(status);
+
+                    return (
+                      <div key={task._id} className={`bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3 ${isFinished ? 'opacity-60' : assignedToMe ? 'border-emerald-300 bg-emerald-50/20' : ''}`}>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-2.5">
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-xs ${
+                              task.isFood ? 'bg-amber-100 text-amber-600' : task.isPollution ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-700'
+                            }`}>
+                              {task.isFood ? <FaUtensils /> : task.isPollution ? <FaExclamationTriangle /> : <FaTrashAlt />}
+                            </div>
+                            <div>
+                              <span className="text-[9px] font-black uppercase text-emerald-600">
+                                {task.isFood ? "Food Rescue" : task.isPollution ? "Pollution" : "Waste Pickup"}
+                              </span>
+                              <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                                {task.isFood ? task.placeName : task.isPollution ? task.pollutionType : task.wasteType}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[9px] font-bold text-slate-400">{new Date(task.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                          <button onClick={() => handleNavigation(task)} className="font-bold text-emerald-600 flex items-center gap-1 hover:underline">
+                            <FaDirections /> GPS
+                          </button>
+                          {(task.userPhone || task.userId?.phone) && (
+                            <a href={`tel:${task.userPhone || task.userId?.phone}`} className="font-bold text-slate-500 flex items-center gap-1">
+                              <FaPhoneAlt size={9} /> Call
+                            </a>
+                          )}
+                        </div>
+
+                        <div className="pt-1">
+                          {isFinished ? (
+                            <div className="text-center py-2 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold border border-slate-200">
+                              Mission Resolved
+                            </div>
+                          ) : (!assignedToMe && !task.assignedVolunteer) ? (
+                            <button
+                              onClick={() => handleClaim(task)}
+                              disabled={isVolunteerBusy}
+                              className={`w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${
+                                isVolunteerBusy ? 'bg-slate-100 text-slate-400 border border-slate-200' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm active:scale-95'
+                              }`}
+                            >
+                              {isVolunteerBusy ? "Occupied" : "Claim Mission"}
+                            </button>
+                          ) : assignedToMe ? (
+                            <div className="space-y-2">
+                              {task.isPollution ? (
+                                <button onClick={() => handleAction(task._id, 'resolve')} className="w-full bg-rose-600 text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm">Resolve Hazard</button>
+                              ) : task.isFood ? (
+                                status === "claimed" ? (
+                                  <button onClick={() => handleAction(task._id, 'collect_food')} className="w-full bg-amber-500 text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm flex items-center justify-center gap-1.5">
+                                    <FaTruckLoading /> Mark Collected
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => task.donorConfirmedCollection ? triggerPhotoUpload(task._id) : toast.error("Waiting for donor confirmation...")}
+                                    className={`w-full ${task.donorConfirmedCollection ? 'bg-emerald-600' : 'bg-slate-300'} text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm flex items-center justify-center gap-1.5`}
+                                  >
+                                    <FaCamera /> {task.donorConfirmedCollection ? "Deliver & Photo" : "Awaiting Verification"}
+                                  </button>
+                                )
+                              ) : status === "claimed" ? (
+                                <button onClick={() => handleAction(task._id, 'arrival')} className="w-full bg-orange-500 text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm flex items-center justify-center gap-1.5">
+                                  <FaTruckLoading /> Arrived at Location
+                                </button>
+                              ) : (status === "arrived" && !task.isPaid) ? (
+                                <div className="py-2 bg-amber-50 text-amber-700 border border-amber-200 font-bold text-xs text-center rounded-xl">Citizen Payment Pending</div>
+                              ) : (
+                                <button onClick={() => handleAction(task._id, 'complete')} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm">Complete Mission</button>
+                              )}
+                              <div className="flex justify-between text-xs pt-1">
+                                <button onClick={() => handleUnclaim(task._id, task.isPollution)} className="text-slate-400 hover:text-rose-600 font-bold">Abort</button>
+                                <button onClick={() => handleFlagReport(task._id)} className="text-rose-600 font-bold">Flag Fraud</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="py-2 text-center text-xs font-medium text-slate-400 bg-slate-50 rounded-xl">Claimed by another agent</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="py-12 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">
+                    <p className="text-xs font-bold uppercase">No Missions in Sector</p>
+                  </div>
+                )}
+
+                {/* Mobile Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50/80 border border-slate-200/80 rounded-2xl mt-4">
+                    <p className="text-xs font-medium text-slate-500">
+                      Showing <span className="font-bold text-slate-800">{indexOfFirstItem + 1}</span> to{" "}
+                      <span className="font-bold text-slate-800">{Math.min(indexOfLastItem, visibleTasks.length)}</span> of{" "}
+                      <span className="font-bold text-slate-800">{visibleTasks.length}</span>
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 shadow-sm transition-all"
+                      >
+                        ← Prev
+                      </button>
+                      <span className="text-xs font-black text-slate-600 px-2">
+                        {currentPage} / {totalPages}
+                      </span>
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 shadow-sm transition-all"
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+          )}
+
+          {/* 🌟 VOLUNTEER -> USER REVIEW MODAL */}
+          {reviewModal.show && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 animate-in fade-in duration-200">
+              <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-200">
+                <div className="bg-slate-50 p-5 flex justify-between items-center border-b border-slate-100">
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 tracking-tight">Citizen Debrief</h3>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Rate the citizen & report any issues</p>
+                  </div>
+                  <button
+                    onClick={() => setReviewModal({ show: false, item: null, type: "", rating: 0, comment: "", isReport: false, reportReason: "", loading: false })}
+                    className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-all"
+                  >
+                    <FaTimes size={12} />
+                  </button>
+                </div>
+
+                <div className="p-6 space-y-5">
+                  {/* Star Rating */}
+                  <div className="text-center space-y-2">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Citizen Cooperation</p>
+                    <div className="flex justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setReviewModal(prev => ({ ...prev, rating: s }))}
+                          className={`text-2xl transition-all transform active:scale-90 ${reviewModal.rating >= s ? "text-amber-500 scale-110" : "text-slate-200 hover:text-amber-300"}`}
+                        >
+                          <FaStar />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Feedback Comment */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mission Notes</label>
+                    <textarea
+                      placeholder="Notes about this mission or citizen behavior..."
+                      value={reviewModal.comment}
+                      onChange={(e) => setReviewModal(prev => ({ ...prev, comment: e.target.value }))}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs font-medium text-slate-800 outline-none focus:border-emerald-500 transition-all min-h-[80px]"
+                    />
+                  </div>
+
+                  {/* Report Issue Toggle */}
+                  <div className="pt-3 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => setReviewModal(prev => ({ ...prev, isReport: !prev.isReport }))}
+                      className={`w-full p-3 rounded-xl flex items-center justify-between transition-all border ${
+                        reviewModal.isReport ? "bg-rose-50 border-rose-200 text-rose-700" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span className="text-xs font-bold flex items-center gap-2">
+                        <FaExclamationTriangle className={reviewModal.isReport ? "text-rose-600" : "text-slate-400"} /> File Misconduct Report
+                      </span>
+                      <div className={`w-3.5 h-3.5 rounded-full border-2 transition-all ${reviewModal.isReport ? "bg-rose-600 border-rose-600" : "border-slate-300"}`}></div>
+                    </button>
+
+                    {reviewModal.isReport && (
+                      <div className="mt-3 animate-in slide-in-from-top-2 duration-200">
+                        <textarea
+                          placeholder="Describe the issue with the citizen..."
+                          required
+                          value={reviewModal.reportReason}
+                          onChange={(e) => setReviewModal(prev => ({ ...prev, reportReason: e.target.value }))}
+                          className="w-full bg-rose-50/50 border border-rose-200 rounded-xl p-3 text-xs font-medium text-rose-900 outline-none focus:border-rose-400 transition-all"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleReviewSubmit}
+                    disabled={reviewModal.loading}
+                    className="w-full bg-slate-900 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-600 transition-all shadow-sm disabled:opacity-50"
+                  >
+                    {reviewModal.loading ? "Submitting..." : "Submit Review"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 📱 MOBILE BOTTOM NAV 📱 */}
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 flex shadow-lg">
+            <button onClick={() => setActiveTab('missions')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'missions' ? "text-emerald-600" : "text-slate-400"}`}>
+              <FaColumns size={15} />
+              Missions
+            </button>
+            <button onClick={() => navigate("/volunteer-history")} className="flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all text-slate-400">
+              <FaCheckCircle size={15} />
+              Log
+            </button>
+            <button onClick={() => setActiveTab('profile')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'profile' ? "text-indigo-600" : "text-slate-400"}`}>
+              <FaUserShield size={15} />
+              Profile
+            </button>
           </div>
-        </div>
-      )}
 
-      {/* 📱 MOBILE BOTTOM NAV 📱 */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 flex shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-        <button onClick={() => setActiveTab('missions')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'missions' ? "text-emerald-600" : "text-slate-400"}`}>
-          <FaColumns size={16} />
-          Missions
-        </button>
-        <button onClick={() => navigate("/volunteer-history")} className="flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all text-slate-400">
-          <FaCheckCircle size={16} />
-          Log
-        </button>
-        <button onClick={() => setActiveTab('profile')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'profile' ? "text-indigo-600" : "text-slate-400"}`}>
-          <FaUserShield size={16} />
-          Profile
-        </button>
-      </div>
-
-      </main>
+        </main>
       </div>
 
       <div id="recaptcha-container"></div>
