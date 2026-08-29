@@ -1,16 +1,11 @@
 import React from 'react';
-import { FaUtensils, FaHistory, FaHeartbeat } from "react-icons/fa";
+import { FaUtensils, FaHeartbeat } from "react-icons/fa";
 
 const FoodAnalysis = ({ reports }) => {
-  // 🔥 ADVANCED IMPACT LOGIC: Processing Servings and Delivery Status
   const foodStats = reports.reduce((acc, r) => {
     if (r.type === 'food') {
       acc.total += 1;
-
-      // Normalize status to match your backend/lifecycle
       const status = (r.status || "Available").toLowerCase();
-
-      // Calculate Total Servings (Impact Weight)
       const servings = parseInt(r.quantity) || 0;
       acc.totalServings += servings;
 
@@ -26,73 +21,58 @@ const FoodAnalysis = ({ reports }) => {
     return acc;
   }, { total: 0, delivered: 0, active: 0, available: 0, totalServings: 0, servingsSaved: 0 });
 
-  // Success rate is based on actual completions
   const successRate = foodStats.total > 0
     ? Math.round((foodStats.delivered / foodStats.total) * 100)
     : 0;
 
   return (
-    <div className="bg-slate-900 p-6 md:p-8 rounded-3xl md:rounded-[3rem] shadow-2xl text-white border border-white/5 relative overflow-hidden">
-      {/* Decorative Glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 blur-[100px] rounded-full"></div>
-
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0 relative z-10">
+    <div className="h-full flex flex-col justify-between min-w-0">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[11px] font-black uppercase text-slate-500 tracking-[0.2em] mb-2">Food Impact Radar</h3>
-          <div className="flex items-baseline gap-2">
-            <p className="text-4xl font-black text-white">{foodStats.servingsSaved}</p>
-            <p className="text-xs font-bold text-amber-400 uppercase tracking-tighter">Meals Saved</p>
+          <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+            Food Impact Radar
+          </span>
+          <div className="flex items-baseline gap-1.5 mt-0.5">
+            <p className="text-2xl font-black text-slate-900">{foodStats.servingsSaved}</p>
+            <span className="text-xs font-bold text-amber-600 uppercase">Meals Rescued</span>
           </div>
         </div>
-        <div className="bg-amber-400 text-slate-900 p-4 rounded-[1.5rem] shadow-lg shadow-amber-400/20">
-          <FaUtensils size={22} />
+        <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center text-sm shrink-0">
+          <FaUtensils />
         </div>
       </div>
 
-      {/* Impact Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
-        <div className="bg-white/5 p-5 rounded-[2rem] border border-white/5">
-          <p className="text-[9px] font-black text-slate-500 uppercase mb-2 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Delivered
-          </p>
-          <p className="text-2xl font-black text-white">{foodStats.delivered}</p>
-          <p className="text-[10px] text-slate-400 font-medium mt-1">Closed Missions</p>
+      {/* Impact Metric Row */}
+      <div className="grid grid-cols-2 gap-2.5 py-1 flex-grow">
+        <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+          <p className="text-[9px] font-bold text-slate-400 uppercase">Delivered</p>
+          <p className="text-base font-black text-slate-800 mt-0.5">{foodStats.delivered}</p>
         </div>
-        <div className="bg-white/5 p-5 rounded-[2rem] border border-white/5">
-          <p className="text-[9px] font-black text-slate-500 uppercase mb-2 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Active
-          </p>
-          <p className="text-2xl font-black text-white">{foodStats.active + foodStats.available}</p>
-          <p className="text-[10px] text-slate-400 font-medium mt-1">In Pipeline</p>
+        <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+          <p className="text-[9px] font-bold text-slate-400 uppercase">In Pipeline</p>
+          <p className="text-base font-black text-amber-600 mt-0.5">{foodStats.active + foodStats.available}</p>
         </div>
       </div>
 
       {/* Progress & Efficiency */}
-      <div className="space-y-4 relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2 sm:gap-0">
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-black uppercase text-slate-400">Rescue Efficiency</span>
-            <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
-              <FaHeartbeat size={10} /> Community Optimized
-            </span>
-          </div>
-          <span className="text-3xl font-black text-amber-400">{successRate}<span className="text-sm font-light text-slate-500">%</span></span>
+      <div className="space-y-1.5 pt-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1">
+            <FaHeartbeat className="text-emerald-500" size={10} /> Rescue Success
+          </span>
+          <span className="text-xs font-black text-amber-600">{successRate}%</span>
         </div>
 
-        <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(251,191,36,0.3)]"
-            style={{ width: `${successRate}%` }}
+            className="h-full bg-amber-500 rounded-full transition-all duration-500"
+            style={{ width: `${Math.max(successRate, 5)}%` }}
           ></div>
         </div>
 
-        <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
-            <FaHistory /> Total Reach: {foodStats.total}
-          </p>
-          <div className="px-3 py-1 bg-emerald-500/10 rounded-lg">
-            <p className="text-[8px] font-black text-emerald-500 uppercase italic">Live Sync</p>
-          </div>
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
+          <span>Total Logged: {foodStats.total}</span>
+          <span className="text-emerald-600 font-bold">● Zero Waste</span>
         </div>
       </div>
     </div>

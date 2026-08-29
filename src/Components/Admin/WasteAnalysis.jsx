@@ -2,7 +2,6 @@ import React from 'react';
 import { FaRecycle, FaWeightHanging, FaChartPie } from "react-icons/fa";
 
 const WasteAnalysis = ({ reports }) => {
-  // 🔥 Advanced Data Processing
   const stats = reports.reduce((acc, r) => {
     if (r.type === 'pickup') {
       const type = r.wasteType || "General";
@@ -15,73 +14,67 @@ const WasteAnalysis = ({ reports }) => {
     return acc;
   }, { totalWeight: 0, breakdown: {}, count: 0 });
 
-  // Calculate the max weight to scale the bars relative to each other
   const maxWeight = Math.max(...Object.values(stats.breakdown), 10);
 
   return (
-    <div className="bg-white p-6 md:p-8 rounded-3xl md:rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden relative">
+    <div className="h-full flex flex-col justify-between min-w-0">
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2">Collection Volume</h3>
-          <div className="flex items-baseline gap-2">
-            <p className="text-4xl font-black text-slate-900">{stats.totalWeight.toFixed(1)}</p>
-            <p className="text-xs font-bold text-emerald-500 uppercase tracking-tighter">Total KG</p>
+          <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+            Collection Volume
+          </span>
+          <div className="flex items-baseline gap-1.5 mt-0.5">
+            <p className="text-2xl font-black text-slate-900">{stats.totalWeight.toFixed(1)}</p>
+            <span className="text-xs font-bold text-emerald-600 uppercase">KG</span>
           </div>
         </div>
-        <div className="bg-emerald-50 text-emerald-600 p-4 rounded-[1.5rem] shadow-sm">
-          <FaRecycle size={22} className="animate-spin-slow" />
+        <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-600 flex items-center justify-center text-sm shrink-0">
+          <FaRecycle />
         </div>
       </div>
 
       {/* Waste Category Bars */}
-      <div className="space-y-6">
+      <div className="space-y-3 py-1 flex-grow">
         {Object.entries(stats.breakdown).length > 0 ? (
-          Object.entries(stats.breakdown).map(([type, weight]) => {
+          Object.entries(stats.breakdown).slice(0, 3).map(([type, weight]) => {
             const percentage = (weight / maxWeight) * 100;
             return (
               <div key={type} className="group">
-                <div className="flex justify-between items-end mb-2">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase text-slate-400 group-hover:text-indigo-600 transition-colors">
-                      {type}
-                    </span>
-                    <span className="text-[9px] text-slate-300 font-bold italic">
-                      {((weight / stats.totalWeight) * 100).toFixed(0)}% of total
-                    </span>
-                  </div>
-                  <span className="text-sm font-black text-slate-800 tracking-tighter">
-                    {weight} <span className="text-[10px] text-slate-400">KG</span>
+                <div className="flex justify-between items-center text-xs mb-1">
+                  <span className="text-[11px] font-bold text-slate-700">
+                    {type}
+                  </span>
+                  <span className="text-[11px] font-black text-slate-800">
+                    {weight} <span className="text-[9px] text-slate-400">KG</span>
                   </span>
                 </div>
                 
-                {/* Advanced Progress Bar */}
-                <div className="w-full h-3 bg-slate-50 rounded-full overflow-hidden p-0.5 border border-slate-100">
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-emerald-400 to-indigo-500 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: `${percentage}%` }}
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.max(percentage, 5)}%` }}
                   ></div>
                 </div>
               </div>
             );
           })
         ) : (
-          <div className="py-10 text-center border-2 border-dashed border-slate-100 rounded-3xl">
-            <p className="text-[10px] font-black uppercase text-slate-300 italic">No Waste Data Logged</p>
+          <div className="py-6 text-center border border-dashed border-slate-200 rounded-xl">
+            <p className="text-[10px] font-bold text-slate-400 uppercase">No Collection Data</p>
           </div>
         )}
       </div>
 
-      {/* Bottom Footer Stats */}
-      <div className="mt-8 pt-6 border-t border-slate-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase">
-          <FaWeightHanging size={12} className="text-indigo-400" />
+      {/* Footer Stats */}
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
+        <span className="flex items-center gap-1">
+          <FaWeightHanging size={10} className="text-slate-400" />
           Avg: {(stats.totalWeight / (stats.count || 1)).toFixed(1)} KG/Pick
-        </div>
-        <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase">
-          <FaChartPie size={12} className="text-emerald-400" />
-          {stats.count} Jobs
-        </div>
+        </span>
+        <span className="font-bold text-slate-700">
+          {stats.count} Missions
+        </span>
       </div>
     </div>
   );

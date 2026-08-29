@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FaTrash, FaRecycle, FaExclamationTriangle, FaUtensils, FaSearch, FaSyncAlt, FaLock, FaUnlock, FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaCircle, FaUserCheck, FaChartLine, FaArrowRight, FaUsersCog, FaPhoneAlt, FaCamera, FaCalendarAlt, FaClock, FaLeaf, FaStickyNote, FaLayerGroup, FaExternalLinkAlt, FaDownload, FaUserTimes, FaStar, FaInfoCircle, FaCheckDouble, FaFlag, FaCheckCircle } from "react-icons/fa";
+import {
+  FaTrash, FaRecycle, FaExclamationTriangle, FaUtensils, FaSearch, FaSyncAlt,
+  FaLock, FaUnlock, FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaCircle,
+  FaChartLine, FaArrowRight, FaPhoneAlt, FaCamera, FaCalendarAlt, FaClock,
+  FaStickyNote, FaLayerGroup, FaExternalLinkAlt, FaDownload, FaStar,
+  FaInfoCircle, FaCheckDouble, FaFlag, FaCheckCircle, FaUser, FaShieldAlt
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import toast from "react-hot-toast";
@@ -12,742 +18,874 @@ import WasteAnalysis from "../Components/Admin/WasteAnalysis";
 import FoodAnalysis from "../Components/Admin/FoodAnalysis";
 
 const AdminDashboard = () => {
-    const navigate = useNavigate();
-    const [reports, setReports] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("all");
-    const [statusFilter, setStatusFilter] = useState("all");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [dateFilter, setDateFilter] = useState("");
-    const [expandedId, setExpandedId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+  const navigate = useNavigate();
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [expandedId, setExpandedId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastSyncTime, setLastSyncTime] = useState(new Date());
+  const itemsPerPage = 10;
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [filter, statusFilter, searchQuery, dateFilter]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, statusFilter, searchQuery, dateFilter]);
 
-    const fetchAdminData = useCallback(async (isSilent = false) => {
-        try {
-            if (!isSilent) setLoading(true);
-            const allReports = await api.get("/api/admin/all-reports");
-            setReports(allReports.data);
-        } catch (err) {
-            if (!isSilent) toast.error("Satellite Sync Failed");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+  const fetchAdminData = useCallback(async (isSilent = false) => {
+    try {
+      if (!isSilent) setLoading(true);
+      const allReports = await api.get("/api/admin/all-reports");
+      setReports(allReports.data || []);
+      setLastSyncTime(new Date());
+    } catch (err) {
+      if (!isSilent) toast.error("Satellite Sync Failed");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    useEffect(() => {
-        fetchAdminData();
-        const interval = setInterval(() => fetchAdminData(true), 5000); // Live feel
-        return () => clearInterval(interval);
-    }, [fetchAdminData]);
+  useEffect(() => {
+    fetchAdminData();
+    const interval = setInterval(() => fetchAdminData(true), 5000); // Live feel
+    return () => clearInterval(interval);
+  }, [fetchAdminData]);
 
-    const getExpiryStatus = (expiryDate) => {
-        if (!expiryDate) return { text: "No Data", color: "bg-slate-100 text-slate-400" };
-        const now = new Date();
-        const expiry = new Date(expiryDate);
-        const diffInHours = (expiry - now) / (1000 * 60 * 60);
+  const getExpiryStatus = (expiryDate) => {
+    if (!expiryDate) return { text: "No Data", color: "bg-slate-100 text-slate-500 border border-slate-200" };
+    const now = new Date();
+    const expiry = new Date(expiryDate);
+    const diffInHours = (expiry - now) / (1000 * 60 * 60);
 
-        if (diffInHours < 0) return { text: "Expired", color: "bg-rose-500 text-white animate-pulse" };
+    if (diffInHours < 0) return { text: "Expired", color: "bg-rose-50 text-rose-700 border border-rose-200 font-black" };
 
-        const hours = Math.floor(diffInHours);
-        const mins = Math.round((diffInHours - hours) * 60);
-        const timeText = hours > 0 ? `${hours}h ${mins}m left` : `${mins}m left`;
+    const hours = Math.floor(diffInHours);
+    const mins = Math.round((diffInHours - hours) * 60);
+    const timeText = hours > 0 ? `${hours}h ${mins}m left` : `${mins}m left`;
 
-        return { text: timeText, color: diffInHours < 2 ? "bg-orange-500 text-white" : "bg-emerald-100 text-emerald-700" };
+    return {
+      text: timeText,
+      color: diffInHours < 2 ? "bg-amber-50 text-amber-700 border border-amber-200 font-bold" : "bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold"
     };
+  };
 
-    const updatePollutionStatus = async (e, id, newStatus) => {
-        e.stopPropagation();
-        try {
-            await api.patch(`/api/admin/pollution/status/${id}`, { status: newStatus });
-            toast.success(`Mission moved to ${newStatus}`);
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Update failed");
-        }
-    };
+  const updatePollutionStatus = async (e, id, newStatus) => {
+    e.stopPropagation();
+    try {
+      await api.patch(`/api/admin/pollution/status/${id}`, { status: newStatus });
+      toast.success(`Mission moved to ${newStatus}`);
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Update failed");
+    }
+  };
 
-    const handleAdminReset = async (e, taskId, reportType) => {
-        e.stopPropagation();
-        if (!window.confirm("FORCE UNASSIGN: This will remove the agent. Proceed?")) return;
-        try {
-            await api.patch(`/api/admin/reset-mission/${taskId}`, { type: reportType });
-            toast.success("Mission Reset Successfully");
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Server rejected reset");
-        }
-    };
+  const handleAdminReset = async (e, taskId, reportType) => {
+    e.stopPropagation();
+    if (!window.confirm("FORCE UNASSIGN: This will remove the assigned volunteer from this task. Proceed?")) return;
+    try {
+      await api.patch(`/api/admin/reset-mission/${taskId}`, { type: reportType });
+      toast.success("Mission Reset Successfully");
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Server rejected reset");
+    }
+  };
 
-    const deleteReport = async (e, id, type) => {
-        e.stopPropagation();
-        if (!window.confirm("Permanent Delete?")) return;
-        try {
-            await api.delete(`/api/admin/report/${type}/${id}`);
-            toast.success("Record Purged");
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Delete failed");
-        }
-    };
+  const deleteReport = async (e, id, type) => {
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to permanently delete this record? This action cannot be undone.")) return;
+    try {
+      await api.delete(`/api/admin/report/${type}/${id}`);
+      toast.success("Record Purged");
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Delete failed");
+    }
+  };
 
-    const handleFreezeUser = async (e, userId) => {
-        e.stopPropagation();
-        if (!userId) return toast.error("System Node ID mismatch.");
-        if (!window.confirm("🧊 ACCELERATED DISCIPLINARY ACTION: Freeze this user's account immediately?")) return;
-        try {
-            await api.patch(`/api/admin/freeze-user/${userId}`);
-            toast.success("Account frozen. User locked out.");
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Freeze command failed");
-        }
-    };
+  const handleFreezeUser = async (e, userId) => {
+    e.stopPropagation();
+    if (!userId) return toast.error("User ID not available.");
+    if (!window.confirm("DISCIPLINARY ACTION: Freeze this user's account immediately? They will be locked out.")) return;
+    try {
+      await api.patch(`/api/admin/freeze-user/${userId}`);
+      toast.success("Account frozen. User locked out.");
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Freeze command failed");
+    }
+  };
 
-    const handleUnflag = async (e, id, type) => {
-        e.stopPropagation();
-        if (!window.confirm("Remove flag from this report? The flag will be dismissed as a minor issue.")) return;
-        try {
-            await api.patch(`/api/admin/unflag-report/${type}/${id}`);
-            toast.success("Report unflagged successfully");
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Unflag operation failed");
-        }
-    };
+  const handleUnflag = async (e, id, type) => {
+    e.stopPropagation();
+    if (!window.confirm("Dismiss and remove the flag from this report?")) return;
+    try {
+      await api.patch(`/api/admin/unflag-report/${type}/${id}`);
+      toast.success("Report unflagged successfully");
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Unflag operation failed");
+    }
+  };
 
-    const handleDismissHelp = async (e, id, type) => {
-        e.stopPropagation();
-        if (!window.confirm("Mark help request as resolved and dismiss alert?")) return;
-        try {
-            await api.post("/api/admin/dismiss-help", { id, type });
-            toast.success("Help signal dismissed");
-            fetchAdminData(true);
-        } catch (err) {
-            toast.error("Dismissal failed");
-        }
-    };
+  const handleDismissHelp = async (e, id, type) => {
+    e.stopPropagation();
+    if (!window.confirm("Mark help request as resolved and dismiss alert?")) return;
+    try {
+      await api.post("/api/admin/dismiss-help", { id, type });
+      toast.success("Help signal dismissed");
+      fetchAdminData(true);
+    } catch (err) {
+      toast.error("Dismissal failed");
+    }
+  };
 
-    const handleResolveMisconduct = async (e, reportId, type, reviewId) => {
-        e.stopPropagation();
-        if (!window.confirm("Resolve this misconduct report and notify the reporting party?")) return;
-        try {
-            await api.patch(`/api/admin/unflag-report/${type}/${reportId}`, { reviewId });
-            setReports(prev => prev.map(r => {
-                if (r._id !== reportId) return r;
-                return {
-                    ...r,
-                    reviews: (r.reviews || []).map(rv => rv._id === reviewId ? { ...rv, isReport: false } : rv)
-                };
-            }));
-            toast.success("Misconduct resolved and reporter notified");
-        } catch (err) {
-            toast.error("Resolve operation failed");
-        }
-    };
+  const handleResolveMisconduct = async (e, reportId, type, reviewId) => {
+    e.stopPropagation();
+    if (!window.confirm("Resolve this misconduct report and notify the reporting party?")) return;
+    try {
+      await api.patch(`/api/admin/unflag-report/${type}/${reportId}`, { reviewId });
+      setReports(prev => prev.map(r => {
+        if (r._id !== reportId) return r;
+        return {
+          ...r,
+          reviews: (r.reviews || []).map(rv => rv._id === reviewId ? { ...rv, isReport: false } : rv)
+        };
+      }));
+      toast.success("Misconduct resolved and reporter notified");
+    } catch (err) {
+      toast.error("Resolve operation failed");
+    }
+  };
 
-    const processedReports = reports
-        .filter(r => {
-            const matchesCategory = filter === "all" || r.type === filter;
-            const currentStatus = (r.status || "pending").toLowerCase();
-            const matchesStatus = statusFilter === "all" || statusFilter === "support" ||
-                (statusFilter === "pending" && ["pending", "reported", "available"].includes(currentStatus)) ||
-                (statusFilter === "active" && ["verified", "claimed", "arrived", "collected"].includes(currentStatus)) ||
-                (statusFilter === "completed" && ["completed", "resolved", "delivered"].includes(currentStatus));
-            const q = searchQuery.toLowerCase();
-            const matchesSearch = (
-                (r.volunteerName || "").toLowerCase().includes(q) ||
-                (r.wasteType || r.pollutionType || r.placeName || "").toLowerCase().includes(q)
-            );
-            let matchesDate = true;
-            if (dateFilter) {
-                const reportMonth = new Date(r.createdAt).toISOString().slice(0, 7);
-                matchesDate = reportMonth === dateFilter;
-            }
+  const processedReports = reports
+    .filter(r => {
+      const matchesCategory = filter === "all" || r.type === filter;
+      const currentStatus = (r.status || "pending").toLowerCase();
+      const matchesStatus = statusFilter === "all" || statusFilter === "support" ||
+        (statusFilter === "pending" && ["pending", "reported", "available"].includes(currentStatus)) ||
+        (statusFilter === "active" && ["verified", "claimed", "arrived", "collected"].includes(currentStatus)) ||
+        (statusFilter === "completed" && ["completed", "resolved", "delivered"].includes(currentStatus));
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = (
+        (r.volunteerName || "").toLowerCase().includes(q) ||
+        (r.displayName || r.userName || "").toLowerCase().includes(q) ||
+        (r.address || r.placeName || "").toLowerCase().includes(q) ||
+        (r.wasteType || r.pollutionType || r.foodType || "").toLowerCase().includes(q)
+      );
+      let matchesDate = true;
+      if (dateFilter) {
+        const reportMonth = new Date(r.createdAt).toISOString().slice(0, 7);
+        matchesDate = reportMonth === dateFilter;
+      }
 
-            // 🔥 NEW: SOS / Help Filter
-            const matchesSupport = statusFilter !== "support" || r.helpRequested === true;
+      const matchesSupport = statusFilter !== "support" || r.helpRequested === true;
 
-            return matchesCategory && matchesStatus && matchesSearch && matchesDate && matchesSupport;
-        })
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return matchesCategory && matchesStatus && matchesSearch && matchesDate && matchesSupport;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = processedReports.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(processedReports.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = processedReports.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(processedReports.length / itemsPerPage);
 
-    const downloadCSV = () => {
-        if (processedReports.length === 0) {
-            toast.error("No data to download!");
-            return;
-        }
-        const headers = ["ID", "Type", "Status", "Date", "Location/Address", "Content", "Agent", "Payment/Amount"];
-        const rows = processedReports.map(r => [
-            r._id,
-            r.type,
-            r.status || "Pending",
-            new Date(r.createdAt).toLocaleString(),
-            (r.address || r.placeName || "").replace(/,/g, " "),
-            (r.wasteType || r.pollutionType || r.foodType || "").replace(/,/g, " "),
-            (r.volunteerName || r.assignedVolunteer || "Unassigned").replace(/,/g, " "),
-            r.paidAmount || r.amount || "-"
-        ]);
-        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `karma_report_${dateFilter || 'all'}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+  const downloadCSV = () => {
+    if (processedReports.length === 0) {
+      toast.error("No data to download!");
+      return;
+    }
+    const headers = ["ID", "Type", "Status", "Date", "Location/Address", "Content", "Agent", "Payment/Amount"];
+    const rows = processedReports.map(r => [
+      r._id,
+      r.type,
+      r.status || "Pending",
+      new Date(r.createdAt).toLocaleString(),
+      (r.address || r.placeName || "").replace(/,/g, " "),
+      (r.wasteType || r.pollutionType || r.foodType || "").replace(/,/g, " "),
+      (r.volunteerName || r.assignedVolunteer || "Unassigned").replace(/,/g, " "),
+      r.paidAmount || r.amount || "-"
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `karma_report_${dateFilter || 'all'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
-            <Nav />
-            <div className="flex pt-[68px] min-h-screen">
-                <AdminSidebar />
-                <main className="flex-1 lg:ml-64 w-full p-4 md:p-8 overflow-x-hidden">
-                    {/* HEADER */}
-                    <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-6 w-full">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <FaCircle className="text-emerald-500 animate-pulse" size={8} />
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">System Overseer Mode</p>
-                            </div>
-                            <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
-                        </div>
-                        <div className="flex items-center gap-3 w-full xl:w-auto">
-                            <button onClick={() => fetchAdminData()} className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all shrink-0">
-                                <FaSyncAlt size={15} className={loading ? "animate-spin" : ""} />
-                            </button>
-                        </div>
-                    </div>
+  const sosCount = reports.filter(r => r.helpRequested).length;
+  const flaggedCount = reports.filter(r => r.isFlagged || r.volFlaggedByCitizen).length;
 
-                {/* ANALYTICS SECTION — Clickable cards */}
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                    <div className="bg-white p-6 rounded-[3rem] shadow-xl border border-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all group" onClick={() => navigate("/admin/revenue-analysis")}>
-                        <MonthlyRevenue reports={reports} />
-                        <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mt-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                            View Full Analysis <FaArrowRight size={8} />
-                        </p>
-                    </div>
-                    <div className="bg-white p-6 rounded-[3rem] shadow-xl border border-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all group" onClick={() => navigate("/admin/waste-analysis")}>
-                        <WasteAnalysis reports={reports} />
-                        <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                            View Full Analysis <FaArrowRight size={8} />
-                        </p>
-                    </div>
-                    <div className="bg-white p-6 rounded-[3rem] shadow-xl border border-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all group" onClick={() => navigate("/admin/food-analysis")}>
-                        <FoodAnalysis reports={reports} />
-                        <p className="text-[9px] font-black text-amber-400 uppercase tracking-widest mt-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                            View Full Analysis <FaArrowRight size={8} />
-                        </p>
-                    </div>
-                </div>
-
-                {/* FILTERS & SEARCH */}
-                <div className="bg-white p-4 md:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8 flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between">
-                    <div className="flex flex-wrap gap-4 w-full xl:w-auto">
-                        <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
-                            {["all", "pickup", "pollution", "food"].map((t) => (
-                                <button key={t} onClick={() => setFilter(t)} className={`flex-1 sm:flex-none px-4 md:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all ${filter === t ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}>
-                                    {t === 'pickup' ? 'Waste' : t}
-                                </button>
-                            ))}
-                        </div>
-                        <div className="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl w-full sm:w-auto">
-                            {["all", "pending", "active", "completed", "support"].map((s) => {
-                                const sosCount = s === 'support' ? reports.filter(r => r.helpRequested).length : 0;
-                                return (
-                                    <button key={s} onClick={() => setStatusFilter(s)} className={`flex-1 sm:flex-none px-3 md:px-5 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all flex items-center gap-2 ${statusFilter === s ? (s === 'support' ? "bg-sky-600 text-white shadow-lg" : "bg-indigo-600 text-white shadow-lg") : "text-slate-400"}`}>
-                                        {s === 'support' ? '🆘 SOS' : s}
-                                        {s === 'support' && sosCount > 0 && (
-                                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] ${statusFilter === s ? "bg-white text-sky-600" : "bg-sky-500 text-white"}`}>
-                                                {sosCount}
-                                            </span>
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        <div className="flex bg-slate-100 p-1.5 rounded-2xl items-center w-full sm:w-auto">
-                            <input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-[11px] font-black uppercase text-slate-500 outline-none px-4 py-1.5 border-none w-full sm:w-[130px] cursor-pointer" />
-                            {dateFilter && (
-                                <button onClick={() => setDateFilter("")} className="px-3 py-1.5 rounded-xl text-rose-500 hover:text-white hover:bg-rose-500 transition-all shrink-0">
-                                    <FaTrash size={10} />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 w-full xl:w-auto">
-                        <div className="relative w-full xl:w-72">
-                            <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search records..." className="w-full pl-16 pr-8 py-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-none rounded-[1.2rem] text-[11px] font-bold uppercase outline-none focus:ring-2 ring-indigo-100" />
-                        </div>
-                        <button onClick={downloadCSV} className="bg-slate-900 text-white p-4 rounded-[1.2rem] hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center min-w-[50px] shrink-0" title="Download CSV Report">
-                            <FaDownload size={14} />
-                        </button>
-                    </div>
-                </div>
-
-                {/* DATA TABLE */}
-                <div className="bg-white border border-slate-100 rounded-3xl md:rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto">
-                    <table className="w-full text-left min-w-[800px]">
-                        <thead>
-                            <tr className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
-                                <th className="p-10 text-[10px] font-black uppercase text-slate-400">Mission Content</th>
-                                <th className="p-10 text-[10px] font-black uppercase text-slate-400">Assigned Agent</th>
-                                <th className="p-10 text-[10px] font-black uppercase text-slate-400 text-center">Time</th>
-                                <th className="p-10 text-[10px] font-black uppercase text-slate-400 text-center">Lifecycle</th>
-                                <th className="p-10 text-[10px] font-black uppercase text-slate-400 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentItems.length > 0 ? currentItems.map((report) => {
-                                const currentStatus = (report.status || "pending").toLowerCase();
-                                const isAssigned = !!(report.assignedVolunteer || report.volunteerName);
-                                const isFinished = ['completed', 'resolved', 'delivered'].includes(currentStatus);
-                                const isExpanded = expandedId === report._id;
-                                const hasMisconductReport = Array.isArray(report.reviews) && report.reviews.some(r => r.isReport);
-                                const reporterUserId = report.userId?._id || report.user?._id || report.userId || report.user;
-                                const volunteerUserId = report.assignedVolunteer?._id || report.assignedVolunteer;
-
-                                // --- Service icon + colour ---
-                                const serviceConfig = report.type === 'food' ? { icon: <FaUtensils />, bg: 'bg-amber-100', text: 'text-amber-600', label: 'Food Rescue', accent: 'border-amber-200 bg-amber-50' } : report.type === 'pollution' ? { icon: <FaExclamationTriangle />, bg: 'bg-rose-100', text: 'text-rose-600', label: 'Pollution', accent: 'border-rose-200 bg-rose-50' } : { icon: <FaRecycle />, bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Waste Pickup', accent: 'border-emerald-200 bg-emerald-50' };
-
-                                return (
-                                    <React.Fragment key={report._id}>
-                                        {/* ── MAIN SUMMARY ROW ── */}
-                                        <tr className={`group transition-all cursor-pointer relative ${report.isFlagged ? 'bg-rose-50 shadow-[inset_4px_0_0_0_#f43f5e] z-10 scale-[1.01]' : report.volFlaggedByCitizen ? 'bg-amber-50 shadow-[inset_4px_0_0_0_#f59e0b]' : hasMisconductReport ? 'bg-amber-50/70 shadow-[inset_4px_0_0_0_#f59e0b]' : report.helpRequested ? 'bg-sky-50 shadow-[inset_4px_0_0_0_#0ea5e9]' : isExpanded ? 'bg-white z-[10]' : isFinished ? 'opacity-50 grayscale-[0.2]' : 'bg-white hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100'} transform transition-all duration-300`} onClick={() => setExpandedId(isExpanded ? null : report._id)}>
-                                            {/* COLUMN 1: SERVICE TYPE + TITLE */}
-                                            <td className={`p-8 first:rounded-l-[3.5rem] transition-all ${report.isFlagged ? 'bg-rose-50/30' : report.volFlaggedByCitizen || hasMisconductReport ? 'bg-amber-50/40' : isExpanded ? 'bg-indigo-50/80' : ''}`}>
-                                                <div className="flex items-center gap-4 relative">
-                                                    {isExpanded && (
-                                                        <div className="absolute -left-4 top-0 bottom-0 w-1 rounded-full bg-indigo-500" />
-                                                    )}
-                                                    {/* Alert Pulse Dot */}
-                                                    {(report.isFlagged || report.volFlaggedByCitizen || report.helpRequested) && (
-                                                        <div className={`absolute -top-1 -left-1 w-3 h-3 rounded-full animate-ping ${report.isFlagged ? 'bg-rose-500' : report.volFlaggedByCitizen ? 'bg-amber-500' : 'bg-sky-500'}`}></div>
-                                                    )}
-                                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg shrink-0 ${serviceConfig.bg} ${serviceConfig.text}`}>
-                                                        {serviceConfig.icon}
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <div className="flex items-center gap-2 mb-0.5">
-                                                            <p className={`text-[9px] font-black uppercase tracking-widest ${serviceConfig.text}`}>{serviceConfig.label}</p>
-                                                            {report.isFlagged && <span className="text-[7px] bg-rose-600 text-white px-1.5 py-0.5 rounded-full font-black animate-pulse">SECURITY FLAG</span>}
-                                                            {report.volFlaggedByCitizen && <span className="text-[7px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-black">USER REPORT</span>}
-                                                            {isExpanded && <span className="text-[7px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full font-black">ACTIVE VIEW</span>}
-                                                        </div>
-                                                        <p className="text-sm font-black text-slate-800 truncate max-w-[200px]">
-                                                            {report.type === 'food' ? report.placeName : report.type === 'pollution' ? report.pollutionType : report.wasteType}
-                                                        </p>
-                                                        {report.type === 'food' && (
-                                                            <div className="flex gap-1.5 mt-1">
-                                                                <span className="bg-indigo-50 text-indigo-600 text-[8px] px-2 py-0.5 rounded font-black border border-indigo-100">{report.quantity} ppl</span>
-                                                                <span className={`text-[8px] px-2 py-0.5 rounded font-black ${getExpiryStatus(report.expiryTime).color}`}>⏳ {getExpiryStatus(report.expiryTime).text}</span>
-                                                            </div>
-                                                        )}
-                                                        {report.type === 'pickup' && report.address && (
-                                                            <p className="text-[9px] text-slate-400 mt-1 truncate max-w-[200px] flex items-center gap-1"><FaMapMarkerAlt size={8} /> {report.address}</p>
-                                                        )}
-                                                        {report.type === 'pollution' && report.description && (
-                                                            <p className="text-[9px] text-slate-400 mt-1 truncate max-w-[200px]">{report.description}</p>
-                                                        )}
-                                                        {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                            <div className="flex items-center gap-1.5 mt-1 bg-white/80 text-rose-600 px-2 py-0.5 rounded border border-rose-200 w-fit shadow-sm">
-                                                                <FaExclamationTriangle size={8} className={report.isFlagged ? "animate-pulse" : ""} />
-                                                                <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">
-                                                                    {report.isFlagged ? "Vol Flagged Citizen" : "Citizen Flagged Volunteer"}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        {report.helpRequested && (
-                                                             <div className="flex flex-col gap-1 mt-1 bg-sky-600 text-white px-2 py-1.5 rounded border border-sky-600 animate-bounce-subtle w-fit shadow-lg max-w-[180px]">
-                                                                 <div className="flex items-center gap-1.5">
-                                                                     <FaInfoCircle size={8} />
-                                                                     <span className="text-[8px] font-black uppercase tracking-widest">LIVE HELP NEEDED</span>
-                                                                 </div>
-                                                                 {report.helpMessage && (
-                                                                     <p className="text-[7px] font-bold italic opacity-90 line-clamp-1">"{report.helpMessage}"</p>
-                                                                 )}
-                                                             </div>
-                                                         )}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            {/* COLUMN 2: REPORTER + VOLUNTEER */}
-                                            <td className={`p-8 transition-colors ${isExpanded ? 'bg-indigo-50/20' : ''}`}>
-                                                <div className="space-y-2">
-                                                    {/* Reporter */}
-                                                    <div>
-                                                        <p className="text-[8px] font-black text-slate-300 uppercase">Reporter</p>
-                                                        <p className="text-xs font-bold text-slate-600">{report.displayName || report.userName || "—"}</p>
-                                                        {(report.userPhone || report.userId?.phone) && (
-                                                            <p className="text-[9px] text-slate-400 flex items-center gap-1"><FaPhoneAlt size={7} /> {report.userPhone || report.userId?.phone}</p>
-                                                        )}
-                                                    </div>
-                                                    {/* Volunteer */}
-                                                    {isAssigned && (
-                                                        <div className="border-t border-slate-50 pt-2">
-                                                            <p className="text-[8px] font-black text-indigo-300 uppercase">Agent</p>
-                                                            <p className="text-xs font-bold text-indigo-600">{report.volunteerName}</p>
-                                                            {report.volunteerPhone && <p className="text-[9px] text-slate-400 flex items-center gap-1"><FaPhoneAlt size={7} /> {report.volunteerPhone}</p>}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </td>
-                                            {/* COLUMN 3: TIME */}
-                                            <td className={`p-8 text-center transition-colors ${isExpanded ? 'bg-indigo-50/20' : ''}`}>
-                                                <div className="text-[9px] font-black text-slate-500 uppercase">
-                                                    {new Date(report.createdAt).toLocaleDateString()} <br />
-                                                    <span className="text-slate-400">{new Date(report.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                                </div>
-                                            </td>
-                                            {/* COLUMN 4: STATUS */}
-                                            <td className={`p-8 text-center transition-colors ${isExpanded ? 'bg-indigo-50/20' : ''}`} onClick={(e) => e.stopPropagation()}>
-                                                {report.type === "pollution" && report.status === "Reported" ? (
-                                                    <button onClick={(e) => updatePollutionStatus(e, report._id, "Verified")} className="bg-emerald-500 text-white px-5 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-emerald-600 shadow-lg transition-all">Verify</button>
-                                                ) : (
-                                                    <div className={`inline-flex items-center gap-1 px-4 py-2 rounded-xl text-[9px] font-black uppercase ${isFinished ? 'bg-emerald-100 text-emerald-600 border border-emerald-200' : currentStatus === 'claimed' || currentStatus === 'arrived' || currentStatus === 'collected' ? 'bg-amber-100 text-amber-600 animate-pulse' : 'bg-slate-100 text-slate-400'}`}>
-                                                        {currentStatus}
-                                                    </div>
-                                                )}
-                                            </td>
-                                            {/* COLUMN 5: ACTIONS */}
-                                            <td className={`p-8 text-right last:rounded-r-[3rem] transition-colors ${isExpanded ? 'bg-indigo-50/20' : ''}`} onClick={(e) => e.stopPropagation()}>
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <button onClick={() => setExpandedId(isExpanded ? null : report._id)} className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all shadow-sm ${isExpanded ? 'bg-indigo-600 text-white animate-bounce-subtle' : 'bg-slate-100 text-slate-500 hover:bg-indigo-100 hover:text-indigo-600'}`} title="Expand details">
-                                                        {isExpanded ? <FaChevronUp size={11} /> : <FaChevronDown size={11} />}
-                                                    </button>
-                                                    {isAssigned && !isFinished && (
-                                                        <button onClick={(e) => handleAdminReset(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-amber-50 text-amber-500 rounded-xl hover:bg-amber-500 hover:text-white transition-all" title="Force Unassign">
-                                                            <FaUnlock size={11} />
-                                                        </button>
-                                                    )}
-                                                    {report.helpRequested && (
-                                                        <button onClick={(e) => handleDismissHelp(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-sky-50 text-sky-600 rounded-xl hover:bg-sky-600 hover:text-white transition-all shadow-lg shadow-sky-100" title="Resolve Help Request">
-                                                            <FaCheckDouble size={11} />
-                                                        </button>
-                                                    )}
-                                                    {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                        <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-lg shadow-rose-100 border border-rose-100" title="Clear/Resolve Flag">
-                                                            <FaFlag size={11} />
-                                                        </button>
-                                                    )}
-                                                    <button onClick={(e) => deleteReport(e, report._id, report.type)} className="w-9 h-9 flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 text-slate-300 hover:bg-rose-500 hover:text-white rounded-xl transition-all">
-                                                        <FaTrash size={11} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {/* ── EXPANDED DETAIL PANEL ── */}
-                                        {isExpanded && (
-                                            <tr className="bg-indigo-50/30 border-t-0 border-b-0">
-                                                <td colSpan="5" className="px-4 md:px-8 pb-6">
-                                                    <div className={`rounded-3xl md:rounded-[2rem] border p-4 md:p-6 mb-4 md:mb-0 ${serviceConfig.accent}`}>
-                                                        {/* === FOOD DETAILS === */}
-                                                        {report.type === 'food' && (
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaMapMarkerAlt size={8} /> Location</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.placeName}</p>
-                                                                    {report.latitude && <p className="text-[9px] text-slate-400 mt-1">{report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}</p>}
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaUtensils size={8} /> Food Info</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.foodType || "—"}</p>
-                                                                    <p className="text-[9px] text-slate-500 mt-1">{report.quantity} servings</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaClock size={8} /> Expiry</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.expiryTime ? new Date(report.expiryTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}</p>
-                                                                    <p className="text-[9px] text-slate-500 mt-1">{report.expiryTime ? new Date(report.expiryTime).toLocaleDateString() : ""}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaStickyNote size={8} /> Notes</p>
-                                                                    <p className="text-[11px] text-slate-700 leading-relaxed">{report.notes || "No additional notes."}</p>
-                                                                </div>
-                                                                {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                                                        <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
-                                                                            <FaInfoCircle size={14} />
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-sky-600 uppercase mb-1 tracking-widest">Live Help Message</p>
-                                                                            <p className="text-sm font-bold text-sky-900 italic">"{report.helpMessage}"</p>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
-                                                                            <p className="text-sm font-black text-rose-700">
-                                                                                {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="flex flex-wrap items-center gap-2">
-                                                                            <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
-                                                                                Unflag
-                                                                            </button>
-                                                                            <button onClick={(e) => handleFreezeUser(e, report.userId?._id || report.user?._id || report.userId || report.user)} className="px-6 py-2 bg-rose-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-rose-200">
-                                                                                Freeze User
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {report.deliveryPhoto && (
-                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
-                                                                        <p className="text-[8px] font-black text-emerald-600 uppercase mb-2 flex items-center gap-1"><FaCamera size={8} /> Delivery Proof</p>
-                                                                        <img src={report.deliveryPhoto} alt="Delivery proof" className="h-40 rounded-2xl object-cover border-4 border-emerald-100 shadow-md" />
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                        {/* === WASTE / PICKUP DETAILS === */}
-                                                        {report.type === 'pickup' && (
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaMapMarkerAlt size={8} /> Address</p>
-                                                                    <p className="text-[11px] font-bold text-slate-800 leading-snug">{report.address || "—"}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaLayerGroup size={8} /> Waste Type</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.wasteType || "—"}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaCalendarAlt size={8} /> Pickup Date</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.pickupDate ? new Date(report.pickupDate).toLocaleDateString() : "—"}</p>
-                                                                    <p className="text-[9px] text-slate-500 mt-1">{report.timeSlot || ""}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaStickyNote size={8} /> Description</p>
-                                                                    <p className="text-[11px] text-slate-700">{report.description || "No description."}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaLayerGroup size={8} /> Weight Collected</p>
-                                                                    <p className="text-sm font-black text-emerald-600">{report.weight || "0"} KG</p>
-                                                                    <p className="text-[9px] text-slate-400 mt-1">Impact metric</p>
-                                                                </div>
-                                                                {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                                                        <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
-                                                                            <FaInfoCircle size={14} />
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-sky-600 uppercase mb-1 tracking-widest">Live Help Message</p>
-                                                                            <p className="text-sm font-bold text-sky-900 italic">"{report.helpMessage}"</p>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
-                                                                            <p className="text-sm font-black text-rose-700">
-                                                                                {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="flex flex-wrap items-center gap-2">
-                                                                            <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
-                                                                                Unflag
-                                                                            </button>
-                                                                            <button onClick={(e) => handleFreezeUser(e, report.userId?._id || report.user?._id || report.userId || report.user)} className="px-6 py-2 bg-rose-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-rose-200">
-                                                                                Freeze User
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {report.location && (
-                                                                    <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                        <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Coordinates</p>
-                                                                        <p className="text-[10px] font-bold text-slate-600">{report.location.lat?.toFixed(4)}, {report.location.lng?.toFixed(4)}</p>
-                                                                        <a href={`https://www.google.com/maps?q=${report.location.lat},${report.location.lng}`} target="_blank" rel="noreferrer" className="text-[9px] text-indigo-500 font-bold flex items-center gap-1 mt-1 hover:underline"><FaExternalLinkAlt size={7} /> Open Map</a>
-                                                                    </div>
-                                                                )}
-                                                                {report.isPaid && (
-                                                                    <div className="bg-emerald-50 rounded-2xl p-4 shadow-sm border border-emerald-100">
-                                                                        <p className="text-[8px] font-black text-emerald-600 uppercase mb-1">Payment</p>
-                                                                        <p className="text-sm font-black text-emerald-700">₹ Paid ✅</p>
-                                                                        <p className="text-[9px] text-slate-400 mt-1">{report.paymentId || ""}</p>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                        {/* === POLLUTION DETAILS === */}
-                                                        {report.type === 'pollution' && (
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> Type</p>
-                                                                    <p className="text-sm font-bold text-slate-800">{report.pollutionType || "—"}</p>
-                                                                </div>
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaStickyNote size={8} /> Description</p>
-                                                                    <p className="text-[11px] text-slate-700 leading-relaxed">{report.description || "No description."}</p>
-                                                                </div>
-                                                                {report.helpRequested && report.helpMessage && (
-                                                                    <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                                                        <div className="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center animate-pulse shrink-0">
-                                                                            <FaInfoCircle size={14} />
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-sky-600 uppercase mb-1 tracking-widest">Live Help Message</p>
-                                                                            <p className="text-sm font-bold text-sky-900 italic">"{report.helpMessage}"</p>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {(report.isFlagged || report.volFlaggedByCitizen) && (
-                                                                    <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 shadow-sm col-span-1 sm:col-span-2 lg:col-span-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                                                        <div>
-                                                                            <p className="text-[8px] font-black text-rose-600 uppercase mb-1 flex items-center gap-1"><FaExclamationTriangle size={8} /> INTEGRITY ALERT</p>
-                                                                            <p className="text-sm font-black text-rose-700">
-                                                                                {report.isFlagged ? `Flagged: ${report.flagReason || "Suspicious content"}` : `User Issue: ${report.volFlagReason || "Reported by citizen"}`}
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="flex flex-wrap items-center gap-2">
-                                                                            <button onClick={(e) => handleUnflag(e, report._id, report.type)} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-300 transition-all">
-                                                                                Unflag
-                                                                            </button>
-                                                                            <button onClick={(e) => handleFreezeUser(e, report.userId?._id || report.user?._id || report.userId || report.user)} className="px-6 py-2 bg-rose-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-rose-200">
-                                                                                Freeze User
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                <div className="bg-white rounded-2xl p-4 shadow-sm">
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase mb-1 flex items-center gap-1"><FaMapMarkerAlt size={8} /> Location</p>
-                                                                    {report.location ? (
-                                                                        <a href={`https://www.google.com/maps?q=${report.location.lat},${report.location.lng}`} target="_blank" rel="noreferrer" className="text-[10px] text-indigo-500 font-bold flex items-center gap-1 hover:underline"><FaExternalLinkAlt size={7} /> Open Map</a>
-                                                                    ) : <p className="text-[10px] text-slate-400">No GPS data</p>}
-                                                                </div>
-                                                                {report.photos && report.photos.length > 0 && (
-                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
-                                                                        <p className="text-[8px] font-black text-rose-500 uppercase mb-2 flex items-center gap-1"><FaCamera size={8} /> Evidence Photos</p>
-                                                                        <div className="flex gap-3 flex-wrap">
-                                                                            {report.photos.map((photo, i) => (
-                                                                                <img key={i} src={`${import.meta.env.VITE_API_URL}/uploads/${photo}`} alt={`Evidence ${i + 1}`} className="h-28 w-28 object-cover rounded-2xl border-4 border-rose-100 shadow-md cursor-pointer hover:scale-105 transition-transform" onClick={() => window.open(`${import.meta.env.VITE_API_URL}/uploads/${photo}`, '_blank')} />
-                                                                            ))}
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {report.type === 'food' && report.deliveryPhoto && (
-                                                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
-                                                                        <p className="text-[8px] font-black text-green-600 uppercase mb-2 flex items-center gap-1"><FaCheckCircle size={8} /> Delivery Proof</p>
-                                                                        <img src={`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`} alt="Delivery Proof" className="h-28 w-28 object-cover rounded-2xl border-4 border-green-100 shadow-md cursor-pointer hover:scale-105 transition-transform" onClick={() => window.open(`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`, '_blank')} />
-                                                                    </div>
-                                                                )}
-                                                                {/* Admin Status Control */}
-                                                                <div className="col-span-1 sm:col-span-2 lg:col-span-4 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
-                                                                    <p className="text-[8px] font-black text-slate-400 uppercase w-full">Update Status:</p>
-                                                                    {["Reported", "Verified", "Claimed", "Resolved"].map(s => (
-                                                                        <button key={s} onClick={(e) => updatePollutionStatus(e, report._id, s)} className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${report.status === s ? 'bg-rose-600 text-white shadow-lg' : 'bg-white border border-slate-200 text-slate-500 hover:border-rose-300 hover:text-rose-600'}`}>{s}</button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* === FEEDBACK & REVIEWS SECTION === */}
-                                                    {report.reviews && report.reviews.length > 0 && (
-                                                        <div className="mt-8 pt-8 border-t border-slate-100 space-y-6">
-                                                            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest px-1 flex items-center gap-2">
-                                                                <FaStar className="text-amber-500" /> Mission Activity Logs ({report.reviews.length})
-                                                            </h3>
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                                {report.reviews.map((rev, index) => {
-                                                                    const reporterIsVolunteer = rev.reviewerId?.role === 'volunteer';
-                                                                    const otherPartyId = reporterIsVolunteer ? reporterUserId : volunteerUserId;
-                                                                    return (
-                                                                        <div key={index} className={`p-6 rounded-[2rem] border transition-all ${rev.isReport ? 'bg-rose-50 border-rose-100 shadow-sm' : 'bg-white border-slate-100 shadow-sm hover:shadow-md'}`}>
-                                                                            <div className="flex justify-between items-start mb-4">
-                                                                                <div>
-                                                                                    <p className={`text-[8px] font-black uppercase tracking-widest mb-1 ${rev.reviewerId?.role === 'volunteer' ? 'text-indigo-500' : 'text-emerald-600'}`}>
-                                                                                        Review from {rev.reviewerId?.role === 'volunteer' ? 'Agent' : 'Citizen'} ({rev.reviewerId?.name || "Participant"})
-                                                                                    </p>
-                                                                                    <div className="flex items-center gap-1 text-amber-500">
-                                                                                        {[1, 2, 3, 4, 5].map(s => (
-                                                                                            <FaStar key={s} size={10} className={rev.rating >= s ? "fill-current" : "text-slate-200"} />
-                                                                                        ))}
-                                                                                        <span className="ml-2 text-xs font-black text-slate-700">{rev.rating}/5</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                                {rev.isReport && (
-                                                                                    <span className="bg-rose-600 text-white text-[8px] font-black px-3 py-1 rounded-full uppercase flex items-center gap-1 shadow-sm">
-                                                                                        <FaExclamationTriangle size={7} /> Misconduct Logged
-                                                                                    </span>
-                                                                                )}
-                                                                            </div>
-                                                                            <p className="text-sm font-medium text-slate-700 italic border-l-2 border-slate-100 pl-4 py-1">
-                                                                                "{rev.comment || "No written feedback."}"
-                                                                            </p>
-                                                                            {rev.isReport && (
-                                                                                <div className="mt-4 p-4 bg-white/80 rounded-xl border border-rose-200 flex flex-col gap-3">
-                                                                                    <div className="flex flex-col gap-1">
-                                                                                        <p className="text-[8px] font-black text-rose-500 uppercase mb-1 flex items-center gap-1">
-                                                                                            <FaExclamationTriangle size={7} /> Problem Description
-                                                                                        </p>
-                                                                                        <p className="text-xs font-bold text-rose-900 leading-relaxed">{rev.reportReason}</p>
-                                                                                    </div>
-                                                                                    <div className="flex flex-wrap gap-2">
-                                                                                        <button onClick={(e) => handleResolveMisconduct(e, report._id, report.type, rev._id)} className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[9px] font-black uppercase tracking-[0.18em] flex items-center gap-1 transition-all">
-                                                                                            <FaCheckDouble size={9} /> Resolve Issue
-                                                                                        </button>
-                                                                                        {otherPartyId && (
-                                                                                            <button onClick={(e) => handleFreezeUser(e, otherPartyId)} className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[8px] font-black uppercase tracking-[0.18em] flex items-center gap-1 transition-all">
-                                                                                                <FaLock size={8} /> Freeze {reporterIsVolunteer ? 'Citizen' : 'Agent'}
-                                                                                            </button>
-                                                                                        )}
-                                                                                    </div>
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    )
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </React.Fragment>
-                                );
-                            }) : <tr><td colSpan="5" className="text-center py-12"><span className="text-[9px] px-2 py-1 rounded-lg font-black uppercase bg-slate-100 text-slate-400">⏳ No Data</span></td></tr>}
-                        </tbody>
-                    </table>
-                </div>
-                {totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-8">
-                        <button 
-                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                            disabled={currentPage === 1}
-                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
-                        >
-                            &lt;
-                        </button>
-                        <span className="text-[11px] font-black uppercase text-slate-500">
-                            Page <span className="text-indigo-600">{currentPage}</span> of {totalPages}
-                        </span>
-                        <button 
-                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                            disabled={currentPage === totalPages}
-                            className="w-10 h-10 flex justify-center items-center rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 disabled:opacity-50 shadow-sm transition-all font-black text-[12px]"
-                        >
-                            &gt;
-                        </button>
-                    </div>
-                )}
-                </main>
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
+      <Nav />
+      <div className="flex pt-[68px] min-h-screen">
+        <AdminSidebar />
+        
+        <main className="flex-1 lg:ml-64 w-full p-4 sm:p-6 lg:p-8 xl:p-10 space-y-8 overflow-x-hidden">
+          
+          {/* ── TOP HEADER BAR ── */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
+                  Live Operations Console
+                </span>
+                <span className="text-slate-300">•</span>
+                <span className="text-[11px] font-bold text-slate-400">
+                  {reports.length} Total Registered Missions
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Global Operations <span className="text-emerald-600 font-bold">Feed</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">
+                Unified live intake and mission management across Waste Pickups, Pollution Reports, and Food Rescue streams.
+              </p>
             </div>
-        </div>
-    );
+
+            {/* Quick Action Hub */}
+            <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[11px]">Synced {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+              </div>
+
+              <button
+                onClick={() => fetchAdminData()}
+                className="p-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl shadow-sm hover:shadow transition-all"
+                title="Refresh Live Data"
+              >
+                <FaSyncAlt size={13} className={loading ? "animate-spin text-emerald-600" : ""} />
+              </button>
+
+              <button
+                onClick={downloadCSV}
+                className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm hover:shadow transition-all"
+              >
+                <FaDownload size={11} />
+                <span>Export CSV</span>
+              </button>
+            </div>
+          </div>
+
+          {/* ── TOP 3 ANALYTICS SUMMARY CARDS (CLICKABLE) ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer group flex flex-col justify-between"
+              onClick={() => navigate("/admin/revenue-analysis")}
+            >
+              <MonthlyRevenue reports={reports} />
+              <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-black text-indigo-600 uppercase tracking-wider">
+                <span>View Revenue Dashboard</span>
+                <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            <div
+              className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all cursor-pointer group flex flex-col justify-between"
+              onClick={() => navigate("/admin/waste-analysis")}
+            >
+              <WasteAnalysis reports={reports} />
+              <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-black text-emerald-600 uppercase tracking-wider">
+                <span>View Waste Metrics</span>
+                <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            <div
+              className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-amber-300 transition-all cursor-pointer group flex flex-col justify-between"
+              onClick={() => navigate("/admin/food-analysis")}
+            >
+              <FoodAnalysis reports={reports} />
+              <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-black text-amber-600 uppercase tracking-wider">
+                <span>View Food Rescue Analytics</span>
+                <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </div>
+
+          {/* ── FILTER & SEARCH TOOLBAR ── */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              
+              {/* Category Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl border border-slate-200/60 w-full lg:w-auto">
+                {[
+                  { id: "all", label: "All Streams" },
+                  { id: "pickup", label: "♻️ Waste Pickup" },
+                  { id: "pollution", label: "⚠️ Pollution" },
+                  { id: "food", label: "🍲 Food Rescue" }
+                ].map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setFilter(t.id)}
+                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-xs font-black transition-all ${
+                      filter === t.id
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Status Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl border border-slate-200/60 w-full lg:w-auto">
+                {[
+                  { id: "all", label: "All Status" },
+                  { id: "pending", label: "⏳ Pending" },
+                  { id: "active", label: "⚡ In Progress" },
+                  { id: "completed", label: "✓ Completed" },
+                  { id: "support", label: "🆘 SOS Alert", count: sosCount }
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setStatusFilter(s.id)}
+                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                      statusFilter === s.id
+                        ? s.id === "support"
+                          ? "bg-rose-600 text-white shadow-sm"
+                          : "bg-slate-900 text-white shadow-sm"
+                        : s.id === "support" && s.count > 0
+                          ? "text-rose-600 font-bold bg-rose-50"
+                          : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    <span>{s.label}</span>
+                    {s.count > 0 && (
+                      <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-black ${
+                        statusFilter === s.id ? "bg-white text-rose-600" : "bg-rose-500 text-white"
+                      }`}>
+                        {s.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+            </div>
+
+            {/* Sub-row: Month selector + Search input */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <span className="text-[11px] font-black uppercase text-slate-400 shrink-0">Month:</span>
+                <input
+                  type="month"
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer"
+                />
+                {dateFilter && (
+                  <button
+                    onClick={() => setDateFilter("")}
+                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all text-xs font-bold"
+                    title="Clear Date Filter"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              <div className="relative w-full sm:w-80">
+                <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={12} />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by agent, location, waste type..."
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-emerald-500 focus:bg-white transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ── MAIN DATA TABLE ── */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                  <tr className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-black uppercase tracking-wider text-slate-500">
+                    <th className="py-4 px-5">Mission Stream & Details</th>
+                    <th className="py-4 px-5">Location & Destination</th>
+                    <th className="py-4 px-5">Reporter & Assigned Agent</th>
+                    <th className="py-4 px-5 text-center">Timestamp</th>
+                    <th className="py-4 px-5 text-center">Status</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm">
+                  {currentItems.length > 0 ? (
+                    currentItems.map((report) => {
+                      const currentStatus = (report.status || "pending").toLowerCase();
+                      const isAssigned = !!(report.assignedVolunteer || report.volunteerName);
+                      const isFinished = ['completed', 'resolved', 'delivered'].includes(currentStatus);
+                      const isExpanded = expandedId === report._id;
+                      const hasMisconductReport = Array.isArray(report.reviews) && report.reviews.some(r => r.isReport);
+                      const reporterUserId = report.userId?._id || report.user?._id || report.userId || report.user;
+                      const volunteerUserId = report.assignedVolunteer?._id || report.assignedVolunteer;
+
+                      // Service configs
+                      const serviceConfig =
+                        report.type === 'food'
+                          ? { icon: <FaUtensils size={13} />, bg: 'bg-amber-100 text-amber-800 border-amber-200', label: 'Food Rescue', pill: 'bg-amber-50 text-amber-800' }
+                          : report.type === 'pollution'
+                            ? { icon: <FaExclamationTriangle size={13} />, bg: 'bg-rose-100 text-rose-800 border-rose-200', label: 'Pollution Hazard', pill: 'bg-rose-50 text-rose-800' }
+                            : { icon: <FaRecycle size={13} />, bg: 'bg-emerald-100 text-emerald-800 border-emerald-200', label: 'Waste Pickup', pill: 'bg-emerald-50 text-emerald-800' };
+
+                      return (
+                        <React.Fragment key={report._id}>
+                          {/* Main Row */}
+                          <tr
+                            onClick={() => setExpandedId(isExpanded ? null : report._id)}
+                            className={`cursor-pointer transition-colors ${
+                              report.isFlagged || report.volFlaggedByCitizen
+                                ? "bg-rose-50/50 hover:bg-rose-50 border-l-4 border-rose-500"
+                                : report.helpRequested
+                                  ? "bg-sky-50/50 hover:bg-sky-50 border-l-4 border-sky-500"
+                                  : isExpanded
+                                    ? "bg-slate-50 border-l-4 border-emerald-500"
+                                    : "hover:bg-slate-50/80"
+                            }`}
+                          >
+                            {/* Column 1: Stream & Title */}
+                            <td className="py-4 px-5">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${serviceConfig.bg}`}>
+                                  {serviceConfig.icon}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="flex items-center gap-1.5 mb-0.5">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                                      {serviceConfig.label}
+                                    </span>
+                                    {report.isFlagged && (
+                                      <span className="text-[9px] font-black bg-rose-600 text-white px-1.5 py-0.2 rounded uppercase animate-pulse">
+                                        Flagged
+                                      </span>
+                                    )}
+                                    {report.helpRequested && (
+                                      <span className="text-[9px] font-black bg-sky-600 text-white px-1.5 py-0.2 rounded uppercase">
+                                        SOS
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs font-bold text-slate-900 truncate max-w-[220px]">
+                                    {report.type === 'food'
+                                      ? report.placeName
+                                      : report.type === 'pollution'
+                                        ? report.pollutionType
+                                        : report.wasteType || "General Recyclables"}
+                                  </p>
+                                  {report.type === 'food' && (
+                                    <div className="flex items-center gap-1.5 mt-1 text-[10px]">
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 font-bold border border-amber-200">
+                                        {report.quantity} Servings
+                                      </span>
+                                      <span className={`px-1.5 py-0.2 rounded ${getExpiryStatus(report.expiryTime).color}`}>
+                                        ⏳ {getExpiryStatus(report.expiryTime).text}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {report.type === 'pickup' && report.weight > 0 && (
+                                    <span className="inline-block mt-1 text-[10px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                                      ⚖️ {report.weight} KG Collected
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Column 2: Location */}
+                            <td className="py-4 px-5">
+                              <div className="max-w-[200px]">
+                                <p className="text-xs font-medium text-slate-700 truncate flex items-center gap-1.5">
+                                  <FaMapMarkerAlt className="text-slate-400 shrink-0" size={10} />
+                                  <span>{report.address || report.placeName || (report.lat ? `${report.lat?.toFixed(3)}, ${report.lng?.toFixed(3)}` : "Location pinned")}</span>
+                                </p>
+                                {(report.lat || report.latitude) && (
+                                  <a
+                                    href={`https://www.google.com/maps?q=${report.lat || report.latitude},${report.lng || report.longitude}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-[10px] text-emerald-600 font-bold hover:underline flex items-center gap-1 mt-0.5"
+                                  >
+                                    <FaExternalLinkAlt size={8} /> View Google Maps
+                                  </a>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Column 3: Reporter & Volunteer */}
+                            <td className="py-4 px-5">
+                              <div className="space-y-1 text-xs">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] font-bold text-slate-400 uppercase w-12">User:</span>
+                                  <span className="font-bold text-slate-800 truncate max-w-[130px]">
+                                    {report.displayName || report.userName || "Citizen"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] font-bold text-indigo-500 uppercase w-12">Agent:</span>
+                                  <span className={`font-bold truncate max-w-[130px] ${isAssigned ? "text-indigo-700" : "text-slate-400 italic"}`}>
+                                    {report.volunteerName || "Unassigned"}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Column 4: Timestamp */}
+                            <td className="py-4 px-5 text-center">
+                              <p className="text-xs font-bold text-slate-700">
+                                {new Date(report.createdAt).toLocaleDateString()}
+                              </p>
+                              <p className="text-[10px] text-slate-400 font-medium">
+                                {new Date(report.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </td>
+
+                            {/* Column 5: Status */}
+                            <td className="py-4 px-5 text-center" onClick={(e) => e.stopPropagation()}>
+                              {report.type === "pollution" && report.status === "Reported" ? (
+                                <button
+                                  onClick={(e) => updatePollutionStatus(e, report._id, "Verified")}
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-black text-[10px] uppercase tracking-wider shadow-sm transition-all"
+                                >
+                                  Verify Hazard
+                                </button>
+                              ) : (
+                                <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                                  isFinished
+                                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                    : currentStatus === "claimed" || currentStatus === "arrived" || currentStatus === "collected"
+                                      ? "bg-amber-50 text-amber-800 border-amber-200 animate-pulse"
+                                      : "bg-slate-100 text-slate-700 border-slate-200"
+                                }`}>
+                                  {currentStatus}
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Column 6: Actions */}
+                            <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => setExpandedId(isExpanded ? null : report._id)}
+                                  className={`p-2 rounded-lg transition-all ${
+                                    isExpanded ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                  }`}
+                                  title="Expand Dossier"
+                                >
+                                  {isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
+                                </button>
+
+                                {isAssigned && !isFinished && (
+                                  <button
+                                    onClick={(e) => handleAdminReset(e, report._id, report.type)}
+                                    className="p-2 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white rounded-lg border border-amber-200 transition-all"
+                                    title="Force Unassign Volunteer"
+                                  >
+                                    <FaUnlock size={10} />
+                                  </button>
+                                )}
+
+                                {report.helpRequested && (
+                                  <button
+                                    onClick={(e) => handleDismissHelp(e, report._id, report.type)}
+                                    className="p-2 bg-sky-50 text-sky-600 hover:bg-sky-600 hover:text-white rounded-lg border border-sky-200 transition-all"
+                                    title="Resolve SOS Help Signal"
+                                  >
+                                    <FaCheckDouble size={10} />
+                                  </button>
+                                )}
+
+                                {(report.isFlagged || report.volFlaggedByCitizen) && (
+                                  <button
+                                    onClick={(e) => handleUnflag(e, report._id, report.type)}
+                                    className="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-lg border border-rose-200 transition-all"
+                                    title="Clear Flag"
+                                  >
+                                    <FaFlag size={10} />
+                                  </button>
+                                )}
+
+                                <button
+                                  onClick={(e) => deleteReport(e, report._id, report.type)}
+                                  className="p-2 bg-slate-100 text-slate-400 hover:bg-rose-600 hover:text-white rounded-lg transition-all"
+                                  title="Delete Record"
+                                >
+                                  <FaTrash size={10} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+
+                          {/* ── EXPANDED DETAILS DRAWER ── */}
+                          {isExpanded && (
+                            <tr className="bg-slate-50/90">
+                              <td colSpan="6" className="p-5 sm:p-6 border-t border-b border-slate-200/80">
+                                <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-6">
+                                  
+                                  {/* Drawer Header */}
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs font-black uppercase tracking-wider text-slate-500">
+                                        Mission Dossier • ID:
+                                      </span>
+                                      <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
+                                        {report._id}
+                                      </span>
+                                    </div>
+
+                                    {/* Action Buttons inside Drawer */}
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      {report.userId && (
+                                        <button
+                                          onClick={(e) => handleFreezeUser(e, reporterUserId)}
+                                          className="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white rounded-lg text-xs font-bold border border-rose-200 transition-all flex items-center gap-1.5"
+                                        >
+                                          <FaLock size={9} /> Freeze User
+                                        </button>
+                                      )}
+                                      {(report.isFlagged || report.volFlaggedByCitizen) && (
+                                        <button
+                                          onClick={(e) => handleUnflag(e, report._id, report.type)}
+                                          className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all"
+                                        >
+                                          Dismiss Flag
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* Drawer Content Grid */}
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    
+                                    {/* Card 1: Logistics & Coordinates */}
+                                    <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/70 space-y-2">
+                                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                        <FaMapMarkerAlt className="text-emerald-600" /> Location Details
+                                      </p>
+                                      <p className="text-xs font-bold text-slate-800">
+                                        {report.address || report.placeName || "No street address specified"}
+                                      </p>
+                                      {(report.lat || report.latitude) && (
+                                        <p className="text-[11px] font-medium text-slate-500 font-mono">
+                                          GPS: {(report.lat || report.latitude)?.toFixed(5)}, {(report.lng || report.longitude)?.toFixed(5)}
+                                        </p>
+                                      )}
+                                      {report.timeSlot && (
+                                        <p className="text-[11px] font-medium text-slate-600">
+                                          Window: <span className="font-bold">{report.timeSlot}</span>
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    {/* Card 2: Contact Info */}
+                                    <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/70 space-y-2">
+                                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                        <FaUser className="text-indigo-600" /> Stakeholder Directory
+                                      </p>
+                                      <div className="text-xs space-y-1">
+                                        <p className="font-medium text-slate-700">
+                                          <span className="font-bold text-slate-900">Reporter:</span> {report.displayName || report.userName || "Citizen"}
+                                        </p>
+                                        {(report.userPhone || report.userId?.phone) && (
+                                          <p className="text-slate-500 flex items-center gap-1">
+                                            <FaPhoneAlt size={9} /> {report.userPhone || report.userId?.phone}
+                                          </p>
+                                        )}
+                                        <div className="pt-1 border-t border-slate-200/60">
+                                          <p className="font-medium text-slate-700">
+                                            <span className="font-bold text-indigo-900">Volunteer:</span> {report.volunteerName || "Unassigned"}
+                                          </p>
+                                          {report.volunteerPhone && (
+                                            <p className="text-slate-500 flex items-center gap-1">
+                                              <FaPhoneAlt size={9} /> {report.volunteerPhone}
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Card 3: Notes & Instructions */}
+                                    <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/70 space-y-2">
+                                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                        <FaStickyNote className="text-amber-600" /> Operational Notes
+                                      </p>
+                                      <p className="text-xs font-medium text-slate-700 italic">
+                                        "{report.description || report.notes || "No special instructions provided."}"
+                                      </p>
+                                      {report.isPaid && (
+                                        <div className="pt-1">
+                                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 border border-emerald-300 px-2 py-0.5 rounded">
+                                            Payment Verified: ₹{report.paidAmount || report.amount || 0}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+
+                                  </div>
+
+                                  {/* Evidence Photos (if any) */}
+                                  {report.photos && report.photos.length > 0 && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                                        <FaCamera className="text-rose-500" /> Geotagged Evidence Photos ({report.photos.length})
+                                      </p>
+                                      <div className="flex gap-3 flex-wrap">
+                                        {report.photos.map((photo, i) => (
+                                          <img
+                                            key={i}
+                                            src={`${import.meta.env.VITE_API_URL}/uploads/${photo}`}
+                                            alt={`Evidence ${i + 1}`}
+                                            className="h-24 w-24 object-cover rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:opacity-90 hover:scale-105 transition-all"
+                                            onClick={() => window.open(`${import.meta.env.VITE_API_URL}/uploads/${photo}`, '_blank')}
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Delivery Proof */}
+                                  {report.deliveryPhoto && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                                      <p className="text-[10px] font-black uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
+                                        <FaCheckCircle /> Volunteer Delivery Proof
+                                      </p>
+                                      <img
+                                        src={`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`}
+                                        alt="Delivery Proof"
+                                        className="h-28 w-28 object-cover rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:scale-105 transition-all"
+                                        onClick={() => window.open(`${import.meta.env.VITE_API_URL}/uploads/${report.deliveryPhoto}`, '_blank')}
+                                      />
+                                    </div>
+                                  )}
+
+                                  {/* Feedback & Activity Logs */}
+                                  {report.reviews && report.reviews.length > 0 && (
+                                    <div className="space-y-3 pt-3 border-t border-slate-100">
+                                      <p className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                                        <FaStar className="text-amber-500" /> Mission Feedback & Audit Logs ({report.reviews.length})
+                                      </p>
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {report.reviews.map((rev, index) => {
+                                          const reporterIsVolunteer = rev.reviewerId?.role === 'volunteer';
+                                          const otherPartyId = reporterIsVolunteer ? reporterUserId : volunteerUserId;
+                                          return (
+                                            <div
+                                              key={index}
+                                              className={`p-4 rounded-xl border ${
+                                                rev.isReport ? "bg-rose-50 border-rose-200" : "bg-slate-50 border-slate-200"
+                                              }`}
+                                            >
+                                              <div className="flex items-center justify-between mb-2">
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase">
+                                                  Review from {rev.reviewerId?.role === 'volunteer' ? 'Agent' : 'Citizen'} ({rev.reviewerId?.name || "Participant"})
+                                                </span>
+                                                <div className="flex items-center gap-1 text-amber-500">
+                                                  {[1, 2, 3, 4, 5].map((s) => (
+                                                    <FaStar key={s} size={9} className={rev.rating >= s ? "fill-current" : "text-slate-300"} />
+                                                  ))}
+                                                </div>
+                                              </div>
+                                              <p className="text-xs text-slate-700 italic">
+                                                "{rev.comment || "No comment provided."}"
+                                              </p>
+
+                                              {rev.isReport && (
+                                                <div className="mt-3 pt-3 border-t border-rose-200 space-y-2">
+                                                  <p className="text-xs font-bold text-rose-900">
+                                                    Issue Reported: {rev.reportReason}
+                                                  </p>
+                                                  <button
+                                                    onClick={(e) => handleResolveMisconduct(e, report._id, report.type, rev._id)}
+                                                    className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-black uppercase tracking-wider"
+                                                  >
+                                                    Resolve Misconduct
+                                                  </button>
+                                                </div>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center py-16 text-slate-400">
+                        <FaLayerGroup size={24} className="mx-auto mb-2 text-slate-300" />
+                        <p className="text-xs font-bold uppercase tracking-wider">No matching records found</p>
+                        <p className="text-[11px] text-slate-400 mt-1">Try resetting filters or adjusting search keywords.</p>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50/80 border-t border-slate-200/80">
+                <p className="text-xs font-medium text-slate-500">
+                  Showing <span className="font-bold text-slate-800">{indexOfFirstItem + 1}</span> to{" "}
+                  <span className="font-bold text-slate-800">{Math.min(indexOfLastItem, processedReports.length)}</span> of{" "}
+                  <span className="font-bold text-slate-800">{processedReports.length}</span> missions
+                </p>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+                  >
+                    ← Previous
+                  </button>
+                  <span className="text-xs font-black text-slate-600 px-2">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </main>
+      </div>
+    </div>
+  );
 };
 
 export default AdminDashboard;
