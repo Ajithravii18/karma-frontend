@@ -509,7 +509,7 @@ const VolunteerPortal = () => {
         </aside>
 
         {/* ── MAIN CONTENT AREA ── */}
-        <main className="flex-1 lg:ml-64 w-full p-4 sm:p-6 lg:p-8 min-w-0 pb-24 lg:pb-8">
+        <main className="flex-1 lg:ml-64 w-full p-4 sm:p-6 lg:p-8 min-w-0 pb-36 sm:pb-32 lg:pb-12">
 
           {/* ===== CAMERA / GALLERY PICKER MODAL ===== */}
           {photoModal.open && (
@@ -602,7 +602,7 @@ const VolunteerPortal = () => {
 
           {activeTab === 'profile' ? (
             /* ── PROFILE & SECURITY TAB ── */
-            <div className="space-y-6 animate-in fade-in duration-200 max-w-4xl">
+            <div className="space-y-6 animate-in fade-in duration-200 max-w-3xl mb-12">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Volunteer <span className="text-emerald-600">Profile</span></h1>
                 <p className="text-xs font-semibold text-slate-500 mt-1">Manage your registered phone number, verified metrics, and credentials.</p>
@@ -628,10 +628,11 @@ const VolunteerPortal = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
+                  type="button"
                   onClick={() => setPhoneState({ ...phoneState, show: !phoneState.show, step: 1 })}
-                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${phoneState.show ? 'bg-indigo-50/70 border-indigo-300' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${phoneState.show ? 'bg-emerald-50/80 border-emerald-300 ring-2 ring-emerald-500/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
                 >
-                  <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-base"><FaSync /></div>
+                  <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-base"><FaSync /></div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900">Update Contact Number</h4>
                     <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP</p>
@@ -639,8 +640,9 @@ const VolunteerPortal = () => {
                 </button>
                 
                 <button
+                  type="button"
                   onClick={() => setDeleteState({ ...deleteState, show: !deleteState.show })}
-                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${deleteState.show ? 'bg-rose-50/70 border-rose-300' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                  className={`border p-5 rounded-2xl shadow-xs flex flex-col items-start gap-2.5 transition-all text-left ${deleteState.show ? 'bg-rose-50/80 border-rose-300 ring-2 ring-rose-500/20' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
                 >
                   <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-base"><FaTrashAlt /></div>
                   <div>
@@ -652,27 +654,27 @@ const VolunteerPortal = () => {
 
               {/* Contact Number Modal / Step */}
               {phoneState.show && (
-                <div className="p-6 bg-white border border-indigo-200 rounded-2xl shadow-sm space-y-4">
-                  <h4 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <FaSync className={`text-indigo-600 ${phoneState.loading ? 'animate-spin' : ''}`} /> Update Registered Phone
+                <div className="p-5 sm:p-6 bg-white border border-emerald-200 rounded-2xl shadow-sm space-y-4 animate-in fade-in duration-200">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                    <FaSync className={`text-emerald-600 ${phoneState.loading ? 'animate-spin' : ''}`} /> Update Registered Phone
                   </h4>
                   {phoneState.step === 1 ? (
                     <div className="flex flex-col sm:flex-row gap-3">
                       <input
                         type="tel" placeholder="+91..."
                         value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 outline-none focus:border-indigo-500 transition-all"
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400"
                       />
                       <button
                         onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                        className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-indigo-700 transition-all shadow-sm disabled:opacity-50"
+                        className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-700 transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
                       >
                         {phoneState.loading ? "Sending..." : "Send OTP"}
                       </button>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <p className="text-xs text-slate-500 font-medium">Enter the 6-digit code sent to {phoneState.newPhone}:</p>
+                      <p className="text-xs text-slate-500 font-medium">Enter the 6-digit verification code sent to {phoneState.newPhone}:</p>
                       <div className="flex gap-2">
                         {[0, 1, 2, 3, 4, 5].map((i) => (
                           <input
@@ -687,13 +689,13 @@ const VolunteerPortal = () => {
                               setPhoneState({ ...phoneState, otp: newOtp.join("") });
                               if (val && e.target.nextSibling) e.target.nextSibling.focus();
                             }}
-                            className="w-10 h-10 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 text-center outline-none focus:border-indigo-500 transition-all text-sm"
+                            className="w-10 h-10 sm:w-11 sm:h-11 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 text-center outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
                           />
                         ))}
                       </div>
                       <button
                         onClick={handleVerifyPhone} disabled={phoneState.loading}
-                        className="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-sm disabled:opacity-50"
+                        className="bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-sm disabled:opacity-50"
                       >
                         {phoneState.loading ? "Verifying..." : "Verify & Save"}
                       </button>
@@ -704,8 +706,8 @@ const VolunteerPortal = () => {
 
               {/* Deletion confirmation step */}
               {deleteState.show && (
-                <div className="p-6 bg-rose-50/60 border border-rose-200 rounded-2xl shadow-sm space-y-3">
-                  <h4 className="text-base font-bold text-rose-900">Account Deletion Protocol</h4>
+                <div className="p-5 sm:p-6 bg-rose-50/60 border border-rose-200 rounded-2xl shadow-sm space-y-3 animate-in fade-in duration-200">
+                  <h4 className="text-sm sm:text-base font-bold text-rose-900">Account Deletion Protocol</h4>
                   <p className="text-xs text-rose-600 font-medium">Mission data will be archived, identity will be permanently purged.</p>
 
                   {deleteState.step !== 2 ? (
@@ -717,7 +719,7 @@ const VolunteerPortal = () => {
                       />
                       <button
                         onClick={handleDeleteRequest} disabled={deleteState.loading}
-                        className="bg-rose-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-700 transition-all shadow-sm disabled:opacity-50"
+                        className="bg-rose-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-700 transition-all shadow-sm disabled:opacity-50"
                       >
                         {deleteState.loading ? "Requesting OTP..." : "Request Deletion OTP"}
                       </button>
@@ -738,13 +740,13 @@ const VolunteerPortal = () => {
                               setDeleteState({ ...deleteState, otp: newOtp.join("") });
                               if (val && e.target.nextSibling) e.target.nextSibling.focus();
                             }}
-                            className="w-10 h-10 bg-white border border-rose-300 rounded-xl font-bold text-rose-900 text-center outline-none focus:border-rose-500 text-sm"
+                            className="w-10 h-10 sm:w-11 sm:h-11 bg-white border border-rose-300 rounded-xl font-bold text-rose-900 text-center outline-none focus:border-rose-500 text-sm"
                           />
                         ))}
                       </div>
                       <button
                         onClick={handleFinalDelete} disabled={deleteState.loading}
-                        className="bg-rose-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-800 transition-all shadow-sm disabled:opacity-50"
+                        className="bg-rose-700 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-800 transition-all shadow-sm disabled:opacity-50"
                       >
                         {deleteState.loading ? "Purging..." : "Confirm Permanent Deletion"}
                       </button>
