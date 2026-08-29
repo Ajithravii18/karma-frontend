@@ -399,14 +399,14 @@ const Dashboard = () => {
       onClick={() => setActiveTab(id)}
       className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
         activeTab === id
-          ? "bg-green-500 text-white shadow-lg shadow-green-500/20"
-          : "text-slate-500 hover:bg-slate-50 hover:text-green-600 border border-transparent"
+          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs"
+          : "text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
       }`}
     >
-      <div className={`p-2 rounded-lg transition-colors duration-200 ${
+      <div className={`p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 ${
         activeTab === id 
-          ? "bg-white/20 text-white" 
-          : "bg-slate-100 text-slate-400 group-hover:bg-green-100/50 group-hover:text-green-500"
+          ? "bg-emerald-500/20 text-emerald-400" 
+          : "bg-slate-800/80 text-slate-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-400"
       }`}>
         <Icon size={14} />
       </div>
@@ -630,27 +630,28 @@ const Dashboard = () => {
       <Nav />
       <div className="flex pt-[68px] min-h-screen">
 
-        {/* ── LIGHT SIDEBAR ── */}
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-200">
+        {/* ── ELEGANT OBSIDIAN SIDEBAR ── */}
+        <aside className="hidden lg:flex w-64 bg-slate-900 flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-800">
           {/* Logo Section */}
-          <div className="h-[68px] flex items-center gap-2 px-6 border-b border-slate-200 cursor-pointer shrink-0" onClick={() => navigate("/")}>
+          <div className="h-[68px] flex items-center gap-2.5 px-6 border-b border-slate-800/80 bg-slate-950/40 cursor-pointer shrink-0" onClick={() => navigate("/")}>
             <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+            <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+            <span className="ml-auto text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Citizen</span>
           </div>
 
-          <div className="p-6 border-b border-slate-100">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-green-500/30">
+          <div className="p-5 border-b border-slate-800/80">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-base shadow-md shadow-green-500/20">
                 {currentName.charAt(0).toUpperCase()}
               </div>
               <div className="overflow-hidden">
-                <p className="text-slate-800 font-bold text-sm truncate">{currentName}</p>
-                <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest">Eco Citizen</p>
+                <p className="text-white font-bold text-sm truncate">{currentName}</p>
+                <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest">Eco Citizen</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
+            <div className="flex items-center gap-2 bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-1.5">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ID #{(user._id || user.id || 'XXXXXX').toString().slice(-6)}</span>
             </div>
           </div>
           <nav className="flex flex-col gap-1 p-4 flex-1">
@@ -660,13 +661,13 @@ const Dashboard = () => {
             <TabButton id="pollution" icon={FaExclamationTriangle} label="Pollution Reports" />
             <TabButton id="food" icon={FaUtensils} label="Food Sharing" />
           </nav>
-          <div className="p-4 border-t border-slate-100">
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3">Impact Score</p>
-              <p className="text-3xl font-black text-slate-800"><Counter end={stats.totalImpact} /></p>
-              <p className="text-[10px] text-green-600 font-bold mt-1">Credits Earned</p>
-              <div className="w-full h-1.5 bg-slate-200 rounded-full mt-3 overflow-hidden">
-                <div className="h-full bg-green-500 w-3/4 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+          <div className="p-4 border-t border-slate-800/80">
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">Impact Score</p>
+              <p className="text-2xl font-black text-white"><Counter end={stats.totalImpact} /></p>
+              <p className="text-[10px] text-emerald-400 font-bold mt-0.5">Credits Earned</p>
+              <div className="w-full h-1.5 bg-slate-700 rounded-full mt-3 overflow-hidden">
+                <div className="h-full bg-emerald-500 w-3/4 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.4)]"></div>
               </div>
             </div>
           </div>

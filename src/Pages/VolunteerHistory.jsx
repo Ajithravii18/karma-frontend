@@ -142,20 +142,21 @@ const VolunteerHistory = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-200">
+        <aside className="hidden lg:flex w-64 bg-slate-900 flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-800">
           {/* Logo Section */}
-          <div className="h-[68px] flex items-center gap-2 px-6 border-b border-slate-200 cursor-pointer shrink-0" onClick={() => navigate("/")}>
+          <div className="h-[68px] flex items-center gap-2.5 px-6 border-b border-slate-800/80 bg-slate-950/40 cursor-pointer shrink-0" onClick={() => navigate("/")}>
             <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+            <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+            <span className="ml-auto text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Volunteer</span>
           </div>
 
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             <button
               onClick={() => navigate("/volunteer-portal")}
-              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
             >
-              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-400 group-hover:bg-emerald-100/50 group-hover:text-emerald-600">
+              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-800/80 text-slate-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-400">
                 <FaColumns size={14} />
               </div>
               All Missions
@@ -163,9 +164,9 @@ const VolunteerHistory = () => {
             
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-6">History</p>
             <button
-              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm bg-slate-900 text-white shadow-sm"
+              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs"
             >
-              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-white/20 text-white">
+              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-emerald-500/20 text-emerald-400">
                 <FaCheckCircle size={14} />
               </div>
               Completed Log
@@ -174,19 +175,19 @@ const VolunteerHistory = () => {
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-6">Account</p>
             <button
               onClick={() => navigate("/volunteer-portal")}
-              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
             >
-              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600">
+              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-800/80 text-slate-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400">
                 <FaUserShield size={14} />
               </div>
               Profile & Security
             </button>
           </nav>
 
-          <div className="p-4 border-t border-slate-100">
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+          <div className="p-4 border-t border-slate-800/80">
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Lifetime Impact</p>
-              <p className="text-xl font-black text-slate-800">{history.length} <span className="text-xs font-semibold text-slate-500">Missions</span></p>
+              <p className="text-xl font-black text-white">{history.length} <span className="text-xs font-semibold text-slate-400">Missions</span></p>
             </div>
           </div>
         </aside>

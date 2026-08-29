@@ -427,20 +427,21 @@ const VolunteerPortal = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-200">
+        <aside className="hidden lg:flex w-64 bg-slate-900 flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-800">
           {/* Logo Section */}
-          <div className="h-[68px] flex items-center gap-2 px-6 border-b border-slate-200 cursor-pointer shrink-0" onClick={() => navigate("/")}>
+          <div className="h-[68px] flex items-center gap-2.5 px-6 border-b border-slate-800/80 bg-slate-950/40 cursor-pointer shrink-0" onClick={() => navigate("/")}>
             <img src={logo} className="w-8" alt="E-Karma Logo" />
-            <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+            <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+            <span className="ml-auto text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Volunteer</span>
           </div>
 
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             {[
-              { id: "All Sectors", icon: FaColumns, label: "All Missions", color: "text-emerald-500", bg: "bg-emerald-100/50" },
-              { id: "Waste Only", icon: FaTrashAlt, label: "Waste Control", color: "text-emerald-600", bg: "bg-emerald-100/50" },
-              { id: "Pollution Only", icon: FaExclamationTriangle, label: "Pollution Cases", color: "text-rose-500", bg: "bg-rose-100/50" },
-              { id: "Food Only", icon: FaUtensils, label: "Food Rescues", color: "text-amber-500", bg: "bg-amber-100/50" }
+              { id: "All Sectors", icon: FaColumns, label: "All Missions", color: "text-emerald-400", bg: "bg-emerald-500/20" },
+              { id: "Waste Only", icon: FaTrashAlt, label: "Waste Control", color: "text-emerald-400", bg: "bg-emerald-500/20" },
+              { id: "Pollution Only", icon: FaExclamationTriangle, label: "Pollution Cases", color: "text-rose-400", bg: "bg-rose-500/20" },
+              { id: "Food Only", icon: FaUtensils, label: "Food Rescues", color: "text-amber-400", bg: "bg-amber-500/20" }
             ].map(tab => {
               const isActive = sectorFilter === tab.id && activeTab === "missions";
               return (
@@ -449,14 +450,14 @@ const VolunteerPortal = () => {
                   onClick={() => { setSectorFilter(tab.id); setActiveTab("missions"); }}
                   className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
                     isActive
-                      ? "bg-slate-900 text-white shadow-sm"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs"
+                      : "text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
                   }`}
                 >
                   <div className={`p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 ${
                     isActive
-                      ? "bg-white/20 text-white" 
-                      : `bg-slate-100 text-slate-400 group-hover:${tab.bg} group-hover:${tab.color}`
+                      ? "bg-emerald-500/20 text-emerald-400" 
+                      : `bg-slate-800/80 text-slate-400 group-hover:${tab.bg} group-hover:${tab.color}`
                   }`}>
                     <tab.icon size={14} />
                   </div>
@@ -468,9 +469,9 @@ const VolunteerPortal = () => {
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2 mt-6">History</p>
             <button
               onClick={() => navigate("/volunteer-history")}
-              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+              className="group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
             >
-              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-400 group-hover:bg-emerald-100/50 group-hover:text-emerald-600">
+              <div className="p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 bg-slate-800/80 text-slate-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-400">
                 <FaCheckCircle size={14} />
               </div>
               Completed Log
@@ -481,14 +482,14 @@ const VolunteerPortal = () => {
               onClick={() => setActiveTab('profile')}
               className={`group flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm ${
                 activeTab === 'profile'
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+                  ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs"
+                  : "text-slate-400 hover:bg-slate-800/70 hover:text-white border border-transparent"
               }`}
             >
               <div className={`p-2 rounded-lg transition-colors duration-200 flex items-center justify-center w-8 h-8 ${
                 activeTab === 'profile'
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-100 text-slate-400 group-hover:bg-indigo-100/50 group-hover:text-indigo-600"
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-slate-800/80 text-slate-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"
               }`}>
                 <FaUserShield size={14} />
               </div>
@@ -496,14 +497,14 @@ const VolunteerPortal = () => {
             </button>
           </nav>
           
-          <div className="p-4 border-t border-slate-100">
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+          <div className="p-4 border-t border-slate-800/80">
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">Performance Score</p>
               <div className="flex items-center gap-2 mb-1">
-                <FaStar className="text-amber-500 text-base" />
-                <span className="text-lg font-black text-slate-800">{volunteerInfo.averageRating || "0.0"}</span>
+                <FaStar className="text-amber-400 text-base" />
+                <span className="text-lg font-black text-white">{volunteerInfo.averageRating || "0.0"}</span>
               </div>
-              <p className="text-[10px] text-slate-500 font-medium">From {volunteerInfo.reviewCount || 0} citizen reviews</p>
+              <p className="text-[10px] text-slate-400 font-medium">From {volunteerInfo.reviewCount || 0} citizen reviews</p>
             </div>
           </div>
         </aside>
@@ -601,231 +602,358 @@ const VolunteerPortal = () => {
           )}
 
           {activeTab === 'profile' ? (
-            /* ── PROFILE & SECURITY TAB ── */
-            <div className="space-y-6 animate-in fade-in duration-200 max-w-3xl mb-12">
+            /* ── RICH FULL-WIDTH 2-COLUMN PROFILE TAB ── */
+            <div className="space-y-6 animate-in fade-in duration-200 w-full mb-12">
               {/* Header */}
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Volunteer <span className="text-emerald-600">Profile</span></h1>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Manage your identity, registered contact number, and operational credentials.</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold mb-1.5">
+                    <FaCircle size={6} className="text-emerald-500 animate-pulse" /> Verified Field Credentials
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Volunteer <span className="text-emerald-600">Profile & Impact</span></h1>
+                  <p className="text-xs font-semibold text-slate-500 mt-0.5">Comprehensive identity overview, trust metrics, impact analytics, and account security.</p>
+                </div>
+
+                <button
+                  onClick={() => navigate("/volunteer-history")}
+                  className="bg-slate-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all w-fit"
+                >
+                  <FaHistory size={12} />
+                  <span>View Full History Log</span>
+                </button>
               </div>
               
-              {/* Profile Hero Card */}
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-7 shadow-xs relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600"></div>
+              {/* 2-Column Responsive Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-                  <div className="relative">
-                    <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center text-3xl font-black shrink-0 shadow-md shadow-emerald-500/20 border-2 border-white">
-                      {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
+                {/* ── LEFT COLUMN (lg:col-span-5 space-y-6) ── */}
+                <div className="lg:col-span-5 space-y-6">
+                  
+                  {/* Profile Identity Card */}
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600"></div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center text-3xl font-black shrink-0 shadow-md shadow-emerald-500/20 border-2 border-white">
+                          {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs" title="Field Ready">
+                          <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                        </div>
+                      </div>
+
+                      <div className="overflow-hidden">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mb-1">
+                          <FaUserShield size={10} /> Verified Responder
+                        </span>
+                        <h3 className="text-lg sm:text-xl font-black text-slate-900 truncate leading-tight">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                        <p className="text-[11px] font-mono text-slate-400 mt-0.5">ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
+                      </div>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs" title="Active on Duty">
-                      <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+
+                    <div className="mt-5 pt-4 border-t border-slate-100 space-y-2.5 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-bold uppercase text-[10px]">Registered Phone</span>
+                        <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                          <FaPhoneAlt size={10} className="text-slate-400" />
+                          {volunteerInfo.phone || "No Phone Set"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-bold uppercase text-[10px]">Field Readiness</span>
+                        <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px] uppercase border border-emerald-200 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Active Dispatch
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-bold uppercase text-[10px]">Volunteer Rank</span>
+                        <span className="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-[10px] uppercase border border-indigo-200">
+                          Level 3 Eco-Hero
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="text-center sm:text-left flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  {/* Citizen Trust & Performance Card */}
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-1">
-                          <FaUserShield size={11} /> Verified Eco-Volunteer
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Citizen Trust Score</p>
+                        <h4 className="text-base font-black text-slate-900 mt-0.5">Performance Rating</h4>
                       </div>
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 w-fit mx-auto sm:mx-0">
-                        ID: #{currentVolunteerId?.slice(-6) || "000000"}
-                      </span>
+                      <div className="flex items-center gap-1 px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl font-black text-sm">
+                        <FaStar className="text-amber-500" /> {volunteerInfo.averageRating || "0.0"}
+                      </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3">
-                      <span className="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-amber-200 shadow-xs">
-                        <FaStar className="text-amber-500" /> {volunteerInfo.averageRating || "0.0"} Score ({volunteerInfo.reviewCount || 0} reviews)
+                    <div className="space-y-2 pt-1">
+                      <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+                        <span>5 Star Ratings</span>
+                        <span className="font-bold text-slate-800">92%</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="bg-amber-400 h-full rounded-full w-[92%]"></div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
+                      <span className="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-lg text-[10px] font-bold border border-slate-200">
+                        ⚡ Quick Arrival
                       </span>
-                      <span className="bg-slate-50 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-200 shadow-xs">
-                        <FaPhoneAlt size={10} className="text-slate-400" /> {volunteerInfo.phone || "No Phone"}
+                      <span className="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-lg text-[10px] font-bold border border-slate-200">
+                        🤝 Verified Professional
+                      </span>
+                      <span className="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-lg text-[10px] font-bold border border-slate-200">
+                        ✅ 100% Delivery Integrity
                       </span>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Quick Metrics Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Completed</p>
-                  <p className="text-xl font-black text-slate-900 mt-0.5">{myCompletedCount} <span className="text-xs font-semibold text-slate-500">Missions</span></p>
-                </div>
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
-                  <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Duty Status</p>
-                  <p className="text-sm font-black text-emerald-700 mt-1 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active & Ready
-                  </p>
-                </div>
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col justify-between">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Service History</p>
-                  <button
-                    onClick={() => navigate("/volunteer-history")}
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 mt-1 text-left"
-                  >
-                    View All Logs →
-                  </button>
-                </div>
-              </div>
-
-              {/* Security & Settings Section */}
-              <div className="space-y-3.5 pt-2">
-                <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">Security & Account Protocols</h3>
-
-                {/* ── CARD 1: UPDATE CONTACT NUMBER ACCORDION ── */}
-                <div className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${phoneState.show ? 'border-emerald-300 ring-2 ring-emerald-500/20' : 'border-slate-200'}`}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPhoneState(prev => ({ ...prev, show: !prev.show, step: 1 }));
-                      if (deleteState.show) setDeleteState(prev => ({ ...prev, show: false }));
-                    }}
-                    className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-slate-50/60 transition-colors"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-base shrink-0">
-                        <FaSync className={phoneState.loading ? 'animate-spin' : ''} />
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-slate-900">Update Contact Number</h4>
-                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP verification</p>
-                      </div>
+                  {/* Quick Records Export Banner */}
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-2xl p-5 shadow-xs flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Impact Ledger</p>
+                      <h4 className="text-sm font-bold text-white mt-0.5">Need full audit records?</h4>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Download complete CSV reports of all past service missions.</p>
                     </div>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${phoneState.show ? 'bg-emerald-100 text-emerald-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
-                      ▾
-                    </div>
-                  </button>
+                    <button
+                      onClick={() => navigate("/volunteer-history")}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shrink-0 transition-all shadow-sm"
+                    >
+                      Export CSV
+                    </button>
+                  </div>
+                </div>
 
-                  {/* Form directly inside Update Contact Card */}
-                  {phoneState.show && (
-                    <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-slate-100 space-y-4 bg-slate-50/50 animate-in fade-in duration-200">
-                      <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
-                        Enter New Mobile Number
-                      </h4>
-                      {phoneState.step === 1 ? (
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <input
-                            type="tel" placeholder="+91..."
-                            value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
-                            className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400"
-                          />
-                          <button
-                            onClick={handleSendPhoneOtp} disabled={phoneState.loading}
-                            className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-700 transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
-                          >
-                            {phoneState.loading ? "Sending..." : "Send OTP"}
-                          </button>
+                {/* ── RIGHT COLUMN (lg:col-span-7 space-y-6) ── */}
+                <div className="lg:col-span-7 space-y-6">
+                  
+                  {/* Lifetime Impact Matrix (4 Grid Cards) */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+                    <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm mb-2 border border-emerald-100">
+                        <FaCheckCircle />
+                      </div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Completed</p>
+                      <p className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">{myCompletedCount}</p>
+                      <p className="text-[10px] text-emerald-600 font-semibold mt-0.5">Operations</p>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm mb-2 border border-amber-100">
+                        <FaUtensils />
+                      </div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Food Saved</p>
+                      <p className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">Surplus</p>
+                      <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Redistributed</p>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                      <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm mb-2 border border-rose-100">
+                        <FaExclamationTriangle />
+                      </div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hazards</p>
+                      <p className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">Verified</p>
+                      <p className="text-[10px] text-rose-600 font-semibold mt-0.5">Safeguarded</p>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm mb-2 border border-indigo-100">
+                        <FaStar />
+                      </div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rating</p>
+                      <p className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">{volunteerInfo.averageRating || "0.0"}</p>
+                      <p className="text-[10px] text-indigo-600 font-semibold mt-0.5">Satisfaction</p>
+                    </div>
+                  </div>
+
+                  {/* Operational Achievements Badges */}
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Field Honors & Badges</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+                        <span className="text-xl">🏆</span>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900">Zero Hunger</p>
+                          <p className="text-[10px] text-slate-500 font-medium">Surplus Food Guardian</p>
                         </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <p className="text-xs text-slate-500 font-medium">Enter the 6-digit verification code sent to {phoneState.newPhone}:</p>
-                          <div className="flex gap-2">
-                            {[0, 1, 2, 3, 4, 5].map((i) => (
-                              <input
-                                key={i}
-                                type="text"
-                                maxLength="1"
-                                value={phoneState.otp[i] || ""}
-                                onChange={(e) => {
-                                  const val = e.target.value.replace(/[^0-9]/g, "");
-                                  let newOtp = phoneState.otp.split("");
-                                  newOtp[i] = val;
-                                  setPhoneState({ ...phoneState, otp: newOtp.join("") });
-                                  if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                                }}
-                                className="w-10 h-10 sm:w-11 sm:h-11 bg-white border border-slate-200 rounded-xl font-bold text-slate-800 text-center outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
-                              />
-                            ))}
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+                        <span className="text-xl">⚡</span>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900">Rapid Response</p>
+                          <p className="text-[10px] text-slate-500 font-medium">&lt; 30 min claims</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+                        <span className="text-xl">🌱</span>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900">Clean Earth</p>
+                          <p className="text-[10px] text-slate-500 font-medium">Hazard clearance verified</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Security & Credentials Section */}
+                  <div className="space-y-3.5">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">Account Security & Credentials</h3>
+
+                    {/* ── CARD 1: UPDATE CONTACT NUMBER ACCORDION ── */}
+                    <div className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${phoneState.show ? 'border-emerald-300 ring-2 ring-emerald-500/20' : 'border-slate-200'}`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPhoneState(prev => ({ ...prev, show: !prev.show, step: 1 }));
+                          if (deleteState.show) setDeleteState(prev => ({ ...prev, show: false }));
+                        }}
+                        className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-slate-50/60 transition-colors"
+                      >
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-base shrink-0">
+                            <FaSync className={phoneState.loading ? 'animate-spin' : ''} />
                           </div>
-                          <button
-                            onClick={handleVerifyPhone} disabled={phoneState.loading}
-                            className="bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-sm disabled:opacity-50"
-                          >
-                            {phoneState.loading ? "Verifying..." : "Verify & Save"}
-                          </button>
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-900">Update Contact Number</h4>
+                            <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP verification</p>
+                          </div>
+                        </div>
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${phoneState.show ? 'bg-emerald-100 text-emerald-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
+                          ▾
+                        </div>
+                      </button>
+
+                      {/* Form directly inside Update Contact Card */}
+                      {phoneState.show && (
+                        <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-slate-100 space-y-4 bg-slate-50/50 animate-in fade-in duration-200">
+                          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
+                            Enter New Mobile Number
+                          </h4>
+                          {phoneState.step === 1 ? (
+                            <div className="flex flex-col sm:flex-row gap-3">
+                              <input
+                                type="tel" placeholder="+91..."
+                                value={phoneState.newPhone} onChange={(e) => setPhoneState({ ...phoneState, newPhone: e.target.value })}
+                                className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400"
+                              />
+                              <button
+                                onClick={handleSendPhoneOtp} disabled={phoneState.loading}
+                                className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-700 transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+                              >
+                                {phoneState.loading ? "Sending..." : "Send OTP"}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              <p className="text-xs text-slate-500 font-medium">Enter the 6-digit verification code sent to {phoneState.newPhone}:</p>
+                              <div className="flex gap-2">
+                                {[0, 1, 2, 3, 4, 5].map((i) => (
+                                  <input
+                                    key={i}
+                                    type="text"
+                                    maxLength="1"
+                                    value={phoneState.otp[i] || ""}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/[^0-9]/g, "");
+                                      let newOtp = phoneState.otp.split("");
+                                      newOtp[i] = val;
+                                      setPhoneState({ ...phoneState, otp: newOtp.join("") });
+                                      if (val && e.target.nextSibling) e.target.nextSibling.focus();
+                                    }}
+                                    className="w-10 h-10 sm:w-11 sm:h-11 bg-white border border-slate-200 rounded-xl font-bold text-slate-800 text-center outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
+                                  />
+                                ))}
+                              </div>
+                              <button
+                                onClick={handleVerifyPhone} disabled={phoneState.loading}
+                                className="bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-all shadow-sm disabled:opacity-50"
+                              >
+                                {phoneState.loading ? "Verifying..." : "Verify & Save"}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
 
-                {/* ── CARD 2: DELETE ACCOUNT ACCORDION ── */}
-                <div className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${deleteState.show ? 'border-rose-300 ring-2 ring-rose-500/20' : 'border-slate-200'}`}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDeleteState(prev => ({ ...prev, show: !prev.show }));
-                      if (phoneState.show) setPhoneState(prev => ({ ...prev, show: false }));
-                    }}
-                    className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-slate-50/60 transition-colors"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-base shrink-0">
-                        <FaTrashAlt />
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-rose-900">Delete Account</h4>
-                        <p className="text-[10px] text-rose-600 font-medium mt-0.5">Permanently purge your volunteer account and credentials</p>
-                      </div>
-                    </div>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${deleteState.show ? 'bg-rose-100 text-rose-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
-                      ▾
-                    </div>
-                  </button>
-
-                  {/* Form directly inside Delete Account Card */}
-                  {deleteState.show && (
-                    <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-rose-100 bg-rose-50/40 space-y-3 animate-in fade-in duration-200">
-                      <p className="text-xs text-rose-600 font-medium">Mission data will be archived, identity will be permanently purged.</p>
-
-                      {deleteState.step !== 2 ? (
-                        <div className="space-y-3">
-                          <textarea
-                            placeholder="Reason for deletion..."
-                            value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
-                            className="w-full bg-white border border-rose-200 rounded-xl p-3 text-xs font-medium outline-none focus:border-rose-500 min-h-[80px]"
-                          />
-                          <button
-                            onClick={handleDeleteRequest} disabled={deleteState.loading}
-                            className="bg-rose-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-700 transition-all shadow-sm disabled:opacity-50"
-                          >
-                            {deleteState.loading ? "Requesting OTP..." : "Request Deletion OTP"}
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <div className="flex gap-2">
-                            {[0, 1, 2, 3, 4, 5].map((i) => (
-                              <input
-                                key={i}
-                                type="text"
-                                maxLength="1"
-                                value={deleteState.otp[i] || ""}
-                                onChange={(e) => {
-                                  const val = e.target.value.replace(/[^0-9]/g, "");
-                                  let newOtp = deleteState.otp.split("");
-                                  newOtp[i] = val;
-                                  setDeleteState({ ...deleteState, otp: newOtp.join("") });
-                                  if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                                }}
-                                className="w-10 h-10 sm:w-11 sm:h-11 bg-white border border-rose-300 rounded-xl font-bold text-rose-900 text-center outline-none focus:border-rose-500 text-sm"
-                              />
-                            ))}
+                    {/* ── CARD 2: DELETE ACCOUNT ACCORDION ── */}
+                    <div className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${deleteState.show ? 'border-rose-300 ring-2 ring-rose-500/20' : 'border-slate-200'}`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDeleteState(prev => ({ ...prev, show: !prev.show }));
+                          if (phoneState.show) setPhoneState(prev => ({ ...prev, show: false }));
+                        }}
+                        className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-slate-50/60 transition-colors"
+                      >
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-base shrink-0">
+                            <FaTrashAlt />
                           </div>
-                          <button
-                            onClick={handleFinalDelete} disabled={deleteState.loading}
-                            className="bg-rose-700 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-800 transition-all shadow-sm disabled:opacity-50"
-                          >
-                            {deleteState.loading ? "Purging..." : "Confirm Permanent Deletion"}
-                          </button>
+                          <div>
+                            <h4 className="text-sm font-bold text-rose-900">Delete Account</h4>
+                            <p className="text-[10px] text-rose-600 font-medium mt-0.5">Permanently purge your volunteer account and credentials</p>
+                          </div>
+                        </div>
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${deleteState.show ? 'bg-rose-100 text-rose-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
+                          ▾
+                        </div>
+                      </button>
+
+                      {/* Form directly inside Delete Account Card */}
+                      {deleteState.show && (
+                        <div className="px-4 sm:px-6 pb-5 pt-3 border-t border-rose-100 bg-rose-50/40 space-y-3 animate-in fade-in duration-200">
+                          <p className="text-xs text-rose-600 font-medium">Mission data will be archived, identity will be permanently purged.</p>
+
+                          {deleteState.step !== 2 ? (
+                            <div className="space-y-3">
+                              <textarea
+                                placeholder="Reason for deletion..."
+                                value={deleteState.reason} onChange={(e) => setDeleteState({ ...deleteState, reason: e.target.value })}
+                                className="w-full bg-white border border-rose-200 rounded-xl p-3 text-xs font-medium outline-none focus:border-rose-500 min-h-[80px]"
+                              />
+                              <button
+                                onClick={handleDeleteRequest} disabled={deleteState.loading}
+                                className="bg-rose-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-700 transition-all shadow-sm disabled:opacity-50"
+                              >
+                                {deleteState.loading ? "Requesting OTP..." : "Request Deletion OTP"}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              <div className="flex gap-2">
+                                {[0, 1, 2, 3, 4, 5].map((i) => (
+                                  <input
+                                    key={i}
+                                    type="text"
+                                    maxLength="1"
+                                    value={deleteState.otp[i] || ""}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/[^0-9]/g, "");
+                                      let newOtp = deleteState.otp.split("");
+                                      newOtp[i] = val;
+                                      setDeleteState({ ...deleteState, otp: newOtp.join("") });
+                                      if (val && e.target.nextSibling) e.target.nextSibling.focus();
+                                    }}
+                                    className="w-10 h-10 sm:w-11 sm:h-11 bg-white border border-rose-300 rounded-xl font-bold text-rose-900 text-center outline-none focus:border-rose-500 text-sm"
+                                  />
+                                ))}
+                              </div>
+                              <button
+                                onClick={handleFinalDelete} disabled={deleteState.loading}
+                                className="bg-rose-700 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-800 transition-all shadow-sm disabled:opacity-50"
+                              >
+                                {deleteState.loading ? "Purging..." : "Confirm Permanent Deletion"}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
+                  </div>
                 </div>
+
               </div>
             </div>
           ) : (
