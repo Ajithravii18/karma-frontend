@@ -265,14 +265,6 @@ const AdminDashboard = () => {
               >
                 <FaSyncAlt size={13} className={loading ? "animate-spin text-emerald-600" : ""} />
               </button>
-
-              <button
-                onClick={downloadCSV}
-                className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm hover:shadow transition-all"
-              >
-                <FaDownload size={11} />
-                <span>Export CSV</span>
-              </button>
             </div>
           </div>
 
@@ -374,25 +366,35 @@ const AdminDashboard = () => {
 
             </div>
 
-            {/* Sub-row: Month selector + Search input */}
+            {/* Sub-row: Month selector + Export CSV Button + Search input */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100">
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
                 <span className="text-[11px] font-black uppercase text-slate-400 shrink-0">Month:</span>
                 <input
                   type="month"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer"
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-all cursor-pointer shadow-sm"
                 />
                 {dateFilter && (
                   <button
                     onClick={() => setDateFilter("")}
-                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all text-xs font-bold"
+                    className="px-2.5 py-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all text-xs font-bold border border-rose-200"
                     title="Clear Date Filter"
                   >
-                    Clear
+                    Reset
                   </button>
                 )}
+
+                {/* ── Export CSV right next to Month Filter ── */}
+                <button
+                  onClick={downloadCSV}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm hover:shadow transition-all shrink-0 active:scale-95"
+                  title={dateFilter ? `Download CSV for ${dateFilter}` : "Download All Missions CSV"}
+                >
+                  <FaDownload size={11} />
+                  <span>{dateFilter ? `Export ${dateFilter} CSV` : "Export CSV"}</span>
+                </button>
               </div>
 
               <div className="relative w-full sm:w-80">
