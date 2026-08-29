@@ -196,287 +196,356 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const isServicePage = serviceRoutes.some(route => location.pathname.startsWith(route));
 
   return (
-    <nav className={`fixed top-0 z-[100] transition-all duration-500 font-sans flex items-center ${
-      isDashboard
-        ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-200"
-        : isServicePage
-          ? "h-[68px] w-full left-0 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm"
-          : location.pathname === "/" && !isScrolled
-            ? "w-full left-0 bg-transparent py-5"
-            : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
-    }`}>
+    <>
+      <nav className={`fixed top-0 z-[100] transition-all duration-300 font-sans flex items-center ${
+        isDashboard
+          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950/90 text-white border-b border-white/10 shadow-lg backdrop-blur-xl"
+          : "h-[68px] w-full left-0 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white border-b border-white/10 shadow-lg backdrop-blur-xl"
+      }`}>
 
-      <div className="w-full px-6 flex items-center relative z-10 justify-between">
+        <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
 
-        {/* Left Side Group: Logo + Dashboard return */}
-        <div className="flex items-center gap-3">
-          {/* Logo — hidden on desktop dashboard only (sidebar takes over), always visible on mobile & service pages */}
-          <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
-            {location.pathname === "/" && !isScrolled ? (
-              <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
-                <img src={logo} className="w-7" alt="E-Karma Logo" />
-                <span className="text-base font-black tracking-tighter uppercase text-white">E-Karma</span>
+          {/* Left Side Group: Logo + Return Home */}
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
+              <div className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-sm border-white/15">
+                <img src={logo} className="w-7 h-7 object-contain" alt="E-Karma Logo" />
+                <span className="text-base font-black tracking-tight uppercase text-white">E-Karma</span>
               </div>
-            ) : (
-              <div className="flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
-                <img src={logo} className="w-8" alt="E-Karma Logo" />
-                <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+            </div>
+
+            {isServicePage && (
+              <div className="flex items-center gap-2 pl-2 border-l border-white/15">
+                <button
+                  onClick={handleHome}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 bg-white/10 hover:bg-white/20 border border-white/15 transition-all active:scale-95"
+                >
+                  <span>←</span>
+                  <span className="hidden sm:inline">Home</span>
+                </button>
               </div>
             )}
           </div>
 
+          {/* Dashboard Greeting (Desktop only) */}
+          {isDashboard && (
+            <div className="hidden lg:flex flex-col ml-4">
+              <h2 className="text-lg font-black text-white tracking-tight leading-none">
+                Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
+              </h2>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+              </p>
+            </div>
+          )}
+
+          {/* Desktop Service Page Switcher Tabs */}
           {isServicePage && (
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+            <div className="hidden md:flex items-center bg-white/10 p-1 rounded-2xl border border-white/15 backdrop-blur-md shadow-inner gap-1">
               <button
-                onClick={handleHome}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all active:scale-95"
+                onClick={() => nav('/pick-up')}
+                className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
+                  location.pathname === '/pick-up'
+                    ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md shadow-emerald-500/25'
+                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <span>←</span>
-                <span className="hidden sm:inline">Home</span>
+                <span>♻️</span>
+                <span>Waste Pickup</span>
+              </button>
+              <button
+                onClick={() => nav('/report-pollution')}
+                className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
+                  location.pathname === '/report-pollution'
+                    ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/25'
+                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span>🚨</span>
+                <span>Pollution Spot</span>
+              </button>
+              <button
+                onClick={() => nav('/report-food')}
+                className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 border ${
+                  location.pathname === '/report-food'
+                    ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md shadow-amber-400/25'
+                    : 'border-transparent text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span>🍲</span>
+                <span>Food Rescue</span>
               </button>
             </div>
           )}
-        </div>
 
-        {/* Dashboard Greeting (Desktop only) */}
-        {isDashboard && (
-          <div className="hidden lg:flex flex-col ml-4">
-            <h2 className="text-lg font-black text-slate-800 tracking-tight leading-none">
-              Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
-            </h2>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-            </p>
+          {/* Desktop Marketing Nav Links */}
+          {!isDashboard && !isServicePage && (
+            <div className="hidden lg:flex items-center space-x-6">
+              {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
+                <button key={idx} onClick={item.onClick}
+                  className="font-semibold transition-all duration-200 py-2 text-sm relative group text-slate-200 hover:text-emerald-400">
+                  {item.label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+              ))}
+
+              {/* Services Dropdown */}
+              <div className="relative group">
+                <button className="font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 text-slate-200 hover:text-emerald-400">
+                  Services <FaChevronDown className="text-[10px]" />
+                </button>
+                <div className="absolute left-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50 overflow-hidden">
+                  {services.map((service, index) => (
+                    <button key={index}
+                      onClick={() => {
+                        if (!isLoggedIn) {
+                          toast.error("Please login to access services");
+                          nav("/login");
+                          return;
+                        }
+                        nav(service.path);
+                      }}
+                      className="flex items-center gap-3 w-full p-3.5 hover:bg-white/10 transition border-b border-white/5 last:border-0 text-left group/item"
+                    >
+                      <span className="text-lg">{service.icon}</span>
+                      <p className="font-bold text-white text-xs group-hover/item:text-emerald-400 transition">{service.label}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Right Side Actions: Alerts + Profile / Auth */}
+          <div className="flex items-center space-x-2.5">
+            {isLoggedIn ? (
+              <>
+                {/* Notification Bell */}
+                <div className="relative" ref={notifRef}>
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="relative p-2.5 rounded-xl transition-all cursor-pointer bg-white/10 hover:bg-white/20 text-white border border-white/15 active:scale-95"
+                    title="Notifications"
+                  >
+                    <FaBell size={16} />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[9px] font-black flex items-center justify-center rounded-full border-2 border-slate-900 animate-pulse">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200 text-slate-900">
+                      <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h3 className="font-black text-xs uppercase tracking-widest text-slate-500">Alerts Hub</h3>
+                        <button onClick={() => setShowNotifications(false)} className="md:hidden text-slate-400 p-1 hover:text-slate-600"><FaTimes size={14} /></button>
+                      </div>
+                      <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto custom-scrollbar">
+                        {notifications.length > 0 ? notifications.map(n => {
+                          let Icon = FaInfoCircle, iconBg = "bg-blue-100 text-blue-600";
+                          if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
+                          else if (n.type === 'PAYMENT_SUCCESS') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
+                          return (
+                            <div key={n._id} onClick={() => { markAsRead(n._id); setShowNotifications(false); }} className={`p-4 border-b border-slate-50 flex gap-3.5 items-start hover:bg-slate-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-emerald-50/50' : ''}`}>
+                              <div className={`${iconBg} p-2 rounded-xl text-sm shrink-0`}><Icon /></div>
+                              <div className="flex-1 text-left">
+                                <p className="text-xs font-bold text-slate-700 leading-relaxed">{n.message}</p>
+                                <p className="text-[9px] font-black text-slate-400 uppercase mt-1">{new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                              </div>
+                            </div>
+                          );
+                        }) : <div className="p-10 text-center text-[10px] font-black text-slate-400 uppercase">No Alerts Yet</div>}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile Pill */}
+                <div className="relative group/profile" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-md"
+                  >
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-500'}`}>
+                      {userRole === 'admin' ? <FaUserShield size={11} /> : (userName?.charAt(0).toUpperCase() || "U")}
+                    </div>
+                    <span className="font-bold text-xs hidden sm:inline text-white truncate max-w-[100px]">{userName}</span>
+                    <FaChevronDown className={`text-[9px] text-slate-300 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                  </button>
+                  {showDropdown && (
+                    <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2 text-slate-900">
+                      <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-slate-50 text-slate-700 font-bold text-xs transition border-b border-slate-100">
+                        <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-emerald-600"} />
+                        {userRole === 'admin' ? "Admin Console" : "Dashboard"}
+                      </button>
+                      <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-rose-50 text-rose-600 font-bold text-xs transition">
+                        <FaSignOutAlt /> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              /* Sign In Button */
+              <button
+                onClick={() => nav("/login")}
+                className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20"
+              >
+                Sign In
+              </button>
+            )}
+
+            {/* Mobile Menu Toggle (on marketing pages) */}
+            {!isDashboard && (
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle bg-white/10 hover:bg-white/20 text-white border border-white/15 active:scale-95"
+                title="Open Menu"
+              >
+                {isMenuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
+              </button>
+            )}
           </div>
-        )}
+        </div>
+      </nav>
 
-        {/* Service Page Switcher Tabs (Responsive on Mobile & Desktop) */}
-        {isServicePage && (
-          <div className="flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/80 shadow-inner max-w-full overflow-x-auto no-scrollbar">
+      {/* ── MOBILE STICKY SERVICE SWITCHER SUB-BAR (ONLY ON SERVICE PAGES) ── */}
+      {isServicePage && (
+        <div className="fixed top-[68px] left-0 w-full z-40 bg-slate-950/95 backdrop-blur-xl px-3 py-2 border-b border-white/10 shadow-lg md:hidden">
+          <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-1.5 p-1 bg-white/10 rounded-2xl border border-white/15">
             <button
               onClick={() => nav('/pick-up')}
-              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
+              className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/pick-up'
-                  ? 'bg-white text-emerald-700 border-slate-200/80 shadow-sm font-black'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               <span>♻️</span>
-              <span className="hidden sm:inline">Waste Pickup</span>
-              <span className="inline sm:hidden text-[11px]">Waste</span>
+              <span>Waste</span>
             </button>
             <button
               onClick={() => nav('/report-pollution')}
-              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
+              className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/report-pollution'
-                  ? 'bg-white text-rose-700 border-slate-200/80 shadow-sm font-black'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               <span>🚨</span>
-              <span className="hidden sm:inline">Pollution Spot</span>
-              <span className="inline sm:hidden text-[11px]">Pollution</span>
+              <span>Pollution</span>
             </button>
             <button
               onClick={() => nav('/report-food')}
-              className={`px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 shrink-0 border ${
+              className={`py-2 px-1 rounded-xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                 location.pathname === '/report-food'
-                  ? 'bg-white text-amber-700 border-slate-200/80 shadow-sm font-black'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/25'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               <span>🍲</span>
-              <span className="hidden sm:inline">Food Rescue</span>
-              <span className="inline sm:hidden text-[11px]">Food</span>
+              <span>Food</span>
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Desktop Nav Links — hidden on dashboard AND service pages */}
-        {!isDashboard && !isServicePage && (
-          <div className="hidden lg:flex items-center space-x-6">
-            {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
-              <button key={idx} onClick={item.onClick}
-                className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
-                  location.pathname === "/" && !isScrolled 
-                    ? "text-white/90 hover:text-white"
-                    : "text-slate-600 hover:text-green-600"
-                }`}>
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            ))}
+      {/* ── POLISHED MOBILE DRAWER ── */}
+      <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setIsMenuOpen(false)}>
+        <div ref={menuRef} className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-slate-950 text-white shadow-2xl border-l border-white/10 transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
+          
+          {/* Drawer Header */}
+          <div className="p-5 border-b border-white/10 flex justify-between items-center bg-white/5">
+            <div className="flex items-center gap-2.5">
+              <img src={logo} className="w-8 h-8 object-contain" alt="Logo" />
+              <h2 className="font-black text-lg text-white tracking-tight uppercase">E-Karma</h2>
+            </div>
+            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-400 hover:text-white"><FaTimes size={20} /></button>
+          </div>
 
-            {/* Services Dropdown */}
-            <div className="relative group">
-              <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
-                location.pathname === "/" && !isScrolled 
-                  ? "text-white/90 hover:text-white"
-                  : "text-slate-600 hover:text-green-600"
-              }`}>
-                Services <FaChevronDown className="text-[10px]" />
-              </button>
-              <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
-                {services.map((service, index) => (
-                  <button key={index}
+          {/* Drawer Body */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
+            {/* Quick Service Switcher in Drawer */}
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Our Services</p>
+              <div className="space-y-1.5">
+                {services.map((s, sIdx) => (
+                  <button
+                    key={sIdx}
                     onClick={() => {
-                      if (!isLoggedIn) {
-                        toast.error("Please login to access services");
-                        nav("/login");
-                        return;
-                      }
-                      nav(service.path);
+                      setIsMenuOpen(false);
+                      if (!isLoggedIn) toast.error("Please login to access services");
+                      else nav(s.path);
                     }}
-                    className="flex items-center justify-between w-full p-4 hover:bg-slate-50 transition border-b border-slate-100 last:border-0 text-left group/item"
+                    className={`w-full flex items-center justify-between p-3 rounded-xl font-bold text-xs transition-all border ${
+                      location.pathname === s.path
+                        ? 'bg-white/15 border-emerald-500 text-emerald-400'
+                        : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
+                    }`}
                   >
-                    <div>
-                      <p className="font-bold text-slate-800 text-sm group-hover/item:text-green-600 transition">{service.label}</p>
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-base">{s.icon}</span>
+                      <span>{s.label}</span>
                     </div>
+                    <span>→</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="pt-2 border-t border-white/10">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Navigation</p>
+              <div className="space-y-1">
+                {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      item.onClick();
+                    }}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold text-slate-200 hover:bg-white/10 hover:text-white transition"
+                  >
+                    <span className="text-slate-400">{item.icon}</span>
+                    <span>{item.label}</span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
-        )}
 
-        {/* User Actions */}
-        <div className="flex items-center space-x-3">
-          {isLoggedIn ? (
-            <>
-              {/* Notifications */}
-              <div className="relative" ref={notifRef}>
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className={`relative p-2.5 rounded-xl transition-all cursor-pointer ${
-                    location.pathname === "/" && !isScrolled
-                      ? "bg-white/10 text-white/90 hover:bg-white/20"
-                      : "bg-slate-100 text-slate-500 hover:text-green-600 hover:bg-green-50 border border-slate-200"
-                  }`}
-                >
-                  <FaBell size={18} />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[9px] font-black flex items-center justify-center rounded-full border-2 border-white animate-pulse">
-                      {unreadCount}
-                    </span>
-                  )}
-                </button>
-
-                {showNotifications && (
-                  <div className="fixed inset-x-4 top-20 mx-auto w-auto max-w-[calc(100vw-2rem)] md:absolute md:inset-auto md:right-0 md:mt-4 md:w-80 bg-white rounded-2xl shadow-xl border border-slate-200 z-[200] overflow-hidden animate-in fade-in zoom-in duration-200">
-                    <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                      <h3 className="font-black text-xs uppercase tracking-widest text-slate-500">Alerts Hub</h3>
-                      <button onClick={() => setShowNotifications(false)} className="md:hidden text-slate-400 p-1 hover:text-slate-600"><FaTimes size={14} /></button>
-                    </div>
-                    <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto custom-scrollbar">
-                      {notifications.length > 0 ? notifications.map(n => {
-                        let Icon = FaInfoCircle, iconBg = "bg-blue-100 text-blue-600";
-                        if (n.type === 'VOLUNTEER_ARRIVED') { Icon = FaTruck; iconBg = "bg-orange-100 text-orange-600"; }
-                        else if (n.type === 'PAYMENT_SUCCESS') { Icon = FaCreditCard; iconBg = "bg-emerald-100 text-emerald-600"; }
-                        return (
-                          <div key={n._id} onClick={() => { markAsRead(n._id); setShowNotifications(false); }} className={`p-5 border-b border-slate-50 flex gap-4 items-start hover:bg-slate-50 transition-colors cursor-pointer ${!n.isRead ? 'bg-green-50/50' : ''}`}>
-                            <div className={`${iconBg} p-2 rounded-xl text-sm shrink-0`}><Icon /></div>
-                            <div className="flex-1 text-left">
-                              <p className="text-xs font-bold text-slate-700 leading-relaxed">{n.message}</p>
-                              <p className="text-[9px] font-black text-slate-400 uppercase mt-1">{new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                            </div>
-                          </div>
-                        );
-                      }) : <div className="p-12 text-center text-[10px] font-black text-slate-400 uppercase">No Alerts Yet</div>}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Profile Dropdown Pill */}
-              <div className="relative group/profile" ref={dropdownRef}>
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className={`flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 border ${
-                    location.pathname === "/" && !isScrolled
-                      ? "bg-white/10 shadow-lg border-white/20"
-                      : "bg-white border-slate-200 shadow-sm hover:border-slate-300"
-                  }`}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-xs ${userRole === 'admin' ? 'bg-purple-600' : userRole === 'volunteer' ? 'bg-blue-600' : 'bg-emerald-500'}`}>
-                    {userRole === 'admin' ? <FaUserShield /> : (userName?.charAt(0).toUpperCase() || "U")}
-                  </div>
-                  <span className={`font-bold text-sm hidden lg:inline ${location.pathname === "/" && !isScrolled ? "text-white" : "text-slate-700"}`}>{userName}</span>
-                  <FaChevronDown className={`text-[10px] ${location.pathname === "/" && !isScrolled ? "text-white/60" : "text-slate-400"} transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                </button>
-                {showDropdown && (
-                  <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 z-[110] overflow-hidden animate-in fade-in slide-in-from-top-2">
-                    <button onClick={goToDashboard} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-slate-50 text-slate-700 font-bold text-sm transition border-b border-slate-100">
-                      <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-emerald-600"} />
-                      {userRole === 'admin' ? "Admin Console" : "Dashboard"}
-                    </button>
-                    <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-red-50 text-red-600 font-bold text-sm transition">
-                      <FaSignOutAlt /> Sign Out
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            /* Sign In Button */
-            <button
-              onClick={() => nav("/login")}
-              className={`px-5 py-2 rounded-xl font-bold text-sm transition-all active:scale-95 ${
-                location.pathname === "/" && !isScrolled
-                ? "bg-white text-green-900 shadow-lg hover:bg-green-50"
-                : "bg-green-600 text-white hover:bg-green-700 shadow-sm"
-              }`}
-            >
-              Sign In
-            </button>
-          )}
-
-          {/* Mobile Menu Toggle — only on pure marketing pages */}
-          {!isDashboard && !isServicePage && (
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${location.pathname === "/" && !isScrolled ? "text-white/90 hover:bg-white/10" : "text-slate-500 hover:bg-slate-100"}`}
-            >
-              {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Drawer (Logic Untouched) */}
-      <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] transition-opacity duration-300 lg:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setIsMenuOpen(false)}>
-        <div ref={menuRef} className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-2xl transition-transform duration-300 transform flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
-          <div className="p-6 border-b border-transparent flex justify-between items-center">
-            <div className="flex items-center gap-3"><img src={logo} className="w-10" alt="Logo" /><h2 className="font-black text-xl text-green-900 tracking-tighter uppercase">E-Karma</h2></div>
-            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-gray-400"><FaTimes size={24} /></button>
-          </div>
-          <div className="flex-1 overflow-y-auto py-6 px-6 space-y-2">
-            {menuItems.map((item, idx) => (
-              <div key={idx}>
-                <button onClick={item.isAccordion ? () => setActiveAccordion(activeAccordion === idx ? null : idx) : item.onClick} className={`w-full flex items-center justify-between p-4 rounded-xl font-bold ${activeAccordion === idx ? "bg-green-50 text-green-700" : "text-gray-700"}`}>
-                  <div className="flex items-center gap-4"><span>{item.icon}</span><span>{item.label}</span></div>
-                  {item.isAccordion && <FaChevronDown className={`transition-transform ${activeAccordion === idx ? 'rotate-180' : ''}`} />}
-                </button>
-                {item.isAccordion && activeAccordion === idx && (
-                  <div className="pl-14 space-y-2 py-2">
-                    {services.map((s, sIdx) => (
-                      <button key={sIdx} onClick={() => { if (!isLoggedIn) toast.error("Login first"); else nav(s.path); }} className="w-full text-left p-2 text-sm font-bold text-gray-500 flex items-center gap-2"><span>{s.icon}</span>{s.label}</button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          {/* Mobile Footer */}
-          <div className="p-6 border-t bg-gray-50/50">
+          {/* Drawer Footer */}
+          <div className="p-5 border-t border-white/10 bg-white/5">
             {isLoggedIn ? (
-              <button onClick={() => handleLogout(true)} className="w-full py-4 bg-red-50 text-red-600 rounded-2xl font-black text-sm">Sign Out</button>
+              <div className="space-y-2">
+                <button
+                  onClick={goToDashboard}
+                  className="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                >
+                  <FaColumns /> Go to Dashboard
+                </button>
+                <button
+                  onClick={() => handleLogout(true)}
+                  className="w-full py-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 rounded-xl font-bold text-xs"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
-              <button onClick={() => { nav("/login"); setIsMenuOpen(false); }} className="w-full py-4 bg-green-600 text-white rounded-2xl font-black shadow-lg">Sign In</button>
+              <button
+                onClick={() => { nav("/login"); setIsMenuOpen(false); }}
+                className="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20"
+              >
+                Sign In to E-Karma
+              </button>
             )}
           </div>
+
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

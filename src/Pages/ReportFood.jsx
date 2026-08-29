@@ -115,7 +115,7 @@ function ReportLeftoverFood() {
       <Nav />
 
       {/* ── MAIN WORKSPACE (FULL-WIDTH 2-COLUMN BALANCED) ── */}
-      <main className="flex-1 pt-[88px] pb-10 px-4 sm:px-6 lg:px-8 xl:px-12">
+      <main className="flex-1 pt-[128px] md:pt-[88px] pb-10 px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="w-full max-w-[1550px] mx-auto space-y-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
