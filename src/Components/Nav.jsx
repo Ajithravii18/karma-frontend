@@ -213,7 +213,9 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
             </div>
           )}
-              {/* Desktop Nav Links */}
+        </div>
+
+        {/* Desktop Nav Links */}
         {!isDashboard && (
           <div className="hidden lg:flex items-center space-x-6">
             {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
@@ -362,7 +364,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
           )}
-        </div>    </div>
+        </div>
       </div>
 
       {/* Mobile Drawer (Logic Untouched) */}
