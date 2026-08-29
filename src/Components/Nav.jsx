@@ -188,7 +188,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
   const freshUserRoleCheck = (role) => role !== "user" && role !== "" && role !== null;
 
-  const isDashboard = location.pathname === "/dashboard";
+  const dashboardRoutes = ["/dashboard", "/volunteer-portal", "/admin-dashboard", "/volunteer-history"];
+  const isDashboard = dashboardRoutes.some(route => location.pathname.startsWith(route));
 
   return (
     <nav className={`fixed top-0 w-full left-0 z-[100] transition-all duration-500 font-sans ${
@@ -212,54 +213,54 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
             </div>
           )}
-        </div>
+              {/* Desktop Nav Links */}
+        {!isDashboard && (
+          <div className="hidden lg:flex items-center space-x-6">
+            {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
+              <button key={idx} onClick={item.onClick}
+                className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
+                  location.pathname === "/" && !isScrolled 
+                    ? "text-white/90 hover:text-white"
+                    : "text-slate-600 hover:text-green-600"
+                }`}>
+                {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+            ))}
 
-        {/* Desktop Nav Links */}
-        <div className="hidden lg:flex items-center space-x-6">
-          {menuItems.filter(i => !i.isAccordion).map((item, idx) => (
-            <button key={idx} onClick={item.onClick}
-              className={`font-semibold transition-all duration-200 py-2 text-sm relative group ${
+            {/* Services Dropdown */}
+            <div className="relative group">
+              <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
                 location.pathname === "/" && !isScrolled 
                   ? "text-white/90 hover:text-white"
                   : "text-slate-600 hover:text-green-600"
               }`}>
-              {item.label}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full"></span>
-            </button>
-          ))}
-
-          {/* Services Dropdown */}
-          <div className="relative group">
-            <button className={`font-semibold transition-all duration-200 py-2 text-sm flex items-center gap-1 ${
-              location.pathname === "/" && !isScrolled 
-                ? "text-white/90 hover:text-white"
-                : "text-slate-600 hover:text-green-600"
-            }`}>
-              Services <FaChevronDown className="text-[10px]" />
-            </button>
-            <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
-              {services.map((service, index) => (
-                <button key={index}
-                  onClick={() => {
-                    if (!isLoggedIn) {
-                      toast.error("Please login to access services");
-                      nav("/login");
-                      return;
-                    }
-                    nav(service.path);
-                  }}
-                  className="flex items-start gap-3 w-full text-left p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0"
-                >
-                  <div className="mt-0.5 text-green-500">{service.icon}</div>
-                  <div>
-                    <p className="font-bold text-sm text-slate-700">{service.label}</p>
-                    <p className="text-[10px] font-medium text-slate-500 mt-0.5 leading-tight">{service.desc}</p>
-                  </div>
-                </button>
-              ))}
+                Services <FaChevronDown className="text-[10px]" />
+              </button>
+              <div className="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-4 z-50 overflow-hidden">
+                {services.map((service, index) => (
+                  <button key={index}
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        toast.error("Please login to access services");
+                        nav("/login");
+                        return;
+                      }
+                      nav(service.path);
+                    }}
+                    className="flex items-start gap-3 w-full text-left p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0"
+                  >
+                    <div className="mt-0.5 text-green-500">{service.icon}</div>
+                    <div>
+                      <p className="font-bold text-sm text-slate-700">{service.label}</p>
+                      <p className="text-[10px] font-medium text-slate-500 mt-0.5 leading-tight">{service.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* User Actions */}
         <div className="flex items-center gap-3">
@@ -353,13 +354,15 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           )}
 
           {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${location.pathname === "/" && !isScrolled ? "text-white/90 hover:bg-white/10" : "text-slate-500 hover:bg-slate-100"}`}
-          >
-            {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-          </button>
-        </div>
+          {!isDashboard && (
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle ${location.pathname === "/" && !isScrolled ? "text-white/90 hover:bg-white/10" : "text-slate-500 hover:bg-slate-100"}`}
+            >
+              {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+          )}
+        </div>    </div>
       </div>
 
       {/* Mobile Drawer (Logic Untouched) */}
