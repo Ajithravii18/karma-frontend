@@ -197,9 +197,9 @@ const Dashboard = () => {
   };
 
   const handleLiveHelp = async (item, type) => {
-    const message = window.prompt("=��� SOS: What issue are you experiencing? (e.g., Courier is not answering, payment stuck):");
-    if (!message || message.trim().length < 5) {
-      return toast.error("Please provide a brief description (min 5 characters)");
+    const message = window.prompt("🆘 SOS EMERGENCY / LIVE HELP:\nWhat issue or blocker are you experiencing with this mission?\n(e.g., Courier not reachable, payment issue, gate locked):");
+    if (!message || message.trim().length < 2) {
+      return toast.error("Please provide a brief description of the issue");
     }
 
     // Fix: Use singular form for API
@@ -209,11 +209,12 @@ const Dashboard = () => {
       await api.post("/api/user/live-help", {
         requestId: item._id,
         requestType: apiType,
-        message: message
+        message: message.trim()
       });
-      toast.success("Help signal sent to HQ. Standby.");
+      toast.success("SOS Help signal transmitted to Admin HQ! 🚨");
+      fetchAllData(false);
     } catch (err) {
-      toast.error(err.response?.data?.message ||"Failed to signal HQ");
+      toast.error(err.response?.data?.message || "Failed to signal HQ");
     }
   };
 
@@ -451,15 +452,16 @@ const Dashboard = () => {
               <FaDownload size={10} /> Get Receipt
             </button>
           ) : null}
-          {hasVolunteer && !isFinished && (
-            <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-sky-50 text-sky-600 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 border border-sky-100">
-              <FaInfoCircle /> {item.helpRequested ? "Signal Active" : "Request Help"}
+          {!isFinished ? (
+            <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white py-2.5 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-1.5 border border-rose-200 transition-all">
+              <FaInfoCircle /> {item.helpRequested ? "SOS Signal Active" : "Request SOS Help"}
             </button>
-          )}
-          {hasVolunteer && isFinished && !item.review && (
-            <button onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })} className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2">
-              <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
-            </button>
+          ) : (
+            hasVolunteer && !item.review && (
+              <button onClick={() => setReviewModal({ show: true, item, type, rating: 0, comment: "", isReport: false, reportReason: "", loading: false })} className="w-full bg-amber-50 text-amber-600 border border-amber-100 py-3 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2">
+                <FaStar /> {type === 'pickups' ? 'Review Courier' : 'Review Agent'}
+              </button>
+            )
           )}
         </div>
       </div>
@@ -556,18 +558,18 @@ const Dashboard = () => {
                             <FaDownload size={10} /> Receipt
                           </button>
                         ) : <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">—</span>}
-                        {hasVolunteer && (
-                          !isFinished ? (
-                            item.helpRequested ? (
-                              <div className="flex items-center gap-2 px-3 py-2 bg-sky-50 text-sky-600 rounded-lg text-[10px] font-black uppercase border border-sky-100 animate-pulse">
-                                <FaInfoCircle size={10} /> Active
-                              </div>
-                            ) : (
-                              <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-sky-50 text-sky-600 px-4 py-2 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-sky-600 hover:text-white transition-all active:scale-95">
-                                <FaInfoCircle /> Help
-                              </button>
-                            )
+                        {!isFinished ? (
+                          item.helpRequested ? (
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-[10px] font-black uppercase border border-rose-200 animate-pulse" title={item.helpMessage || "SOS Active"}>
+                              <FaInfoCircle size={10} /> SOS Active
+                            </div>
                           ) : (
+                            <button onClick={() => handleLiveHelp(item, type)} className="w-full bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase flex items-center justify-center gap-1.5 border border-rose-200 transition-all active:scale-95">
+                              <FaInfoCircle /> SOS Help
+                            </button>
+                          )
+                        ) : (
+                          hasVolunteer && (
                             item.review ? (
                               <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 text-slate-400 rounded-lg text-[10px] font-black uppercase border border-slate-200">
                                 <FaCheckDouble size={10} /> Reviewed
