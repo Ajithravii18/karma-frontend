@@ -217,13 +217,15 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
           )}
         </div>
 
-        {/* Dashboard Search Bar (Desktop) */}
+        {/* Dashboard Greeting (Desktop) */}
         {isDashboard && (
-          <div className="hidden lg:flex items-center flex-1 max-w-md ml-4">
-            <div className="relative w-full">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input type="text" placeholder="Search..." className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all" />
-            </div>
+          <div className="hidden lg:flex flex-col ml-4">
+            <h2 className="text-lg font-black text-slate-800 tracking-tight leading-none">
+              Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
+            </h2>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            </p>
           </div>
         )}
 
