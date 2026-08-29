@@ -479,7 +479,7 @@ const VolunteerPortal = () => {
           </div>
         </aside>
 
-        <main className="flex-1 lg:ml-64 w-full">
+        <main className="flex-1 lg:ml-64 w-full pb-24 lg:pb-0">
 
       {/* ===== CAMERA / GALLERY PICKER MODAL ===== */}
       {photoModal.open && (
@@ -571,30 +571,7 @@ const VolunteerPortal = () => {
       )}
       <div className="max-w-[1400px] mx-auto pt-8 lg:pt-10 px-4 sm:px-6">
 
-        {/* MOBILE NAVIGATION LINKS */}
-        <div className="flex lg:hidden flex-col gap-4 mb-8">
-          <div onClick={() => navigate("/volunteer-history")} className="cursor-pointer bg-slate-900 px-6 py-5 rounded-[2rem] shadow-xl flex items-center gap-4 group hover:bg-slate-800 transition-all text-white">
-            <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shrink-0"><FaCheckCircle /></div>
-            <div className="flex-1">
-              <p className="text-2xl font-black">{myCompletedCount}</p>
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Successful Missions Log</p>
-            </div>
-            <FaArrowRight className="ml-auto group-hover:translate-x-2 transition-transform" />
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {activeTab === 'missions' ? (
-              <button onClick={() => setActiveTab('profile')} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
-                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg"><FaUserShield /></div>
-                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">My Profile</p>
-              </button>
-            ) : (
-              <button onClick={() => setActiveTab('missions')} className="bg-white border border-slate-200 px-4 py-4 rounded-[1.5rem] shadow-sm flex flex-col items-center gap-2 hover:bg-slate-50 transition-all">
-                <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg"><FaColumns /></div>
-                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Back to Missions</p>
-              </button>
-            )}
-          </div>
-        </div>
+
 
         {activeTab === 'profile' ? (
           <div className="animate-in fade-in duration-300">
@@ -1079,6 +1056,22 @@ const VolunteerPortal = () => {
           </div>
         </div>
       )}
+
+      {/* 📱 MOBILE BOTTOM NAV 📱 */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 flex shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+        <button onClick={() => setActiveTab('missions')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'missions' ? "text-emerald-600" : "text-slate-400"}`}>
+          <FaColumns size={16} />
+          Missions
+        </button>
+        <button onClick={() => navigate("/volunteer-history")} className="flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all text-slate-400">
+          <FaCheckCircle size={16} />
+          Log
+        </button>
+        <button onClick={() => setActiveTab('profile')} className={`flex-1 py-3 flex flex-col items-center gap-1 text-[9px] font-bold uppercase tracking-widest transition-all ${activeTab === 'profile' ? "text-indigo-600" : "text-slate-400"}`}>
+          <FaUserShield size={16} />
+          Profile
+        </button>
+      </div>
 
       </main>
       </div>
