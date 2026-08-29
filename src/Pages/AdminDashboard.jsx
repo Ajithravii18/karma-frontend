@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import toast from "react-hot-toast";
 import Nav from "../Components/Nav";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 
 // Analytics Components
 import MonthlyRevenue from "../Components/Admin/MonthlyRevenue";
@@ -209,37 +210,24 @@ const AdminDashboard = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 pb-20">
             <Nav />
-            <div className="max-w-[1440px] mx-auto pt-24 md:pt-32 px-4 md:px-8">
-                {/* HEADER */}
-                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-6 w-full">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <FaCircle className="text-emerald-500 animate-pulse" size={8} />
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">System Overseer Mode</p>
+            <div className="flex pt-[68px] min-h-screen">
+                <AdminSidebar />
+                <main className="flex-1 lg:ml-64 w-full p-4 md:p-8 overflow-x-hidden">
+                    {/* HEADER */}
+                    <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-6 w-full">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <FaCircle className="text-emerald-500 animate-pulse" size={8} />
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">System Overseer Mode</p>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase">Admin <span className="font-thin italic text-slate-400">console</span></h1>
+                        <div className="flex items-center gap-3 w-full xl:w-auto">
+                            <button onClick={() => fetchAdminData()} className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all shrink-0">
+                                <FaSyncAlt size={15} className={loading ? "animate-spin" : ""} />
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-                        <button onClick={() => navigate("/admin/users")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 transition-all">
-                            <FaUsersCog className="text-indigo-600" /> Users
-                        </button>
-                        <button onClick={() => navigate("/admin/deletion-logs")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 transition-all">
-                            <FaUserTimes className="text-rose-500" /> Archives
-                        </button>
-                        <button onClick={() => navigate("/admin/revenue-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-all">
-                            <FaChartLine className="text-indigo-500" /> Revenue
-                        </button>
-                        <button onClick={() => navigate("/admin/waste-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 transition-all">
-                            <FaRecycle className="text-emerald-500" /> Waste
-                        </button>
-                        <button onClick={() => navigate("/admin/food-analysis")} className="flex-1 min-w-[120px] xl:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 px-4 md:px-6 py-3.5 rounded-2xl font-black text-[11px] uppercase shadow-sm hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600 transition-all">
-                            <FaUtensils className="text-amber-500" /> Food
-                        </button>
-                        <button onClick={() => fetchAdminData()} className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all shrink-0">
-                            <FaSyncAlt size={15} className={loading ? "animate-spin" : ""} />
-                        </button>
-                    </div>
-                </div>
 
                 {/* ANALYTICS SECTION — Clickable cards */}
 
@@ -756,6 +744,7 @@ const AdminDashboard = () => {
                         </button>
                     </div>
                 )}
+                </main>
             </div>
         </div>
     );
