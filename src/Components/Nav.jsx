@@ -224,7 +224,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               )}
             </div>
 
-            {isServicePage && (
+            {(isServicePage || isDashboard) && (
               <div className="flex items-center gap-2 pl-2 border-l border-emerald-200/80">
                 <button
                   onClick={handleHome}
@@ -237,15 +237,49 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             )}
           </div>
 
-          {/* Dashboard Greeting (Desktop only) */}
+          {/* Dashboard Greeting + Home & Services Shortcuts (Desktop only) */}
           {isDashboard && (
-            <div className="hidden lg:flex flex-col ml-4">
-              <h2 className="text-lg font-black text-slate-900 tracking-tight leading-none">
-                Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
-              </h2>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-              </p>
+            <div className="hidden lg:flex items-center gap-6 ml-4">
+              <div className="flex flex-col">
+                <h2 className="text-lg font-black text-slate-900 tracking-tight leading-none">
+                  Welcome back, {userName?.split(' ')[0] || 'User'}! 👋
+                </h2>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                  {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                </p>
+              </div>
+
+              {/* Dashboard Nav Shortcuts (Home & Services) */}
+              <div className="flex items-center gap-2 pl-4 border-l border-slate-200">
+                <button
+                  onClick={handleHome}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all active:scale-95"
+                >
+                  <span>🏠</span>
+                  <span>Home</span>
+                </button>
+
+                {/* Services Dropdown in Dashboard */}
+                <div className="relative group/dashservices">
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white/90 hover:bg-white border border-slate-200/80 shadow-xs transition-all">
+                    <FaConciergeBell className="text-emerald-600" />
+                    <span>Services</span>
+                    <FaChevronDown className="text-[9px] text-slate-400" />
+                  </button>
+                  <div className="absolute left-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 opacity-0 invisible group-hover/dashservices:opacity-100 group-hover/dashservices:visible transition-all duration-200 transform group-hover/dashservices:translate-y-0 translate-y-2 z-50 overflow-hidden text-slate-800">
+                    {services.map((service, index) => (
+                      <button
+                        key={index}
+                        onClick={() => nav(service.path)}
+                        className="flex items-center gap-3 w-full p-3 hover:bg-emerald-50/60 transition border-b border-slate-100 last:border-0 text-left"
+                      >
+                        <span className="text-base">{service.icon}</span>
+                        <p className="font-bold text-slate-800 text-xs hover:text-emerald-700">{service.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -428,20 +462,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               </button>
             )}
 
-            {/* Mobile Menu Toggle (on marketing pages) */}
-            {!isDashboard && (
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle border active:scale-95 ${
-                  location.pathname === "/" && !isScrolled
-                    ? "bg-white/10 hover:bg-white/20 text-white border-white/20"
-                    : "bg-white/90 hover:bg-white text-slate-700 border-slate-200/80 shadow-xs"
-                }`}
-                title="Open Menu"
-              >
-                {isMenuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
-              </button>
-            )}
+            {/* Mobile Menu Toggle (Available across all pages on mobile) */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 menu-toggle border active:scale-95 ${
+                location.pathname === "/" && !isScrolled
+                  ? "bg-white/10 hover:bg-white/20 text-white border-white/20"
+                  : "bg-white/90 hover:bg-white text-slate-700 border-slate-200/80 shadow-xs"
+              }`}
+              title="Open Menu"
+            >
+              {isMenuOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
+            </button>
           </div>
         </div>
       </nav>
