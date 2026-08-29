@@ -427,7 +427,7 @@ const VolunteerPortal = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar z-[150] border-r border-slate-200">
+        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar hide-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden z-[150] border-r border-slate-200">
           {/* Logo Section */}
           <div className="h-[68px] flex items-center gap-2 px-6 border-b border-slate-200 cursor-pointer shrink-0" onClick={() => navigate("/")}>
             <img src={logo} className="w-8" alt="E-Karma Logo" />
@@ -603,30 +603,78 @@ const VolunteerPortal = () => {
           {activeTab === 'profile' ? (
             /* ── PROFILE & SECURITY TAB ── */
             <div className="space-y-6 animate-in fade-in duration-200 max-w-3xl mb-12">
+              {/* Header */}
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Volunteer <span className="text-emerald-600">Profile</span></h1>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Manage your registered phone number, verified metrics, and credentials.</p>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Manage your identity, registered contact number, and operational credentials.</p>
               </div>
               
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs flex flex-col sm:flex-row items-center gap-5">
-                <div className="w-20 h-20 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-3xl font-black shrink-0 border border-indigo-200">
-                  {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
-                </div>
-                <div className="text-center sm:text-left flex-1">
-                  <h3 className="text-xl font-black text-slate-900">{volunteerInfo.name || "Volunteer Agent"}</h3>
-                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-0.5">Volunteer ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3">
-                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-emerald-200">
-                      <FaStar className="text-amber-500" /> {volunteerInfo.averageRating || "0.0"} Rating
-                    </span>
-                    <span className="bg-slate-50 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-200">
-                      <FaPhoneAlt size={10} className="text-slate-400" /> {volunteerInfo.phone || "No Phone"}
-                    </span>
+              {/* Profile Hero Card */}
+              <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-7 shadow-xs relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600"></div>
+                
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                  <div className="relative">
+                    <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center text-3xl font-black shrink-0 shadow-md shadow-emerald-500/20 border-2 border-white">
+                      {volunteerInfo.name?.charAt(0).toUpperCase() || "V"}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs" title="Active on Duty">
+                      <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                    </div>
+                  </div>
+
+                  <div className="text-center sm:text-left flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-1">
+                          <FaUserShield size={11} /> Verified Eco-Volunteer
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                      </div>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 w-fit mx-auto sm:mx-0">
+                        ID: #{currentVolunteerId?.slice(-6) || "000000"}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3">
+                      <span className="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-amber-200 shadow-xs">
+                        <FaStar className="text-amber-500" /> {volunteerInfo.averageRating || "0.0"} Score ({volunteerInfo.reviewCount || 0} reviews)
+                      </span>
+                      <span className="bg-slate-50 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-200 shadow-xs">
+                        <FaPhoneAlt size={10} className="text-slate-400" /> {volunteerInfo.phone || "No Phone"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              {/* Quick Metrics Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Completed</p>
+                  <p className="text-xl font-black text-slate-900 mt-0.5">{myCompletedCount} <span className="text-xs font-semibold text-slate-500">Missions</span></p>
+                </div>
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs">
+                  <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Duty Status</p>
+                  <p className="text-sm font-black text-emerald-700 mt-1 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active & Ready
+                  </p>
+                </div>
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col justify-between">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Service History</p>
+                  <button
+                    onClick={() => navigate("/volunteer-history")}
+                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 mt-1 text-left"
+                  >
+                    View All Logs →
+                  </button>
+                </div>
+              </div>
+
+              {/* Security & Settings Section */}
+              <div className="space-y-3.5 pt-2">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-400">Security & Account Protocols</h3>
+
                 {/* ── CARD 1: UPDATE CONTACT NUMBER ACCORDION ── */}
                 <div className={`bg-white border rounded-2xl shadow-xs transition-all overflow-hidden ${phoneState.show ? 'border-emerald-300 ring-2 ring-emerald-500/20' : 'border-slate-200'}`}>
                   <button
@@ -643,7 +691,7 @@ const VolunteerPortal = () => {
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-slate-900">Update Contact Number</h4>
-                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP</p>
+                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">Change your registered phone number via OTP verification</p>
                       </div>
                     </div>
                     <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${phoneState.show ? 'bg-emerald-100 text-emerald-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
@@ -720,7 +768,7 @@ const VolunteerPortal = () => {
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-rose-900">Delete Account</h4>
-                        <p className="text-[10px] text-rose-600 font-medium mt-0.5">Permanently purge your volunteer account</p>
+                        <p className="text-[10px] text-rose-600 font-medium mt-0.5">Permanently purge your volunteer account and credentials</p>
                       </div>
                     </div>
                     <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform ${deleteState.show ? 'bg-rose-100 text-rose-700 rotate-180' : 'bg-slate-100 text-slate-400'}`}>
