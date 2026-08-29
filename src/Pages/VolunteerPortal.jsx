@@ -5,7 +5,7 @@ import {
   FaDirections, FaHistory, FaCheckCircle, FaArrowRight,
   FaTruckLoading, FaSync, FaUserShield, FaMapMarkerAlt,
   FaExclamationTriangle, FaCamera, FaUtensils, FaImages, FaTimes, FaUpload,
-  FaStar, FaInfoCircle
+  FaStar, FaInfoCircle, FaCircle, FaEdit
 } from "react-icons/fa";
 import api from "../utils/api";
 import toast from "react-hot-toast";
@@ -53,6 +53,8 @@ const VolunteerPortal = () => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [sectorFilter, setSectorFilter] = useState("All Sectors");
   const [volunteerInfo, setVolunteerInfo] = useState({ name: "", phone: "" });
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState("");
   const [photoModal, setPhotoModal] = useState({ open: false, taskId: null, preview: null, file: null, uploading: false });
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
@@ -100,12 +102,25 @@ const VolunteerPortal = () => {
       const res = await api.get("/me");
       const data = res.data.user || res.data;
       setVolunteerInfo({
-        name: data.name,
-        phone: data.phone,
+        name: data.name || "",
+        phone: data.phone || "",
         averageRating: data.averageRating,
         reviewCount: data.reviewCount
       });
+      setNewName(data.name || "");
     } catch (err) { console.error("Profile Fetch Error", err); }
+  };
+
+  const handleUpdateName = async () => {
+    if (!newName.trim()) return toast.error("Name cannot be empty");
+    try {
+      const res = await api.put("/api/update-profile", { name: newName });
+      localStorage.setItem("userName", res.data.name);
+      window.dispatchEvent(new Event("storage"));
+      setVolunteerInfo(prev => ({ ...prev, name: res.data.name }));
+      toast.success("Profile name updated!");
+      setIsEditing(false);
+    } catch (err) { toast.error("Update failed"); }
   };
 
   const fetchTasks = async (isInitial = false) => {
@@ -643,11 +658,37 @@ const VolunteerPortal = () => {
                         </div>
                       </div>
 
-                      <div className="overflow-hidden">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mb-1">
-                          <FaUserShield size={10} /> Verified Responder
-                        </span>
-                        <h3 className="text-lg sm:text-xl font-black text-slate-900 truncate leading-tight">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                      <div className="overflow-hidden flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mb-1">
+                            <FaUserShield size={10} /> Verified Responder
+                          </span>
+                          <button
+                            onClick={() => setIsEditing(!isEditing)}
+                            className="text-[10px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200 transition-all"
+                          >
+                            {isEditing ? <><FaTimes size={9} /> Cancel</> : <><FaEdit size={9} /> Edit Name</>}
+                          </button>
+                        </div>
+
+                        {isEditing ? (
+                          <div className="flex gap-2 mt-1">
+                            <input
+                              value={newName}
+                              onChange={(e) => setNewName(e.target.value)}
+                              className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 font-bold text-slate-800 outline-none focus:border-emerald-500 text-xs w-full"
+                              placeholder="Full Name"
+                            />
+                            <button
+                              onClick={handleUpdateName}
+                              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 transition-all"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <h3 className="text-lg sm:text-xl font-black text-slate-900 truncate leading-tight mt-0.5">{volunteerInfo.name || "Volunteer Agent"}</h3>
+                        )}
                         <p className="text-[11px] font-mono text-slate-400 mt-0.5">ID: #{currentVolunteerId?.slice(-6) || "000000"}</p>
                       </div>
                     </div>
