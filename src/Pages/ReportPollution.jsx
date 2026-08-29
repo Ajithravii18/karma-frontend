@@ -128,59 +128,67 @@ function PollutionReport() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7F6] font-sans text-[#0A2F1D] pb-10 relative">
+    <div className="min-h-screen bg-slate-50 font-sans pb-10 relative">
       <Nav />
-      <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
+
+      <section className="pt-24 pb-10 px-4 md:px-8">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* LEFT PANE */}
-          <div className="flex flex-col justify-between bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px]">
+          <div className="flex flex-col justify-between bg-rose-950 text-white rounded-[2.5rem] min-h-[680px] p-8 md:p-12">
+
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E9F5EC] rounded-full text-[#0B7A30] text-[10px] font-black tracking-widest uppercase mb-10">
-                <span className="w-2 h-2 rounded-full bg-[#09B948]"></span>
+              {/* Badge pill */}
+              <div className="bg-rose-500/20 text-rose-300 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-flex items-center gap-2 mb-10">
+                <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
                 Citizen Watch
               </div>
-              
-              <h1 className="text-5xl md:text-[4rem] font-black text-[#1A2530] leading-[1.05] tracking-tight mb-6">
+
+              {/* Heading */}
+              <h1 className="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-6">
                 Report <br />
-                <span className="text-[#09B948] italic tracking-tighter">Pollution Spot.</span>
+                <span className="text-rose-400 italic">Pollution Spot.</span>
               </h1>
-              
-              <p className="text-gray-500 text-lg md:text-xl font-medium max-w-md leading-relaxed">
+
+              {/* Subtitle */}
+              <p className="text-rose-200/60 text-base font-medium max-w-xs leading-relaxed">
                 Help our volunteers find and verify environmental hazards. Upload photos and pin the exact coordinates of the issue.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
-              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-[#E9F5EC] text-[#0B7A30] flex items-center justify-center mb-4">
+            {/* Feature cards */}
+            <div className="grid grid-cols-2 gap-4 mt-12">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
                   <FaCrosshairs size={16} />
                 </div>
-                <h4 className="font-black text-[#1A2530] text-lg mb-1">Pinpoint Accuracy</h4>
-                <p className="text-sm font-medium text-gray-500 leading-relaxed">GPS location helps fast verification.</p>
+                <h4 className="font-black text-white text-sm mb-1">Pinpoint Accuracy</h4>
+                <p className="text-xs font-medium text-rose-200/50 leading-relaxed">GPS location helps fast verification.</p>
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-[#F4F7F6] text-[#EA580C] flex items-center justify-center mb-4">
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
                   <FaCamera size={16} />
                 </div>
-                <h4 className="font-black text-[#1A2530] text-lg mb-1">Visual Evidence</h4>
-                <p className="text-sm font-medium text-gray-500 leading-relaxed">Upload photos for quick assessment.</p>
+                <h4 className="font-black text-white text-sm mb-1">Visual Evidence</h4>
+                <p className="text-xs font-medium text-rose-200/50 leading-relaxed">Upload photos for quick assessment.</p>
               </div>
             </div>
           </div>
 
           {/* RIGHT PANE (FORM) */}
-          <div className="bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px] flex flex-col justify-center">
+          <div className="bg-white rounded-[2.5rem] min-h-[680px] p-8 md:p-12 flex flex-col justify-center shadow-sm border border-slate-200">
             <form onSubmit={handleSubmit} className="space-y-6">
 
+              {/* Incident Category */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
                   <FaExclamationTriangle /> Incident Category
                 </label>
                 <select
                   value={pollutionType}
                   onChange={(e) => setPollutionType(e.target.value)}
-                  className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all text-sm cursor-pointer appearance-none"
                   required
                 >
                   <option value="">Select Category...</option>
@@ -191,37 +199,48 @@ function PollutionReport() {
                 </select>
               </div>
 
+              {/* Description */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Description</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                  Description
+                </label>
                 <textarea
                   placeholder="Describe the environmental hazard..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-[#F4F7F6] border-transparent rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all text-sm min-h-[100px] resize-none"
                   required
                 />
               </div>
 
-              {/* Enhanced Image Upload with Previews */}
+              {/* Evidence Photos */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
                   <FaCamera /> Evidence Photos
                 </label>
+
                 <div
                   onClick={() => fileInputRef.current.click()}
-                  className="w-full bg-[#F4F7F6] border-2 border-dashed border-gray-300 rounded-3xl px-5 py-8 text-center cursor-pointer hover:bg-white hover:border-[#09B948] transition-all group flex flex-col items-center justify-center"
+                  className="w-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl px-5 py-8 text-center cursor-pointer hover:bg-white hover:border-rose-400 transition-all group flex flex-col items-center justify-center"
                 >
-                  <FaCamera className="text-gray-400 group-hover:text-[#09B948] mb-2 transition-colors" size={24} />
-                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">
-                    {photos.length >= 4 ?"Max Capacity Reached" :"Attach Evidence Photos (Max 4)"}
+                  <FaCamera className="text-slate-400 group-hover:text-rose-500 mb-2 transition-colors" size={24} />
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
+                    {photos.length >= 4 ? "Max Capacity Reached" : "Attach Evidence Photos (Max 4)"}
                   </p>
                 </div>
 
                 {photos.length > 0 && (
                   <div className="grid grid-cols-4 gap-3 mt-3">
                     {photos.map((file, index) => (
-                      <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
-                        <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                      <div
+                        key={index}
+                        className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 group"
+                      >
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt="preview"
+                          className="w-full h-full object-cover"
+                        />
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); removePhoto(index); }}
@@ -244,20 +263,28 @@ function PollutionReport() {
                 />
               </div>
 
-              {/* Location Selector */}
+              {/* Location */}
               <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                  <FaMapMarkerAlt /> Location
+                </label>
+
                 <button
                   type="button"
                   onClick={getLocation}
-                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus ==="success"
-                      ?"bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
-                      :"bg-[#FFF4ED] text-[#EA580C] border-[#EA580C]/30 hover:bg-[#FCE3D4]"
-                    }`}
+                  className={
+                    locationStatus === "success"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl py-3.5 font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 w-full hover:bg-emerald-100 transition-all"
+                      : "bg-slate-50 text-slate-700 border border-slate-200 rounded-xl py-3.5 font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 w-full hover:bg-slate-100 transition-all"
+                  }
                 >
-                  <FaCrosshairs size={14} /> {locationStatus ==="success" ?"COORDINATES SECURED (RE-SYNC)" :"?? Pin Current Location"}
+                  <FaCrosshairs size={14} />
+                  {locationStatus === "success"
+                    ? "Coordinates Secured — Re-Sync"
+                    : "Pin Current Location"}
                 </button>
 
-                <div className="rounded-3xl overflow-hidden h-[180px] w-full border-4 border-[#F1F3F2] relative z-0">
+                <div className="border-2 border-slate-100 rounded-2xl overflow-hidden h-[180px] w-full relative z-0">
                   <MapContainer
                     center={[location.lat, location.lng]}
                     zoom={location.lat === 20.5937 ? 5 : 16}
@@ -276,14 +303,15 @@ function PollutionReport() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-[#09B948] text-white py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-[#0B7A30] transition-all shadow-[0_6px_20px_rgb(9,185,72,0.4)] flex items-center justify-center gap-3 disabled:opacity-50"
+                  className="w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {submitting ?"Transmitting Evidence..." :"?? Broadcast Report"}
+                  {submitting ? "Transmitting Evidence..." : "Broadcast Report"}
                 </button>
               </div>
 
             </form>
           </div>
+
         </div>
       </section>
     </div>

@@ -100,53 +100,66 @@ function SchedulePickup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7F6] font-sans text-[#0A2F1D] pb-10 relative">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <Nav />
-      <section className="pt-24 pb-10 px-4 md:px-8 flex items-center justify-center relative z-10">
+
+      <section className="pt-24 pb-10 px-4 md:px-8">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* LEFT PANE */}
-          <div className="flex flex-col justify-between bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px]">
+          <div className="flex flex-col justify-between bg-slate-900 rounded-[2.5rem] min-h-[680px] p-8 md:p-12">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E9F5EC] rounded-full text-[#0B7A30] text-[10px] font-black tracking-widest uppercase mb-10">
-                <span className="w-2 h-2 rounded-full bg-[#09B948]"></span>
+              {/* Badge pill */}
+              <div className="bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full inline-flex items-center gap-2 mb-10">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 Precision Logistics
               </div>
-              
-              <h1 className="text-5xl md:text-[4rem] font-black text-[#1A2530] leading-[1.05] tracking-tight mb-6">
-                Schedule Your <br />
-                <span className="text-[#09B948] italic tracking-tighter">Waste Pickup.</span>
+
+              {/* Heading */}
+              <h1 className="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-6">
+                Schedule Your<br />
+                <span className="text-emerald-400 italic">Waste Pickup.</span>
               </h1>
-              
-              <p className="text-gray-500 text-lg md:text-xl font-medium max-w-md leading-relaxed">
+
+              {/* Subtitle */}
+              <p className="text-slate-400 text-base font-medium max-w-xs leading-relaxed">
                 Our AI-driven routing ensures the nearest volunteer finds your exact doorstep using GPS coordinates.
               </p>
             </div>
 
+            {/* Mini feature cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
-              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-[#E9F5EC] text-[#0B7A30] flex items-center justify-center mb-4">
-                  <FaCrosshairs size={16} />
+              {/* Card: Pinpoint Accuracy */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/15 flex items-center justify-center mb-4">
+                  <FaCrosshairs size={16} className="text-emerald-400" />
                 </div>
-                <h4 className="font-black text-[#1A2530] text-lg mb-1">Pinpoint Accuracy</h4>
-                <p className="text-sm font-medium text-gray-500 leading-relaxed">Doorstep pickup with GPS routing.</p>
+                <h4 className="font-black text-white text-base mb-1">Pinpoint Accuracy</h4>
+                <p className="text-sm font-medium text-slate-400 leading-relaxed">
+                  Doorstep pickup with GPS routing.
+                </p>
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]  flex flex-col justify-center min-h-[160px]">
-                <div className="w-10 h-10 rounded-full bg-[#F4F7F6] text-[#EA580C] flex items-center justify-center mb-4">
-                  <FaMapMarkerAlt size={16} />
+
+              {/* Card: Reliable Service */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center mb-4">
+                  <FaMapMarkerAlt size={16} className="text-amber-400" />
                 </div>
-                <h4 className="font-black text-[#1A2530] text-lg mb-1">Reliable Service</h4>
-                <p className="text-sm font-medium text-gray-500 leading-relaxed">Convenient slots that suit you.</p>
+                <h4 className="font-black text-white text-base mb-1">Reliable Service</h4>
+                <p className="text-sm font-medium text-slate-400 leading-relaxed">
+                  Convenient slots that suit you.
+                </p>
               </div>
             </div>
           </div>
 
           {/* RIGHT PANE (FORM) */}
-          <div className="bg-white p-8 md:p-12 lg:p-16 rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)]  min-h-[680px] flex flex-col justify-center">
+          <div className="bg-white rounded-[2.5rem] min-h-[680px] p-8 md:p-12 flex flex-col justify-center shadow-sm border border-slate-200">
             <form onSubmit={handleSubmit} className="space-y-6">
 
+              {/* Address */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
                   <FaMapMarkerAlt /> Pickup Address / Landmark
                 </label>
                 <input
@@ -155,7 +168,7 @@ function SchedulePickup() {
                   placeholder="Enter detailed address..."
                   value={form.address}
                   onChange={handleChange}
-                  className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-sm"
                   required
                 />
               </div>
@@ -163,12 +176,14 @@ function SchedulePickup() {
               {/* Row: Waste Type & Pickup Date */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Waste Type</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                    Waste Type
+                  </label>
                   <select
                     name="wasteType"
                     value={form.wasteType}
                     onChange={handleChange}
-                    className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-sm cursor-pointer appearance-none"
                     required
                   >
                     <option value="">Select Type</option>
@@ -178,26 +193,31 @@ function SchedulePickup() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Pickup Date</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                    Pickup Date
+                  </label>
                   <input
                     type="date"
                     name="pickupDate"
                     min={today}
                     value={form.pickupDate}
                     onChange={handleChange}
-                    className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-sm"
                     required
                   />
                 </div>
               </div>
 
+              {/* Time Slot */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Time Slot</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                  Time Slot
+                </label>
                 <select
                   name="timeSlot"
                   value={form.timeSlot}
                   onChange={handleChange}
-                  className="w-full bg-[#F4F7F6] border-transparent rounded-2xl px-5 py-4 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none cursor-pointer appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-sm cursor-pointer appearance-none"
                   required
                 >
                   <option value="">Select Time Slot</option>
@@ -207,43 +227,50 @@ function SchedulePickup() {
                 </select>
               </div>
 
+              {/* Additional Notes */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Additional Notes</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                  Additional Notes
+                </label>
                 <textarea
                   name="description"
                   placeholder="Additional Notes for Volunteer..."
                   value={form.description}
                   onChange={handleChange}
-                  className="w-full bg-[#F4F7F6] border-transparent rounded-3xl px-5 py-5 font-bold text-gray-700 outline-none focus:bg-white focus:border-[#09B948] transition-all border shadow-none min-h-[100px] resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-medium text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-sm min-h-[100px] resize-none"
                 />
               </div>
 
-              {/* Location Status Button */}
+              {/* GPS Pin Button */}
               <div className="space-y-3 pt-2">
                 <button
                   type="button"
                   onClick={requestLocation}
-                  className={`w-full py-4 font-black text-[11px] uppercase tracking-widest rounded-full border transition-all flex items-center justify-center gap-3 ${locationStatus ==="success"
-                      ?"bg-[#E9F5EC] text-[#0B7A30] border-[#09B948]/30 hover:bg-[#D5EAD9]"
-                      :"bg-[#F4F7F6] text-[#EA580C] border-[#EA580C]/30 hover:bg-[#F4F7F6]"
-                    }`}
+                  className={
+                    locationStatus === "success"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl py-3.5 font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 w-full hover:bg-emerald-100 transition-all"
+                      : "bg-slate-50 text-slate-700 border border-slate-200 rounded-xl py-3.5 font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 w-full hover:bg-slate-100 transition-all"
+                  }
                 >
-                  <FaCrosshairs size={14} /> {locationStatus ==="success" ?"GPS FIXED (RE-SYNC)" :"📍 Pin Current Location"}
+                  <FaCrosshairs size={14} />
+                  {locationStatus === "success" ? "GPS Fixed — Re-Sync" : "📍 Pin Current Location"}
                 </button>
               </div>
 
+              {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#09B948] text-white py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-[#0B7A30] transition-all shadow-[0_6px_20px_rgb(9,185,72,0.4)] flex items-center justify-center gap-3 disabled:opacity-50"
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {loading ?"Transmitting..." :"🚀 Confirm Schedule"}
+                  {loading ? "Transmitting..." : "🚀 Confirm Schedule"}
                 </button>
               </div>
 
             </form>
           </div>
+
         </div>
       </section>
     </div>
