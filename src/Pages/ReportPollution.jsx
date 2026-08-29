@@ -9,7 +9,7 @@ import Nav from "../Components/Nav";
 import AOS from "aos";
 import {
   FaMapMarkerAlt, FaCrosshairs, FaCamera, FaExclamationTriangle,
-  FaTrash, FaHistory, FaShieldAlt, FaEye, FaCheckCircle, FaFileAlt
+  FaTrash, FaShieldAlt, FaEye, FaCheckCircle, FaBolt
 } from "react-icons/fa";
 
 // Fix for Leaflet default marker icons
@@ -37,27 +37,9 @@ function PollutionReport() {
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef();
 
-  const [pastPollution, setPastPollution] = useState([]);
-  const [loadingPollution, setLoadingPollution] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const fetchPastPollution = async () => {
-    try {
-      setLoadingPollution(true);
-      const res = await api.get("/api/my-pollution");
-      setPastPollution(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingPollution(false);
-    }
-  };
-
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
     getLocation();
-    fetchPastPollution();
   }, []);
 
   const getLocation = () => {
@@ -66,11 +48,11 @@ function PollutionReport() {
       (pos) => {
         setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setLocationStatus("success");
-        toast.success("Location Coordinates Secured");
+        toast.success("Hazard coordinates secured!");
       },
       () => {
         setLocationStatus("error");
-        toast.error("Location access denied");
+        toast.error("Location access denied. Please click to pin.");
       },
       { enableHighAccuracy: true }
     );
@@ -79,7 +61,7 @@ function PollutionReport() {
   const handlePhotoChange = (e) => {
     const files = Array.from(e.target.files);
     if (photos.length + files.length > 4) {
-      toast.error("Maximum 4 Evidence Images Allowed");
+      toast.error("Maximum 4 evidence images allowed");
       return;
     }
     setPhotos([...photos, ...files]);
@@ -94,13 +76,13 @@ function PollutionReport() {
     const token = localStorage.getItem("authToken");
 
     if (!token) {
-      toast.error("Authentication Required");
+      toast.error("Please login to report an incident");
       navigate("/login");
       return;
     }
 
     if (locationStatus !== "success") {
-      toast.error("Please pin the precise hazard coordinates");
+      toast.error("Please lock the hazard coordinates on the map.");
       return;
     }
 
@@ -117,11 +99,10 @@ function PollutionReport() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Incident Broadcasted to Response Teams!");
+      toast.success("Environmental Report Transmitted! 🚨");
       setPollutionType("");
       setDescription("");
       setPhotos([]);
-      fetchPastPollution();
     } catch (err) {
       toast.error(err.response?.data?.message || "Transmission failed");
     } finally {
@@ -129,158 +110,154 @@ function PollutionReport() {
     }
   };
 
-  const totalPages = Math.ceil(pastPollution.length / itemsPerPage);
-  const currentRecords = pastPollution.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col selection:bg-rose-500 selection:text-white">
       <Nav />
 
-      {/* ── TOP HERO BANNER & METRICS ── */}
-      <section className="pt-[88px] pb-6 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-200/60 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-              <span className="text-[10px] font-black text-rose-700 uppercase tracking-widest">
-                Citizen Environmental Watchdog • Public Incident Registry
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Report & Mobilize <span className="text-rose-600 italic">Pollution Hotspots</span>
-            </h1>
-            <p className="text-slate-500 text-sm sm:text-base max-w-2xl font-medium leading-relaxed">
-              Document illegal waste dumps, air emissions, and toxic effluents. Real-time geo-tagging alerts nearby volunteer squads and civic monitoring teams for fast cleanup mobilization.
-            </p>
+      {/* ── HERO BANNER ── */}
+      <section className="pt-[92px] pb-8 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-rose-50 border border-rose-200/80 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+            <span className="text-[11px] font-black text-rose-700 uppercase tracking-widest">
+              Citizen Environmental Watchdog • Public Hazard Registry
+            </span>
           </div>
 
-          {/* Quick Metrics */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0 overflow-x-auto pb-2 md:pb-0">
-            <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Hotspots Cleared</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">📍 1,240+</p>
-            </div>
-            <div className="px-4 py-3 bg-rose-50 border border-rose-200/80 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-rose-600 uppercase tracking-wider">Triage Speed</p>
-              <p className="text-lg font-black text-rose-800 mt-0.5">🚨 &lt; 2 Hours</p>
-            </div>
-            <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Anonymity</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">🔒 100% Private</p>
-            </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+            Report an <span className="text-rose-600 italic">Environmental Hazard</span>
+          </h1>
+
+          <p className="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+            Document open burning, toxic dumping, or water contamination. Photographic proof and GPS coordinates trigger immediate volunteer and civic response.
+          </p>
+
+          {/* Quick Pillars */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-600">
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-rose-500">🚨</span> Urgent Triage Response
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-rose-500">🔒</span> 100% Anonymous Reporting
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-rose-500">📸</span> Geotagged Visual Evidence
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── MAIN WORKSPACE CONTAINER ── */}
-      <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto space-y-8">
+      {/* ── MAIN WORKSPACE (2-COLUMN BALANCED) ── */}
+      <main className="flex-1 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto space-y-10">
 
-          {/* TWO COLUMN GRID */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
-            {/* ── LEFT PANE: ESCALATION GUIDE & PROTOCOL ── */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              {/* Incident Verification Protocol */}
-              <div className="bg-rose-950 text-white rounded-3xl p-6 sm:p-8 border border-rose-900 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-16 -top-16 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl" />
-                
-                <h3 className="text-xs font-black text-rose-400 uppercase tracking-widest mb-4">
-                  Incident Action Protocol
-                </h3>
-                
-                <div className="space-y-5 relative z-10">
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-300 font-black text-xs flex items-center justify-center shrink-0">
-                      01
+            {/* ── LEFT PANE: ACTION PROTOCOL & HAZARD GUIDE ── */}
+            <div className="lg:col-span-5 bg-rose-950 text-white rounded-3xl p-7 sm:p-9 border border-rose-900 shadow-xl flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-8">
+                <div>
+                  <span className="text-[10px] font-black text-rose-300 uppercase tracking-widest">
+                    Response Protocol
+                  </span>
+                  <h2 className="text-2xl font-black text-white tracking-tight mt-1">
+                    How We Triage Reports
+                  </h2>
+                </div>
+
+                {/* 3 Step Guide */}
+                <div className="space-y-5">
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      1
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Identify Hazard Category</h4>
+                      <h4 className="text-sm font-black text-white">Identify & Classify</h4>
                       <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
-                        Specify if the incident relates to air emissions, blackwater runoff, chemical spillage, or unauthorized dumping.
+                        Categorize the incident by pollutant type (Air, Water, Garbage, Chemical).
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-300 font-black text-xs flex items-center justify-center shrink-0">
-                      02
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      2
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Attach Clear Photographic Evidence</h4>
+                      <h4 className="text-sm font-black text-white">Attach Visual Proof</h4>
                       <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
-                        Photos enable cleanup leads to estimate equipment requirements and scale of contamination.
+                        Photos provide immediate context on volume, risk level, and equipment needed.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-300 font-black text-xs flex items-center justify-center shrink-0">
-                      03
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      3
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Automatic Dispatch & Civic Tracking</h4>
+                      <h4 className="text-sm font-black text-white">Dispatch & Authority Alert</h4>
                       <p className="text-xs text-rose-200/60 mt-0.5 leading-relaxed">
-                        Reports are automatically routed to municipal green cells and community emergency units.
+                        Automated alerts mobilize nearby green response squads and civic cells.
                       </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Severity Guide */}
+                <div className="pt-2 border-t border-rose-900/80">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-rose-300 mb-3">
+                    Priority Streams
+                  </p>
+                  <div className="grid grid-cols-2 gap-2.5 text-xs">
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>☠️</span>
+                      <span className="font-bold text-rose-100">Chemical Waste</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>💧</span>
+                      <span className="font-bold text-rose-100">Water Runoff</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>🗑️</span>
+                      <span className="font-bold text-rose-100">Illegal Dumpsite</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>💨</span>
+                      <span className="font-bold text-rose-100">Smoke & Emissions</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Severity Reference Guide */}
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                  Hazard Classification Guide
-                </h3>
-                <div className="space-y-2.5 text-xs">
-                  <div className="p-3 bg-rose-50/60 rounded-2xl border border-rose-100 flex items-start gap-2.5">
-                    <span className="text-base shrink-0 mt-0.5">☠️</span>
-                    <div>
-                      <p className="font-black text-rose-950">Toxic / Chemical Effluents</p>
-                      <p className="text-[11px] text-rose-700">Immediate hazard to local water supplies and public health.</p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-100 flex items-start gap-2.5">
-                    <span className="text-base shrink-0 mt-0.5">🗑️</span>
-                    <div>
-                      <p className="font-black text-amber-950">Illegal Dumping & Open Waste</p>
-                      <p className="text-[11px] text-amber-700">Accumulated garbage causing breeding of pests and odors.</p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2.5">
-                    <span className="text-base shrink-0 mt-0.5">💨</span>
-                    <div>
-                      <p className="font-black text-slate-800">Emissions & Smoke Inversion</p>
-                      <p className="text-[11px] text-slate-500">Unfiltered exhaust or open burning of plastic waste.</p>
-                    </div>
-                  </div>
-                </div>
+              {/* Bottom Guarantee */}
+              <div className="pt-6 mt-6 border-t border-rose-900 text-[11px] font-bold text-rose-300 flex items-center justify-between relative z-10">
+                <span className="text-rose-400">🔒 Whistleblower Privacy</span>
+                <span>Encrypted Transmissions</span>
               </div>
-
             </div>
 
-            {/* ── RIGHT PANE: INCIDENT REPORTING CONSOLE ── */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
+            {/* ── RIGHT PANE: INCIDENT FORM ── */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/80 shadow-xl flex flex-col justify-center">
+              <div className="pb-5 border-b border-slate-100 mb-6 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-black text-slate-900 tracking-tight">
-                    Submit Incident Dossier
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                    Incident Report Details
                   </h3>
                   <p className="text-xs text-slate-400 font-medium mt-0.5">
-                    All reports are validated by automated screening and green responder units.
+                    Broadcast accurate information to dispatch teams.
                   </p>
                 </div>
-                <span className="text-xs font-black px-3 py-1.5 bg-rose-50 text-rose-700 rounded-xl border border-rose-100">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
                   Direct Escalation
                 </span>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Category & Photos Row */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Category & Evidence Upload */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
@@ -294,24 +271,24 @@ function PollutionReport() {
                     >
                       <option value="">Select Category...</option>
                       <option value="Air Pollution">💨 Air Pollution & Smoke</option>
-                      <option value="Water Contamination">💧 Water Body Contamination</option>
+                      <option value="Water Contamination">💧 Water Contamination</option>
                       <option value="Illegal Garbage Dump">🗑️ Illegal Garbage Dump</option>
                       <option value="Chemical/Toxic Waste">☠️ Chemical / Toxic Waste</option>
-                      <option value="Noise Pollution">📢 Industrial Noise Violation</option>
+                      <option value="Noise Pollution">📢 Industrial Noise</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
-                      <FaCamera className="text-rose-500" /> Photographic Evidence <span className="text-slate-400 font-normal lowercase">(max 4)</span>
+                      <FaCamera className="text-rose-500" /> Evidence Photos <span className="text-slate-400 font-normal lowercase">(max 4)</span>
                     </label>
                     <div
                       onClick={() => fileInputRef.current.click()}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-center cursor-pointer hover:bg-rose-50/40 hover:border-rose-300 transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-center cursor-pointer hover:bg-rose-50/50 hover:border-rose-300 transition-all flex items-center justify-center gap-2"
                     >
                       <FaCamera className="text-slate-400" size={14} />
                       <span className="text-xs font-bold text-slate-600">
-                        {photos.length > 0 ? `${photos.length}/4 Photos Attached` : "Upload Photos"}
+                        {photos.length > 0 ? `${photos.length}/4 Photos Added` : "Attach Photos"}
                       </span>
                     </div>
                     <input
@@ -345,24 +322,24 @@ function PollutionReport() {
 
                 {/* Description */}
                 <div>
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 block">
-                    Detailed Observations & Severity
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1 block">
+                    Detailed Observation & Landmark Notes
                   </label>
                   <textarea
-                    placeholder="Provide details on odors, duration of dumping, surrounding water bodies, or landmarks..."
+                    placeholder="Describe visible fumes, odors, approximate duration, proximity to water bodies..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
+                    rows={2}
                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 outline-none transition-all resize-none"
                     required
                   />
                 </div>
 
                 {/* Map & Coordinates */}
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                      <FaMapMarkerAlt className="text-rose-500" /> Precise Coordinates Pin
+                      <FaMapMarkerAlt className="text-rose-500" /> Precise Hazard Coordinates
                     </label>
                     <button
                       type="button"
@@ -373,12 +350,12 @@ function PollutionReport() {
                           : "text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100"
                       }`}
                     >
-                      <FaCrosshairs className={locationStatus === "loading" ? "animate-spin" : ""} size={12} />
+                      <FaCrosshairs className={locationStatus === "loading" ? "animate-spin" : ""} size={11} />
                       <span>{locationStatus === "success" ? "✓ Coordinates Locked" : "Capture Location"}</span>
                     </button>
                   </div>
 
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden h-[150px] w-full relative z-0 shadow-inner">
+                  <div className="border border-slate-200 rounded-2xl overflow-hidden h-[135px] w-full relative z-0 shadow-inner">
                     <MapContainer
                       center={[location.lat, location.lng]}
                       zoom={location.lat === 20.5937 ? 5 : 16}
@@ -392,14 +369,14 @@ function PollutionReport() {
                   </div>
                 </div>
 
-                {/* Action Trigger */}
+                {/* Submit Action */}
                 <div className="pt-2">
                   <button
                     type="submit"
                     disabled={submitting}
                     className="w-full bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white py-3.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider transition-all shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    {submitting ? "Broadcasting Dossier..." : "🚨 Broadcast Environmental Report"}
+                    {submitting ? "Broadcasting Dossier..." : "🚨 Broadcast Pollution Report"}
                   </button>
                 </div>
               </form>
@@ -407,93 +384,43 @@ function PollutionReport() {
 
           </div>
 
-          {/* ── LOWER SECTION: REPORTED HOTSPOTS HISTORY LEDGER ── */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-black">
-                  <FaHistory size={14} />
-                </div>
-                <div>
-                  <h3 className="text-base font-black text-slate-800">Your Transmitted Incident Registry</h3>
-                  <p className="text-xs text-slate-400 font-medium">Track resolution and cleanup stages for your reported spots.</p>
-                </div>
+          {/* ── BOTTOM FEATURE GUARANTEE STRIP ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg shrink-0">
+                <FaBolt />
               </div>
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 w-fit">
-                {pastPollution.length} Reported Incidents
-              </span>
+              <div>
+                <h4 className="text-sm font-black text-slate-800">Rapid Triage Protocol</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  High-risk hazardous reports are triaged and routed to civic officers within 2 hours.
+                </p>
+              </div>
             </div>
 
-            {loadingPollution ? (
-              <div className="py-12 text-center text-slate-400 font-bold text-sm">
-                Loading incident logs...
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+                <FaCamera />
               </div>
-            ) : pastPollution.length === 0 ? (
-              <div className="py-12 text-center text-slate-400">
-                <FaShieldAlt size={28} className="mx-auto text-slate-300 mb-2" />
-                <p className="font-bold text-sm text-slate-600">No reported incidents</p>
-                <p className="text-xs text-slate-400 mt-0.5">Use the console above if you notice an environmental violation.</p>
+              <div>
+                <h4 className="text-sm font-black text-slate-800">Verified Photo Proof</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Visual evidence is cryptographically timestamped and geotagged for verified authority action.
+                </p>
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-100 text-slate-400 font-black uppercase tracking-wider">
-                      <th className="py-3 px-4">Timestamp</th>
-                      <th className="py-3 px-4">Category</th>
-                      <th className="py-3 px-4">Observation Notes</th>
-                      <th className="py-3 px-4">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {currentRecords.map((item) => (
-                      <tr key={item._id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3.5 px-4 font-bold text-slate-800 whitespace-nowrap">
-                          {new Date(item.createdAt).toLocaleDateString()}
-                          <span className="block text-[10px] text-slate-400 font-medium">{new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        </td>
-                        <td className="py-3.5 px-4 font-bold text-slate-700">
-                          {item.pollutionType}
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-500 max-w-sm truncate">
-                          {item.description}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
-                            {item.status || "Escalated"}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-2">
-                    <p className="text-xs text-slate-400 font-bold">
-                      Page {currentPage} of {totalPages}
-                    </p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 disabled:opacity-40 hover:bg-slate-50"
-                      >
-                        Prev
-                      </button>
-                      <button
-                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 disabled:opacity-40 hover:bg-slate-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                )}
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg shrink-0">
+                <FaShieldAlt />
               </div>
-            )}
+              <div>
+                <h4 className="text-sm font-black text-slate-800">Whistleblower Protection</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Citizen identities remain strictly confidential and protected across all public logs.
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>

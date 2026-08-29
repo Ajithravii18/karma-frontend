@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../Components/Nav";
 import AOS from "aos";
 import {
-  FaMapMarkerAlt, FaCrosshairs, FaRecycle, FaBox, FaShieldAlt,
-  FaTruck, FaHistory, FaCheckCircle, FaClock, FaCalendarAlt, FaLeaf
+  FaMapMarkerAlt, FaCrosshairs, FaRecycle, FaShieldAlt,
+  FaTruck, FaClock, FaLeaf, FaBoxOpen, FaCheckCircle, FaAward
 } from "react-icons/fa";
 
 function SchedulePickup() {
@@ -19,33 +19,15 @@ function SchedulePickup() {
     address: "",
     wasteType: "",
     pickupDate: "",
-    timeSlot: "",
+    timeSlot: "9AM-12PM",
     description: "",
     lat: null,
     lng: null
   });
 
-  const [pastPickups, setPastPickups] = useState([]);
-  const [loadingPickups, setLoadingPickups] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const fetchPastPickups = async () => {
-    try {
-      setLoadingPickups(true);
-      const res = await api.get("/api/my-pickups");
-      setPastPickups(res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingPickups(false);
-    }
-  };
-
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
     requestLocation();
-    fetchPastPickups();
   }, []);
 
   const requestLocation = () => {
@@ -63,11 +45,11 @@ function SchedulePickup() {
           lng: position.coords.longitude
         }));
         setLocationStatus("success");
-        toast.success("Exact doorstep GPS captured!");
+        toast.success("Doorstep GPS coordinates locked!");
       },
       (error) => {
         setLocationStatus("error");
-        toast.error("Please enable location for doorstep pickup accuracy.");
+        toast.error("Please enable location access for doorstep accuracy.");
       },
       { enableHighAccuracy: true }
     );
@@ -81,7 +63,7 @@ function SchedulePickup() {
     if (!token) { toast.error("Please login to continue"); navigate("/login"); return; }
 
     if (!form.lat || !form.lng) {
-      toast.error("Please allow location access to proceed.");
+      toast.error("Please lock your doorstep location before submitting.");
       requestLocation();
       return;
     }
@@ -89,182 +71,172 @@ function SchedulePickup() {
     try {
       setLoading(true);
       await api.post("/schedule-pickup", form);
-      toast.success("Pickup Mission Dispatched Successfully!");
+      toast.success("Pickup Mission Dispatched Successfully! 🚀");
       setForm({
-        address: "", wasteType: "", pickupDate: "", timeSlot: "", description: "",
+        address: "", wasteType: "", pickupDate: "", timeSlot: "9AM-12PM", description: "",
         lat: form.lat, lng: form.lng
       });
-      fetchPastPickups();
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
     } finally { setLoading(false); }
   };
 
-  const totalPages = Math.ceil(pastPickups.length / itemsPerPage);
-  const currentRecords = pastPickups.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col selection:bg-emerald-500 selection:text-white">
       <Nav />
 
-      {/* ── TOP HERO BANNER & METRICS ── */}
-      <section className="pt-[88px] pb-6 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">
-                AI Logistics Network • Doorstep Collection
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              On-Demand <span className="text-emerald-600 italic">Waste & Recyclable</span> Pickup
-            </h1>
-            <p className="text-slate-500 text-sm sm:text-base max-w-2xl font-medium leading-relaxed">
-              Schedule convenient doorstep pickups for segregated recyclables, e-waste, and dry scrap. Our intelligent routing connects you with vetted community volunteers.
-            </p>
+      {/* ── HERO BANNER ── */}
+      <section className="pt-[92px] pb-8 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-black text-emerald-700 uppercase tracking-widest">
+              Smart Eco Logistics • Doorstep Collection
+            </span>
           </div>
 
-          {/* Quick Metrics */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0 overflow-x-auto pb-2 md:pb-0">
-            <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Avg. Response</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">⚡ &lt; 15 Mins</p>
-            </div>
-            <div className="px-4 py-3 bg-emerald-50 border border-emerald-200/80 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-wider">Diversion Rate</p>
-              <p className="text-lg font-black text-emerald-800 mt-0.5">🌱 98.4%</p>
-            </div>
-            <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-left min-w-[130px]">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Verification</p>
-              <p className="text-lg font-black text-slate-800 mt-0.5">🛡️ 100% Eco</p>
-            </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+            Schedule a <span className="text-emerald-600 italic">Waste & Recyclables</span> Pickup
+          </h1>
+
+          <p className="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+            Select your materials and time window. We connect you with verified local volunteers for fast, zero-landfill doorstep collection.
+          </p>
+
+          {/* Quick Pillars */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-600">
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-emerald-500">⚡</span> &lt; 15 Mins Response
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-emerald-500">🌱</span> 100% Segregated Recycling
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+              <span className="text-emerald-500">📍</span> Precision GPS Geotag
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── MAIN WORKSPACE CONTAINER ── */}
-      <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto space-y-8">
+      {/* ── MAIN WORKSPACE (2-COLUMN BALANCED) ── */}
+      <main className="flex-1 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto space-y-10">
 
-          {/* TWO COLUMN GRID */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
-            {/* ── LEFT PANE: WORKFLOW & PROTOCOL ── */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              {/* Step-by-step dispatch workflow */}
-              <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-16 -top-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
-                
-                <h3 className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-4">
-                  Collection Process
-                </h3>
-                
-                <div className="space-y-5 relative z-10">
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0">
-                      01
+            {/* ── LEFT PANE: WORKFLOW & ACCEPTED MATERIALS ── */}
+            <div className="lg:col-span-5 bg-slate-900 text-white rounded-3xl p-7 sm:p-9 border border-slate-800 shadow-xl flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-8">
+                <div>
+                  <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+                    Collection Protocol
+                  </span>
+                  <h2 className="text-2xl font-black text-white tracking-tight mt-1">
+                    How Doorstep Pickup Works
+                  </h2>
+                </div>
+
+                {/* 3 Step Guide */}
+                <div className="space-y-5">
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      1
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Segregate Materials</h4>
+                      <h4 className="text-sm font-black text-white">Choose Waste Category</h4>
                       <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                        Group your recyclables into Dry, Plastic, or Electronics for streamlined sorting.
+                        Group plastic, dry recyclables, paper, or electronic items.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0">
-                      02
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      2
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Pin Exact Doorstep Coordinates</h4>
+                      <h4 className="text-sm font-black text-white">Pin Doorstep GPS</h4>
                       <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                        One-click GPS lock eliminates route navigation confusion for volunteers.
+                        Accurate coordinate locks ensure volunteers reach your exact entrance.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0">
-                      03
+                  <div className="flex gap-3.5 items-start">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      3
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">Live Tracking & Verification</h4>
+                      <h4 className="text-sm font-black text-white">Handover to Volunteer</h4>
                       <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                        Receive instant status alerts as volunteers collect and transport items to certified recovery centers.
+                        The collector arrives during your selected window and transports items to certified hubs.
                       </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Material Stream Matrix */}
+                <div className="pt-2 border-t border-slate-800/80">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">
+                    Accepted Streams
+                  </p>
+                  <div className="grid grid-cols-2 gap-2.5 text-xs">
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>♻️</span>
+                      <span className="font-bold text-slate-200">Plastics & Polymers</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>💻</span>
+                      <span className="font-bold text-slate-200">E-Waste & Scrap</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>📦</span>
+                      <span className="font-bold text-slate-200">Cardboard & Paper</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                      <span>🍾</span>
+                      <span className="font-bold text-slate-200">Glass & Metals</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Accepted Materials Matrix */}
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                  Accepted Material Streams
-                </h3>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-2.5">
-                    <span className="text-base">♻️</span>
-                    <div>
-                      <p className="font-black text-slate-800">Plastics & Polymers</p>
-                      <p className="text-[10px] text-slate-400">PET, HDPE, Wraps</p>
-                    </div>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-2.5">
-                    <span className="text-base">💻</span>
-                    <div>
-                      <p className="font-black text-slate-800">E-Waste</p>
-                      <p className="text-[10px] text-slate-400">Cables, Circuit boards</p>
-                    </div>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-2.5">
-                    <span className="text-base">📦</span>
-                    <div>
-                      <p className="font-black text-slate-800">Paper & Cardboard</p>
-                      <p className="text-[10px] text-slate-400">Cartons, Newsprint</p>
-                    </div>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-2.5">
-                    <span className="text-base">🍾</span>
-                    <div>
-                      <p className="font-black text-slate-800">Glass & Metals</p>
-                      <p className="text-[10px] text-slate-400">Bottles, Tin cans</p>
-                    </div>
-                  </div>
-                </div>
+              {/* Bottom Guarantee */}
+              <div className="pt-6 mt-6 border-t border-slate-800 text-[11px] font-bold text-slate-400 flex items-center justify-between relative z-10">
+                <span className="text-emerald-400">🌱 Zero Landfill Commitment</span>
+                <span>Verified Eco Handlers</span>
               </div>
-
             </div>
 
-            {/* ── RIGHT PANE: INTERACTIVE DISPATCH FORM ── */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
+            {/* ── RIGHT PANE: DISPATCH FORM ── */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-7 sm:p-9 border border-slate-200/80 shadow-xl flex flex-col justify-center">
+              <div className="pb-5 border-b border-slate-100 mb-6 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-black text-slate-900 tracking-tight">
-                    Schedule Pickup Mission
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                    Pickup Request Details
                   </h3>
                   <p className="text-xs text-slate-400 font-medium mt-0.5">
-                    Fill in your pickup specifications below for instantaneous dispatcher broadcast.
+                    Provide your address and preferred collection time slot.
                   </p>
                 </div>
-                <span className="text-xs font-black px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
                   Ready to Dispatch
                 </span>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Pickup Address */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Address */}
                 <div>
                   <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
-                    <FaMapMarkerAlt className="text-emerald-500" /> Pickup Address / Landmark
+                    <FaMapMarkerAlt className="text-emerald-500" /> Pickup Address / House Number
                   </label>
                   <input
                     type="text"
                     name="address"
-                    placeholder="e.g. Flat 402, Green Meadows, 12th Main Road..."
+                    placeholder="e.g. Flat 402, Green Ridge Apartments, 5th Cross..."
                     value={form.address}
                     onChange={handleChange}
                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
@@ -272,11 +244,11 @@ function SchedulePickup() {
                   />
                 </div>
 
-                {/* Waste Category & Date Grid */}
+                {/* Waste Type & Pickup Date */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 block">
-                      Waste Category
+                      Waste Stream Category
                     </label>
                     <select
                       name="wasteType"
@@ -285,18 +257,18 @@ function SchedulePickup() {
                       className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all cursor-pointer"
                       required
                     >
-                      <option value="">Select Waste Stream</option>
+                      <option value="">Select Category...</option>
                       <option value="Plastic">♻️ Plastic & Dry Waste</option>
-                      <option value="Food">🍃 Organic / Food Waste</option>
+                      <option value="Food">🍃 Organic & Food Waste</option>
                       <option value="E-Waste">💻 Electronics & E-Waste</option>
                       <option value="Paper">📦 Paper & Cardboard</option>
-                      <option value="Glass">🍾 Glass & Metals</option>
+                      <option value="Glass">🍾 Glass & Bottles</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 block">
-                      Pickup Date
+                      Preferred Date
                     </label>
                     <input
                       type="date"
@@ -310,10 +282,10 @@ function SchedulePickup() {
                   </div>
                 </div>
 
-                {/* Preferred Time Slot */}
+                {/* Time Window Buttons */}
                 <div>
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-2 block">
-                    Preferred Time Window
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 block">
+                    Collection Time Window
                   </label>
                   <div className="grid grid-cols-3 gap-2.5">
                     {[
@@ -331,7 +303,7 @@ function SchedulePickup() {
                             : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300"
                         }`}
                       >
-                        <div className="flex items-center gap-1.5 text-xs font-black">
+                        <div className="flex items-center gap-1 text-xs font-black">
                           <span>{slot.icon}</span>
                           <span>{slot.label}</span>
                         </div>
@@ -341,14 +313,14 @@ function SchedulePickup() {
                   </div>
                 </div>
 
-                {/* Additional Instructions */}
+                {/* Notes */}
                 <div>
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1.5 block">
-                    Special Handover Notes <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-1 block">
+                    Special Handover Instructions <span className="text-slate-400 font-normal lowercase">(optional)</span>
                   </label>
                   <textarea
                     name="description"
-                    placeholder="Gate entry code, call on arrival, items pre-bagged in corridor..."
+                    placeholder="E.g. Placed outside gate, ring bell on arrival, bags pre-sorted..."
                     value={form.description}
                     onChange={handleChange}
                     rows={2}
@@ -356,7 +328,7 @@ function SchedulePickup() {
                   />
                 </div>
 
-                {/* GPS Pin & Action Trigger */}
+                {/* GPS Pin & Submit Action */}
                 <div className="pt-2 flex flex-col sm:flex-row gap-3 items-stretch">
                   <button
                     type="button"
@@ -367,7 +339,7 @@ function SchedulePickup() {
                         : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
                     }`}
                   >
-                    <FaCrosshairs className={locationStatus === "loading" ? "animate-spin" : ""} size={14} />
+                    <FaCrosshairs className={locationStatus === "loading" ? "animate-spin" : ""} size={13} />
                     {locationStatus === "success" ? "✓ Doorstep GPS Locked" : "Capture Doorstep GPS"}
                   </button>
 
@@ -376,7 +348,7 @@ function SchedulePickup() {
                     disabled={loading}
                     className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white py-3.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider transition-all shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    {loading ? "Transmitting Mission..." : "🚀 Transmit Pickup Request"}
+                    {loading ? "Transmitting Mission..." : "🚀 Confirm Pickup Schedule"}
                   </button>
                 </div>
               </form>
@@ -384,93 +356,43 @@ function SchedulePickup() {
 
           </div>
 
-          {/* ── LOWER SECTION: PERSONAL ACTIVITY & HISTORY LEDGER ── */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
-                  <FaHistory size={14} />
-                </div>
-                <div>
-                  <h3 className="text-base font-black text-slate-800">Your Scheduled Pickup Log</h3>
-                  <p className="text-xs text-slate-400 font-medium">Real-time status of your active and past waste collection dispatches.</p>
-                </div>
+          {/* ── BOTTOM FEATURE GUARANTEE STRIP ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+                <FaShieldAlt />
               </div>
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 w-fit">
-                {pastPickups.length} Total Missions
-              </span>
+              <div>
+                <h4 className="text-sm font-black text-slate-800">100% Certified Recovery</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  All collected dry waste is weighed and transferred to authorized municipal recyclers.
+                </p>
+              </div>
             </div>
 
-            {loadingPickups ? (
-              <div className="py-12 text-center text-slate-400 font-bold text-sm">
-                Fetching dispatch ledger...
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
+                <FaClock />
               </div>
-            ) : pastPickups.length === 0 ? (
-              <div className="py-12 text-center text-slate-400">
-                <FaBox size={28} className="mx-auto text-slate-300 mb-2" />
-                <p className="font-bold text-sm text-slate-600">No scheduled pickups yet</p>
-                <p className="text-xs text-slate-400 mt-0.5">Use the dispatch console above to book your first collection.</p>
+              <div>
+                <h4 className="text-sm font-black text-slate-800">Punctual Time Slots</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Volunteers adhere strictly to your selected window for zero disruption to your routine.
+                </p>
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-100 text-slate-400 font-black uppercase tracking-wider">
-                      <th className="py-3 px-4">Date & Slot</th>
-                      <th className="py-3 px-4">Category</th>
-                      <th className="py-3 px-4">Address</th>
-                      <th className="py-3 px-4">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {currentRecords.map((item) => (
-                      <tr key={item._id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3.5 px-4 font-bold text-slate-800">
-                          {item.pickupDate || new Date(item.createdAt).toLocaleDateString()}
-                          <span className="block text-[10px] text-slate-400 font-medium">{item.timeSlot || "Standard"}</span>
-                        </td>
-                        <td className="py-3.5 px-4 font-bold text-slate-700">
-                          {item.wasteType}
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-500 max-w-xs truncate">
-                          {item.address}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            {item.status || "Dispatched"}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-2">
-                    <p className="text-xs text-slate-400 font-bold">
-                      Page {currentPage} of {totalPages}
-                    </p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 disabled:opacity-40 hover:bg-slate-50"
-                      >
-                        Prev
-                      </button>
-                      <button
-                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 disabled:opacity-40 hover:bg-slate-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                )}
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+              <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg shrink-0">
+                <FaAward />
               </div>
-            )}
+              <div>
+                <h4 className="text-sm font-black text-slate-800">Earn Karma Points</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Every completed pickup adds verified green points to your environmental impact profile.
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>
