@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import logo from "../assets/logo.png";
 import {
   FaColumns, FaCheck, FaClock, FaPhoneAlt, FaLeaf, FaTrashAlt,
   FaDirections, FaHistory, FaCheckCircle, FaArrowRight,
@@ -421,7 +422,13 @@ const VolunteerPortal = () => {
 
       {/* ── SaaS SIDEBAR ── */}
       <div className="flex pt-[68px] min-h-screen w-full">
-        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-[68px] left-0 h-[calc(100vh-68px)] overflow-y-auto no-scrollbar z-40 border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <aside className="hidden lg:flex w-64 bg-white flex-col fixed top-0 left-0 h-screen overflow-y-auto no-scrollbar z-[150] border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+          {/* Logo Section */}
+          <div className="h-[68px] flex items-center gap-2 px-6 border-b border-slate-100 cursor-pointer shrink-0" onClick={() => navigate("/")}>
+            <img src={logo} className="w-8" alt="E-Karma Logo" />
+            <span className="text-base font-black tracking-tighter uppercase text-slate-800">E-Karma</span>
+          </div>
+
           <nav className="flex flex-col gap-1 p-4 flex-1">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Missions</p>
             {[

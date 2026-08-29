@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "../assets/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  FaChevronDown, FaColumns, FaSignOutAlt, FaUserShield,
+  FaChevronDown, FaColumns, FaSignOutAlt, FaUserShield, FaSearch,
   FaBell, FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaClock, FaCreditCard, FaTruck,
   FaBars, FaTimes, FaHome, FaInfoCircle as FaInfo, FaImage, FaEnvelope, FaConciergeBell
 } from "react-icons/fa";
@@ -192,16 +192,18 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const isDashboard = dashboardRoutes.some(route => location.pathname.startsWith(route));
 
   return (
-    <nav className={`fixed top-0 w-full left-0 z-[100] transition-all duration-500 font-sans ${
-      location.pathname === "/" && !isScrolled
-        ? "bg-transparent py-5"
-        : "bg-white shadow-sm border-b border-slate-200 py-3"
+    <nav className={`fixed top-0 z-[100] transition-all duration-500 font-sans ${
+      isDashboard 
+        ? "w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white border-b border-slate-100 py-3 shadow-sm"
+        : location.pathname === "/" && !isScrolled
+          ? "w-full left-0 bg-transparent py-5"
+          : "w-full left-0 bg-white shadow-sm border-b border-slate-200 py-3"
     }`}>
 
-      <div className="w-full px-6 flex justify-between items-center relative z-10">
+      <div className="w-full px-6 flex items-center relative z-10 justify-between">
 
         {/* Logo */}
-        <div onClick={handleHome} className="cursor-pointer">
+        <div onClick={handleHome} className={`cursor-pointer ${isDashboard ? 'lg:hidden' : ''}`}>
           {location.pathname === "/" && !isScrolled ? (
             <div className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 border bg-white/10 shadow-lg border-white/20">
               <img src={logo} className="w-7" alt="E-Karma Logo" />
@@ -214,6 +216,16 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
             </div>
           )}
         </div>
+
+        {/* Dashboard Search Bar (Desktop) */}
+        {isDashboard && (
+          <div className="hidden lg:flex items-center flex-1 max-w-md ml-4">
+            <div className="relative w-full">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input type="text" placeholder="Search..." className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-11 pr-4 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all" />
+            </div>
+          </div>
+        )}
 
         {/* Desktop Nav Links */}
         {!isDashboard && (
