@@ -224,7 +224,8 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
               )}
             </div>
 
-            {(isServicePage || isDashboard) && (
+            {/* Back to Home Button (Only on Service Pages) */}
+            {isServicePage && (
               <div className="flex items-center gap-2 pl-2 border-l border-emerald-200/80">
                 <button
                   onClick={handleHome}
