@@ -3,7 +3,8 @@ import api from "../utils/api";
 import {
   FaArrowLeft, FaExchangeAlt, FaSearch, FaUserShield,
   FaUser, FaCircle, FaDatabase, FaShieldAlt, FaUsers, FaUserTie,
-  FaSnowflake, FaUnlock, FaStar, FaInfoCircle, FaCalendarAlt
+  FaSnowflake, FaUnlock, FaStar, FaInfoCircle, FaCalendarAlt,
+  FaTrash, FaTrashAlt
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
@@ -99,9 +100,31 @@ const UserManagement = () => {
     }
   };
 
+  const handleDeleteUser = async (userId, userName, role) => {
+    const promptReason = window.prompt(
+      `⚠️ PERMANENT ACCOUNT TERMINATION:\nAre you sure you want to permanently delete the ${role} account for "${userName || 'this user'}"?\n\nEnter reason for administrative deletion (optional):`,
+      "Administrative termination by Admin HQ"
+    );
+
+    if (promptReason === null) return; // User cancelled
+
+    try {
+      setLoading(true);
+      const res = await api.delete(`/api/admin/delete-user/${userId}`, {
+        data: { reason: promptReason }
+      });
+      toast.success(res.data?.message || "Account permanently deleted and logged to archives.");
+      fetchUsers(searchTerm);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete user account.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 font-sans text-slate-900 flex pb-20">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex pb-20">
       <Nav />
       <div className="flex pt-[68px] min-h-screen w-full">
         <AdminSidebar />
@@ -191,100 +214,115 @@ const UserManagement = () => {
         </div>
 
         {/* --- USER LEDGER --- */}
-        <div className="bg-white rounded-[3rem] shadow-2xl shadow-slate-300/20 border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
           {/* DESKTOP TABLE */}
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 border-b border-slate-100">
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Identity Node</th>
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Rating / Status</th>
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Occupancy</th>
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em]">Security State</th>
-                  <th className="px-10 py-8 text-[11px] font-black uppercase text-slate-400 tracking-[0.3em] text-center">Protocol Management</th>
-
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-wider">Identity Node</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-wider">Role & Rating</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-wider">Occupancy</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-wider">Security State</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-wider text-center">Protocol Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {currentItems.length > 0 ? (
                   currentItems.map((u) => (
-                    <tr key={u._id} className="group hover:bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 transition-all duration-300">
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-6">
-                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg transition-transform group-hover:scale-110 duration-500 ${u.role === 'volunteer' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'
-                            }`}>
-                            {u.role === 'volunteer' ? <FaShieldAlt size={20} /> : <FaUser size={20} />}
+                    <tr key={u._id} className="group hover:bg-slate-50/70 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3.5">
+                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shadow-xs ${
+                            u.role === 'volunteer' ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-emerald-50 border-emerald-200 text-emerald-600'
+                          }`}>
+                            {u.role === 'volunteer' ? <FaShieldAlt size={16} /> : <FaUser size={16} />}
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-sm font-black uppercase text-slate-800">{u.name || "UNNAMED_NODE"}</p>
-                            <p className="text-[10px] font-mono font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded w-fit">{u.phone}</p>
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-bold text-slate-900">{u.name || "Unnamed User"}</p>
+                            <p className="text-[10px] font-mono font-medium text-slate-400">{u.phone}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-10 py-8">
-                        <div className="space-y-2">
-                          <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl border-2 transition-all ${u.role === 'volunteer'
-                            ? 'bg-indigo-50 border-indigo-100 text-indigo-700'
-                            : 'bg-emerald-50 border-emerald-100 text-emerald-700'
-                            }`}>
-                            <span className="text-[10px] font-black uppercase tracking-[0.15em]">{u.role}</span>
-                          </div>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1">
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${
+                            u.role === 'volunteer'
+                              ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                              : 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                          }`}>
+                            {u.role}
+                          </span>
                           {u.role === 'volunteer' && (
-                            <div className="flex items-center gap-1.5 ml-1">
-                              <FaStar className="text-amber-500" size={10} />
-                              <span className="text-[11px] font-black text-slate-700">{u.averageRating || "0.0"}</span>
-                              <span className="text-[9px] font-bold text-slate-400">({u.reviewCount || 0})</span>
+                            <div className="flex items-center gap-1 mt-0.5">
+                              <FaStar className="text-amber-400" size={10} />
+                              <span className="text-xs font-bold text-slate-700">{u.averageRating || "0.0"}</span>
+                              <span className="text-[10px] text-slate-400">({u.reviewCount || 0})</span>
                             </div>
                           )}
                         </div>
                       </td>
-                      <td className="px-10 py-8">
+                      <td className="px-6 py-4">
                         {u.role === 'volunteer' ? (
-                          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-black text-[9px] uppercase tracking-widest ${u.isBusy ? 'bg-amber-50 border-amber-100 text-amber-600' : 'bg-green-50 border-green-100 text-green-700'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${u.isBusy ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`}></div>
-                            {u.isBusy ? "In Task" : "Free"}
+                          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border font-bold text-[10px] uppercase tracking-wider ${
+                            u.isBusy ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                          }`}>
+                            <div className={`w-1.5 h-1.5 rounded-full ${u.isBusy ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></div>
+                            {u.isBusy ? "In Mission" : "Available"}
                           </div>
                         ) : (
-                          <span className="text-[10px] text-slate-300 font-bold uppercase tracking-wider">N/A</span>
+                          <span className="text-xs text-slate-300 font-bold">—</span>
                         )}
                       </td>
-                      <td className="px-10 py-8">
-                        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border font-black text-[9px] uppercase tracking-widest ${u.isFrozen ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-green-50 border-green-100 text-green-400'
-                          }`}>
-                          {u.isFrozen ? <><FaSnowflake className="animate-pulse" /> Frozen</> : <><FaShieldAlt /> Active</>}
+                      <td className="px-6 py-4">
+                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border font-bold text-[10px] uppercase tracking-wider ${
+                          u.isFrozen ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-slate-50 border-slate-200 text-slate-600'
+                        }`}>
+                          {u.isFrozen ? <><FaSnowflake className="text-rose-500 animate-pulse" /> Frozen</> : <><FaShieldAlt className="text-emerald-500" /> Active</>}
                         </div>
                       </td>
-                      <td className="px-10 py-8">
-                        <div className="flex justify-center gap-4">
+                      <td className="px-6 py-4">
+                        <div className="flex justify-center items-center gap-2">
                           <button
                             onClick={() => handleToggleRole(u._id, u.role)}
-                            className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 ${u.role === 'user'
-                              ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200'
-                              : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200'
-                              }`}
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all shadow-xs active:scale-95 border ${
+                              u.role === 'user'
+                                ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
+                                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'
+                            }`}
+                            title={`Change role to ${u.role === 'user' ? 'Volunteer' : 'Citizen'}`}
                           >
-                            <FaExchangeAlt /> Role
+                            <FaExchangeAlt size={9} /> Role
                           </button>
 
                           <button
                             onClick={() => handleToggleFreeze(u._id, u.isFrozen)}
-                            className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 ${u.isFrozen
-                              ? 'bg-slate-900 text-white hover:bg-black shadow-slate-200'
-                              : 'bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white shadow-rose-100'
-                              }`}
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all shadow-xs active:scale-95 border ${
+                              u.isFrozen
+                                ? 'bg-slate-900 hover:bg-black text-white border-slate-900'
+                                : 'bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200'
+                            }`}
+                            title={u.isFrozen ? "Unfreeze Account" : "Freeze Account"}
                           >
-                            {u.isFrozen ? <><FaUnlock /> Unfreeze</> : <><FaSnowflake /> Freeze</>}
+                            {u.isFrozen ? <><FaUnlock size={9} /> Unfreeze</> : <><FaSnowflake size={9} /> Freeze</>}
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteUser(u._id, u.name, u.role)}
+                            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 shadow-xs active:scale-95"
+                            title="Permanently Delete Account"
+                          >
+                            <FaTrash size={9} /> Delete
                           </button>
                         </div>
                       </td>
-
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="py-32 text-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100/50">
-                      <FaDatabase className="mx-auto text-slate-200 mb-4" size={40} />
-                      <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">Empty Cluster Found</p>
+                    <td colSpan="5" className="py-24 text-center">
+                      <FaDatabase className="mx-auto text-slate-300 mb-3" size={32} />
+                      <p className="text-xs font-bold uppercase text-slate-400 tracking-wider">No matching users found</p>
                     </td>
                   </tr>
                 )}
@@ -296,74 +334,70 @@ const UserManagement = () => {
           <div className="lg:hidden p-4 space-y-4">
              {currentItems.length > 0 ? (
                currentItems.map((u) => (
-                 <div key={u._id} className="bg-white rounded-3xl p-6 border-2 border-slate-50 shadow-sm hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${u.role === 'volunteer' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                           {u.role === 'volunteer' ? <FaShieldAlt size={18} /> : <FaUser size={18} />}
+                 <div key={u._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-xs border ${
+                          u.role === 'volunteer' ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-emerald-50 border-emerald-200 text-emerald-600'
+                        }`}>
+                           {u.role === 'volunteer' ? <FaShieldAlt size={16} /> : <FaUser size={16} />}
                         </div>
                         <div>
-                          <h3 className="text-sm font-black uppercase text-slate-800">{u.name || "UNNAMED_NODE"}</h3>
-                          <p className="text-[9px] font-mono text-slate-400">{u.phone}</p>
+                          <h3 className="text-sm font-bold text-slate-900">{u.name || "Unnamed User"}</h3>
+                          <p className="text-[10px] font-mono text-slate-400">{u.phone}</p>
                         </div>
                       </div>
-                      <div className={`px-3 py-1.5 rounded-xl border text-[8px] font-black uppercase tracking-widest ${u.isFrozen ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-green-50 border-green-100 text-green-500'}`}>
+                      <div className={`px-2.5 py-1 rounded-lg border text-[9px] font-bold uppercase tracking-wider ${
+                        u.isFrozen ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-slate-50 border-slate-200 text-slate-600'
+                      }`}>
                          {u.isFrozen ? "Frozen" : "Active"}
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                       <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-3 rounded-2xl">
-                          <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Role Type</p>
-                          <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? 'text-indigo-600' : 'text-emerald-600'}`}>{u.role}</p>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Role</p>
+                          <p className={`text-xs font-black uppercase ${u.role === 'volunteer' ? 'text-indigo-600' : 'text-emerald-600'}`}>{u.role}</p>
                        </div>
-                       <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 p-3 rounded-2xl">
-                          <p className="text-[8px] font-black text-slate-300 uppercase mb-1">Availability</p>
-                          <p className={`text-[10px] font-black uppercase tracking-widest ${u.role === 'volunteer' ? (u.isBusy ? 'text-amber-500' : 'text-green-600') : 'text-slate-300'}`}>
-                             {u.role === 'volunteer' ? (u.isBusy ? "In Task" : "Free") : "N/A"}
+                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Availability</p>
+                          <p className={`text-xs font-bold ${u.role === 'volunteer' ? (u.isBusy ? 'text-amber-600' : 'text-emerald-600') : 'text-slate-400'}`}>
+                             {u.role === 'volunteer' ? (u.isBusy ? "In Mission" : "Available") : "N/A"}
                           </p>
                        </div>
-                       {u.role === 'volunteer' && (
-                         <div className="col-span-2 bg-indigo-50/50 p-3 rounded-2xl flex items-center justify-between">
-                            <div>
-                              <p className="text-[8px] font-black text-indigo-300 uppercase mb-1">Performance Rating</p>
-                              <div className="flex items-center gap-1.5">
-                                <FaStar className="text-amber-500" size={12} />
-                                <span className="text-sm font-black text-slate-700">{u.averageRating || "0.0"}</span>
-                                <span className="text-[10px] font-bold text-slate-400">({u.reviewCount || 0} reviews)</span>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                               <p className="text-[8px] font-black text-indigo-300 uppercase mb-1">Status</p>
-                               <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${u.isBusy ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                                  {u.isBusy ? "Busy" : "Ready"}
-                               </span>
-                            </div>
-                         </div>
-                       )}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 pt-1 border-t border-slate-100">
                        <button
                          onClick={() => handleToggleRole(u._id, u.role)}
-                         className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-sm ${u.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-emerald-600 text-white'}`}
+                         className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                           u.role === 'user' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                         }`}
                        >
-                         <FaExchangeAlt size={10} /> Role
+                         <FaExchangeAlt size={9} /> Role
                        </button>
                        <button
                          onClick={() => handleToggleFreeze(u._id, u.isFrozen)}
-                         className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all border ${u.isFrozen ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-rose-600 border-rose-100'}`}
+                         className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                           u.isFrozen ? 'bg-slate-900 text-white border-slate-900' : 'bg-amber-50 text-amber-700 border-amber-200'
+                         }`}
                        >
-                         {u.isFrozen ? <FaUnlock size={10} /> : <FaSnowflake size={10} />}
+                         {u.isFrozen ? <FaUnlock size={9} /> : <FaSnowflake size={9} />}
                          {u.isFrozen ? "Unfreeze" : "Freeze"}
+                       </button>
+                       <button
+                         onClick={() => handleDeleteUser(u._id, u.name, u.role)}
+                         className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-600 hover:text-white"
+                       >
+                         <FaTrash size={9} /> Delete
                        </button>
                     </div>
                  </div>
                ))
              ) : (
-               <div className="py-20 text-center">
-                 <FaDatabase className="mx-auto text-slate-100 mb-4" size={40} />
-                 <p className="text-[10px] font-black uppercase text-slate-300 tracking-[0.3em]">Empty Cluster Found</p>
+               <div className="py-16 text-center">
+                 <FaDatabase className="mx-auto text-slate-300 mb-3" size={28} />
+                 <p className="text-xs font-bold uppercase text-slate-400">No users found</p>
                </div>
              )}
           </div>
