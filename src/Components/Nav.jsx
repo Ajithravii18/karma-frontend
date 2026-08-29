@@ -21,6 +21,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const dropdownRef = useRef();
   const notifRef = useRef();
@@ -102,10 +103,21 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
     setIsLoggedIn(false);
     setShowDropdown(false);
     setIsMenuOpen(false);
+    setShowLogoutConfirm(false);
     setNotifications([]);
     setUserRole("user");
     if (showToast) toast.success("Logged out successfully");
     nav("/");
+  };
+
+  const promptLogout = () => {
+    setShowDropdown(false);
+    setIsMenuOpen(false);
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    handleLogout(true);
   };
 
   const markAsRead = async (id) => {
@@ -442,7 +454,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                         <FaColumns className={userRole === 'admin' ? "text-purple-600" : "text-emerald-600"} />
                         {userRole === 'admin' ? "Admin Console" : "Dashboard"}
                       </button>
-                      <button onClick={() => handleLogout(true)} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-rose-50 text-rose-600 font-bold text-xs transition">
+                      <button onClick={promptLogout} className="flex items-center gap-3 w-full text-left px-5 py-3.5 hover:bg-rose-50 text-rose-600 font-bold text-xs transition">
                         <FaSignOutAlt /> Sign Out
                       </button>
                     </div>
@@ -595,7 +607,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
                   <FaColumns /> Go to Dashboard
                 </button>
                 <button
-                  onClick={() => handleLogout(true)}
+                  onClick={promptLogout}
                   className="w-full py-2.5 bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 rounded-xl font-bold text-xs"
                 >
                   Sign Out
@@ -613,6 +625,49 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
         </div>
       </div>
+
+      {/* ── SIGN OUT CONFIRMATION MODAL ── */}
+      {showLogoutConfirm && (
+        <div
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-slate-100 text-center space-y-4 animate-in zoom-in-95 duration-200 text-slate-900"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center text-xl shadow-inner">
+              <FaSignOutAlt />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                Sign Out of E-Karma?
+              </h3>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed mt-1">
+                Are you sure you want to end your active session? You will need to sign in again to access your dashboard.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all active:scale-95 border border-slate-200/80"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmLogout}
+                className="flex-1 py-2.5 px-4 rounded-xl font-black text-xs uppercase tracking-wider bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition-all active:scale-95"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
