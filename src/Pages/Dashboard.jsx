@@ -178,7 +178,7 @@ const Dashboard = () => {
   };
 
   const handleFlagVolunteer = async (item, type) => {
-    const reason = window.prompt("G��n+� Report Issue: Describe the problem with this volunteer/mission (e.g., No show, rude behavior):");
+    const reason = window.prompt("⚠️ Report Issue: Describe the problem with this volunteer/mission (e.g., No show, rude behavior):");
     if (!reason || reason.trim().length < 5) {
       toast.error("Please provide a detailed reason (min 5 characters)");
       return;
@@ -326,7 +326,7 @@ const Dashboard = () => {
     try {
       setDeleteState(prev => ({ ...prev, loading: true }));
 
-      // 1. Verify Firebase OTP G�� this signs the user into Firebase Auth
+      // 1. Verify Firebase OTP - this signs the user into Firebase Auth
       await window.confirmationResult.confirm(deleteState.otp);
 
       // 2. Delete the Firebase Auth user from the client side
@@ -337,7 +337,7 @@ const Dashboard = () => {
           console.log("Firebase Auth user deleted successfully.");
         }
       } catch (firebaseErr) {
-        // Log but don't block G�� the backend will also attempt Firebase Admin deletion
+        // Log but don't block - the backend will also attempt Firebase Admin deletion
         console.warn("Firebase client-side deletion warning:", firebaseErr?.message);
       }
 

@@ -10,7 +10,7 @@ import Contact from "./Contact.jsx";
 import Gallery from "./Gallery.jsx";
 import Footer from "../Components/Footer.jsx";
 import Chatbot from "../Components/Chatbot.jsx";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaRecycle, FaLeaf, FaGlobeAsia, FaUsers, FaThermometerHalf, FaWind, FaMapMarkerAlt, FaTruck, FaSeedling } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast"
 
@@ -18,7 +18,7 @@ const Main = forwardRef((props, ref) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({ duration: 800, once: true, easing: "ease-out-cubic", offset: 60 });
   }, []);
 
   const homeRef = useRef(null);
@@ -35,7 +35,7 @@ const Main = forwardRef((props, ref) => {
 
   const handleScheduleClick = () => {
     const token = localStorage.getItem("authToken");
-    const userRole = localStorage.getItem("userRole"); // Assuming you store "user", "volunteer", or "admin"
+    const userRole = localStorage.getItem("userRole");
 
     if (!token) {
       toast.error("Please login to continue");
@@ -43,14 +43,10 @@ const Main = forwardRef((props, ref) => {
       return;
     }
 
-    // Check if the user is a regular "user"
     if (userRole === "user") {
       navigate("/pick-up");
     } else {
-      // If they are Admin or Volunteer, block the action
       toast.error(`Access Denied: ${userRole}s cannot schedule pickups.`);
-
-
     }
   };
 
@@ -66,7 +62,6 @@ const Main = forwardRef((props, ref) => {
           navigator.geolocation.getCurrentPosition(async (pos) => {
             const { latitude: lat, longitude: lon } = pos.coords;
 
-            // Get Weather from Open-Meteo (Free, No Key)
             const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
             const weatherJson = await weatherRes.json();
 
@@ -78,7 +73,6 @@ const Main = forwardRef((props, ref) => {
               });
             }
 
-            // Get City Name from BigDataCloud (Free, No Key required for basic reverse geocoding)
             const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
             const geoJson = await geoRes.json();
             if (geoJson.city || geoJson.locality) {
@@ -86,7 +80,7 @@ const Main = forwardRef((props, ref) => {
             }
             setIsLiveLoading(false);
           }, () => {
-            setIsLiveLoading(false); // Silent fail uses defaults
+            setIsLiveLoading(false);
           });
         }
       } catch (err) {
@@ -125,8 +119,16 @@ const Main = forwardRef((props, ref) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // --- LIVE TIMESTAMP for Impact Section ---
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  useEffect(() => {
+    const tick = setInterval(() => setLastUpdated(new Date()), 60000);
+    return () => clearInterval(tick);
+  }, []);
+  const formatTime = (d) => d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
   return (
-    <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 overflow-x-hidden">
+    <div className="bg-white overflow-x-hidden">
       <Nav
         onHomeClick={scrollToHome}
         onAboutClick={scrollToAbout}
@@ -135,284 +137,417 @@ const Main = forwardRef((props, ref) => {
         onGalleryClick={scrollToGallery}
       />
 
-      {/* --- HERO SECTION --- */}
+      {/* ═══════════════════════════════════════════
+          HERO SECTION — Dark anchor
+      ═══════════════════════════════════════════ */}
       <section
         ref={homeRef}
-        className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-green-950 pt-24 md:pt-32 pb-12 md:pb-20"
+        className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-green-950 pt-20 pb-12 md:pt-24 md:pb-16"
       >
-        {/* Background Image with improved visibility */}
+        {/* Background image */}
         <div
-          className="absolute inset-0 z-0 opacity-55"
+          className="absolute inset-0 z-0 opacity-75"
           style={{
             backgroundImage: `url(${hero})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-        ></div>
+        />
+        {/* Gradient overlay — solid dark behind text (left), fading to clear in center/right */}
+        <div className="absolute inset-0 z-10 bg-green-950/80 lg:bg-transparent lg:bg-gradient-to-r lg:from-green-950 lg:from-40% lg:via-green-950/30 lg:to-transparent" />
 
-        {/* Adjusted Gradient Overlay for better image visibility */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-green-950 via-green-950/70 to-green-900/30"></div>
+        <div className="relative z-20 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 text-white space-y-6 pl-2">
-            <div data-aos="fade-down" className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white/5 backdrop-blur-md rounded-lg text-green-400 text-[10px] font-medium tracking-[0.25em] uppercase border border-white/5 shadow-inner">
-              <span className="relative flex h-2 w-2 mr-0.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
+          {/* ── Left: Text ── */}
+          <div className="text-white space-y-6">
+
+            {/* Badge */}
+            <div data-aos="fade-up" data-aos-delay="0"
+              className="inline-flex items-center gap-2 px-3.5 py-2 bg-green-900/80 backdrop-blur-sm text-green-300 rounded-full text-[11px] font-bold uppercase tracking-wider shadow-lg">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
               Sustainable Future Initiative
             </div>
 
-            <h1 data-aos="fade-right" data-aos-delay="100" className="text-3xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter">
-              മാലിന്യം കുറയ്ക്കാം<br />
-              <span className="text-green-500">പ്രകൃതിയെ സംരക്ഷിക്കാം.</span>
-            </h1>
+            {/* Headline */}
+            <div data-aos="fade-up" data-aos-delay="100">
+              <h1 className="text-5xl md:text-6xl lg:text-[4.5rem] font-black leading-[1.05] tracking-tight">
+                <span className="block text-white">മാലിന്യം കുറയ്ക്കാം</span>
+                <span className="block text-green-400 mt-2">പ്രകൃതിയെ സംരക്ഷിക്കാം.</span>
+              </h1>
+              <p className="mt-4 text-xs text-white/50 font-black tracking-[0.25em] uppercase">
+                Reduce Waste · Protect Nature
+              </p>
+            </div>
 
-            <p data-aos="fade-right" data-aos-delay="200" className="text-base md:text-lg text-gray-300 max-w-xl leading-relaxed font-medium">
-              Building a cleaner, greener tomorrow through community-driven waste management. Our mission is to restore Kerala's natural beauty.
+            <p data-aos="fade-up" data-aos-delay="200" className="text-base md:text-lg text-white/80 max-w-xl leading-relaxed">
+              Building a cleaner, greener tomorrow through community-driven waste management. Restoring Kerala's natural beauty — one pickup at a time.
             </p>
 
-            <div data-aos="fade-right" data-aos-delay="300" className="flex flex-wrap gap-4 pt-2">
+            {/* CTAs */}
+            <div data-aos="fade-up" data-aos-delay="300" className="flex flex-wrap gap-4 pt-4">
               <button
                 onClick={handleScheduleClick}
-                className="px-8 py-4 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-900/40 hover:-translate-y-1 active:scale-95 flex items-center gap-2 text-sm"
+                className="px-8 py-4 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold transition-all hover:shadow-lg hover:shadow-green-500/25 hover:-translate-y-0.5 flex items-center gap-2.5 text-sm uppercase tracking-wide"
               >
                 Schedule Pickup
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
-
               <button
                 onClick={scrollToAbout}
-                className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl font-bold transition-all text-sm"
+                className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-colors text-sm backdrop-blur-sm"
               >
                 Learn More
               </button>
             </div>
           </div>
 
-          <div className="lg:col-span-5 mt-10 lg:mt-0" data-aos="fade-left" data-aos-delay="400">
-            <div className="bg-white p-6 sm:p-8 rounded-[2rem] shadow-2xl space-y-6 relative overflow-hidden max-w-sm mx-auto lg:ml-auto lg:mr-0">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 -mr-12 -mt-12 rounded-full"></div>
+          {/* ── Right: Professional White UI Card ── */}
+          <div data-aos="fade-up" data-aos-delay="200" className="w-full max-w-[420px] lg:ml-auto relative z-10">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
 
-              <div className="relative">
-                <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100/50">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl shadow-inner group">
-                      <span className="group-hover:rotate-12 transition-transform">{weather.temp > 30 ? "☀️" : weather.temp > 20 ? "⛅" : "🌧️"}</span>
-                    </div>
-                    <div>
-                      <h4 className="font-extrabold text-green-900 text-lg leading-none">{weather.temp}°C</h4>
-                      <p className="text-green-600 font-bold text-[10px] uppercase tracking-widest mt-1.5">{weather.condition}</p>
-                    </div>
+              {/* Weather header */}
+              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-xl">
+                    {weather.temp > 30 ? "☀️" : weather.temp > 20 ? "⛅" : "🌧️"}
                   </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-1.5 justify-end text-green-900 font-black text-[10px] uppercase tracking-tighter">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                      Live: {locInfo}
-                    </div>
-                    <p className="text-gray-400 font-bold text-[9px] mt-1">Air Quality: <span className="text-emerald-500">Good</span></p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-sm shadow-sm">📊</div>
                   <div>
-                    <h5 className="font-black text-gray-800 text-sm tracking-tight">Mission Stats</h5>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Real-time Impacts</p>
+                    <div className="text-xl font-black text-slate-900 leading-none">{weather.temp}°C</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mt-1">{weather.condition}</div>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  {[
-                    { label: "Eco Points", end: 2400, suffix: "+", color: "text-green-600", bg: "bg-green-50" },
-                    { label: "Volunteers", end: 850, suffix: "+", color: "text-emerald-600", bg: "bg-emerald-50" },
-                    { label: "Trash Clear", end: 12, suffix: "t", color: "text-green-700", bg: "bg-green-50" },
-                    { label: "Trees Saved", end: 420, suffix: "", color: "text-emerald-700", bg: "bg-emerald-50" }
-                  ].map((stat, i) => (
-                    <div key={i} className={`${stat.bg} p-3 md:p-4 rounded-xl border border-transparent`}>
-                      <p className="text-gray-500 text-[8px] md:text-[9px] font-black mb-1 uppercase tracking-widest">{stat.label}</p>
-                      <h5 className={`text-base md:text-lg font-black ${stat.color}`}>
-                        <Counter end={stat.end} suffix={stat.suffix} />
-                      </h5>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <div className="flex justify-between text-xs mb-2">
-                    <span className="text-gray-600 font-bold uppercase">Progress</span>
-                    <span className="text-green-600 font-black">
-                      <Counter end={84} suffix="%" />
-                    </span>
+                <div className="text-right space-y-1">
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Live</span>
                   </div>
-                  <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden shrink-0">
-                    <div
-                      className="h-full bg-green-600 rounded-full shadow-lg transition-all duration-[2000ms] ease-out"
-                      style={{
-                        width: '0%',
-                        animation: 'loadProgress 2s ease-out forwards'
-                      }}
-                    ></div>
-                    <style>{`
-                      @keyframes loadProgress {
-                        from { width: 0%; }
-                        to { width: 84%; }
-                      }
-                      @keyframes bounce-subtle {
-                        0%, 100% { transform: translateY(0); }
-                        50% { transform: translateY(-3px); }
-                      }
-                      .animate-bounce-subtle {
-                        animation: bounce-subtle 1.5s infinite;
-                      }
-                    `}</style>
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <FaMapMarkerAlt className="text-slate-400 text-[9px]" />
+                    <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">{locInfo}</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* --- CONDENSED MARQUEE --- */}
-            <div className="mt-8 overflow-hidden max-w-sm mx-auto lg:ml-auto lg:mr-0">
-              <div className="animate-marquee whitespace-nowrap flex items-center gap-12 text-white/60 text-[9px] font-thin uppercase tracking-[.5em] select-none">
-                <span>Clean Kerala • Life Impact • Zero Waste • Restore Nature • Bio-Management • Future Focus • </span>
-                <span aria-hidden="true">Clean Kerala • Life Impact • Zero Waste • Restore Nature • Bio-Management • Future Focus • </span>
+              {/* Stat label */}
+              <div className="px-5 pt-5 pb-2">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mission Statistics</h3>
+              </div>
+
+              {/* 4 stat tiles — Clean grid */}
+              <div className="grid grid-cols-2 gap-px bg-slate-100 border-y border-slate-100">
+                {[
+                  { label: "Eco Points", end: 2400, suffix: "+", icon: <FaSeedling className="text-sm" />, color: "text-green-600", bg: "bg-green-50" },
+                  { label: "Volunteers", end: 850, suffix: "+", icon: <FaUsers className="text-sm" />, color: "text-blue-600", bg: "bg-blue-50" },
+                  { label: "Trash Cleared", end: 12, suffix: "t", icon: <FaRecycle className="text-sm" />, color: "text-emerald-600", bg: "bg-emerald-50" },
+                  { label: "Trees Saved", end: 420, suffix: "", icon: <FaLeaf className="text-sm" />, color: "text-teal-600", bg: "bg-teal-50" },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white px-5 py-5 hover:bg-slate-50 transition-colors">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 ${stat.bg} ${stat.color}`}>
+                      {stat.icon}
+                    </div>
+                    <div className="text-2xl font-black text-slate-900 leading-none tracking-tight">
+                      <Counter end={stat.end} suffix={stat.suffix} />
+                    </div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mt-1.5">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Progress footer */}
+              <div className="px-5 py-5 bg-slate-50/80">
+                <div className="flex justify-between items-center mb-2.5">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Annual Target Progress</span>
+                  <span className="text-xs font-black text-green-600"><Counter end={84} suffix="%" /></span>
+                </div>
+                <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500 rounded-full" style={{ animation: 'loadProgress 2.5s ease-out forwards', width: '0%' }} />
+                </div>
+                <p className="text-[10px] text-slate-500 font-medium mt-2.5">Target: 15,000 kg by Dec 2025</p>
               </div>
             </div>
           </div>
         </div>
 
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 animate-bounce cursor-pointer opacity-70 hover:opacity-100 transition-opacity" onClick={scrollToAbout}>
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity" onClick={scrollToAbout}>
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+            <div className="w-1 h-2 bg-white/60 rounded-full" />
           </div>
         </div>
       </section>
 
-      {/* --- RESPONSIBILITY SECTION --- */}
-      <section className="py-16 md:py-24 px-6 md:px-20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-20 items-center">
-          <div data-aos="fade-right">
-            <span className="text-green-600 font-bold tracking-widest uppercase text-xs md:text-sm">Our Philosophy</span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-green-900 mt-4 mb-6 leading-tight">
-              Waste Management is Not a Choice — It’s a Responsibility
+
+
+
+      {/* ═══════════════════════════════════════════
+          PHILOSOPHY SECTION — Light
+      ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 px-6 md:px-20 bg-white">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+
+          <div data-aos="fade-up">
+            <span className="text-xs font-black text-green-600 uppercase tracking-widest">Our Philosophy</span>
+            <h2 className="text-3xl md:text-5xl font-black text-green-900 mt-3 mb-5 leading-tight tracking-tight">
+              Waste Management is Not a Choice —{" "}
+              <span className="text-green-600">It's a Responsibility</span>
             </h2>
-            <div className="w-16 md:w-20 h-1.5 bg-green-600 mb-8 rounded-full"></div>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            <div className="w-10 h-0.5 bg-green-600 mb-7 rounded-full" />
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-4">
               Effective waste management protects our environment, improves public health, and promotes sustainable development.
             </p>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed">
               Proper segregation and recycling reduce landfill waste and create livelihood opportunities for communities.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 gap-3.5">
             {[
-              { val: "2.24B+", desc: "Annual Global Waste" },
-              { val: "40%", desc: "Improperly Managed" },
-              { val: "70%", desc: "Recyclable Potential" },
-              { val: "100%", desc: "Cleaner Cities Goal" }
+              { val: "2.24B+", desc: "Annual Global Waste", icon: "🌍" },
+              { val: "40%", desc: "Improperly Managed", icon: "⚠️" },
+              { val: "70%", desc: "Recyclable Potential", icon: "♻️" },
+              { val: "100%", desc: "Cleaner Cities Goal", icon: "🏙️" }
             ].map((stat, i) => (
-              <div key={i} data-aos="zoom-in" data-aos-delay={i * 100} className="bg-white p-5 md:p-8 rounded-3xl shadow-xl shadow-green-100/30 border border-gray-50 hover:-translate-y-2 transition-all">
-                <h3 className="text-xl md:text-2xl font-black text-green-600 mb-1">{stat.val}</h3>
-                <p className="text-gray-500 text-[10px] md:text-sm font-medium">{stat.desc}</p>
+              <div
+                key={i}
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+                className="border border-slate-100 p-6 rounded-2xl hover:-translate-y-1 transition-transform duration-300"
+              >
+                <div className="text-xl mb-3">{stat.icon}</div>
+                <h3 className="text-2xl md:text-3xl font-black text-green-600 mb-1 tracking-tight">{stat.val}</h3>
+                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">{stat.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* --- IMPACT COUNTER SECTION --- */}
-      <section className="relative bg-green-950 py-16 md:py-24 text-white overflow-hidden">
-        {/* Background Image integration */}
+      {/* ═══════════════════════════════════════════
+          ENVIRONMENTAL IMPACT — Dynamic Parallax
+      ═══════════════════════════════════════════ */}
+      <section className="relative py-16 md:py-20 px-6 md:px-20 overflow-hidden">
+        
+        {/* Parallax Background */}
         <div
-          className="absolute inset-0 z-0 opacity-40"
+          className="absolute inset-0 z-0 bg-fixed scale-110"
           style={{
-            backgroundImage: `url(${hero})`,
+            backgroundImage: `url(https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2000)`, // Lush dark forest canopy
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-        ></div>
+        />
+        {/* Deep premium overlay */}
+        <div className="absolute inset-0 z-10 bg-green-950/90 backdrop-blur-md" />
 
-        {/* Hero-style Gradient Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-green-950/90 via-green-900/80 to-green-950/90"></div>
+        {/* Floating animated particles (CSS defined at bottom) */}
+        <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+          <div className="absolute top-[20%] left-[10%] w-64 h-64 bg-green-500/10 rounded-full blur-3xl animate-[float_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-[20%] right-[10%] w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-[float_12s_ease-in-out_infinite_reverse]" />
+        </div>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12 md:text-center md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold">Our Environmental Impact</h2>
-            <p className="text-green-200 mt-4 text-base md:text-lg">Measuring our commitment towards sustainability.</p>
+        <div className="relative z-20 max-w-7xl mx-auto">
+
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10" data-aos="fade-up">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-900/50 border border-green-500/30 rounded-full mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-[10px] font-bold text-green-300 uppercase tracking-widest">Statewide Impact</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                Our Environmental Impact
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-xl rounded-full self-start md:self-auto hover:bg-white/20 transition-colors">
+              <FaGlobeAsia className="text-green-400 text-sm animate-[spin_10s_linear_infinite]" />
+              <span className="text-[11px] font-bold text-white uppercase tracking-wide">
+                Live Data · {formatTime(lastUpdated)}
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+          {/* 4 metric cards — Interactive Dashboard style */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: "♻️", label: "Waste Collected", end: 12450 },
-              { icon: "🔄", label: "Waste Recycled", end: 8320 },
-              { icon: "🌍", label: "CO₂ Reduced", end: 5200 },
-              { icon: "🏘️", label: "Communities", end: 120 }
+              {
+                icon: <FaRecycle className="text-xl" />,
+                label: "Waste Collected",
+                end: 12450, suffix: "+", unit: "kg",
+                desc: "Total across all panchayats",
+                color: "text-emerald-600",
+                bg: "bg-emerald-50",
+                trend: "↑ 8.2%",
+                trendColor: "text-emerald-700 bg-emerald-100",
+              },
+              {
+                icon: <FaTruck className="text-xl" />,
+                label: "Waste Recycled",
+                end: 8320, suffix: "+", unit: "kg",
+                desc: "Successfully processed material",
+                color: "text-blue-600",
+                bg: "bg-blue-50",
+                trend: "↑ 12.4%",
+                trendColor: "text-blue-700 bg-blue-100",
+              },
+              {
+                icon: <FaGlobeAsia className="text-xl" />,
+                label: "CO₂ Reduced",
+                end: 5200, suffix: "+", unit: "kg",
+                desc: "Carbon emissions prevented",
+                color: "text-teal-600",
+                bg: "bg-teal-50",
+                trend: "↑ 5.1%",
+                trendColor: "text-teal-700 bg-teal-100",
+              },
+              {
+                icon: <FaUsers className="text-xl" />,
+                label: "Communities",
+                end: 120, suffix: "+", unit: "",
+                desc: "Active participating panchayats",
+                color: "text-indigo-600",
+                bg: "bg-indigo-50",
+                trend: "+3 this month",
+                trendColor: "text-indigo-700 bg-indigo-100",
+              },
             ].map((item, i) => (
-              <div 
-                key={i} 
-                data-aos="fade-up" 
+              <div
+                key={i}
+                data-aos="fade-up"
                 data-aos-delay={i * 100}
-                className="bg-white/10 backdrop-blur-md p-6 md:p-10 rounded-2xl md:rounded-3xl border border-white/10 text-center"
+                className="group relative bg-white rounded-2xl p-5 shadow-2xl hover:-translate-y-1.5 hover:shadow-green-900/50 transition-all duration-300 flex flex-col overflow-hidden"
               >
-                <div className="text-3xl md:text-4xl mb-3 md:mb-4">{item.icon}</div>
-                <h3 className="text-2xl md:text-4xl font-black"><Counter end={item.end} suffix="+" /></h3>
-                <p className="text-green-300 text-xs md:text-lg font-medium mt-2">{item.label}</p>
+                {/* Hover shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white to-transparent opacity-0 group-hover:opacity-50 group-hover:translate-x-full duration-1000 transition-all pointer-events-none" />
+
+                {/* Icon + trend */}
+                <div className="flex items-start justify-between mb-6 relative z-10">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${item.bg} ${item.color} group-hover:scale-110 transition-transform duration-300`}>
+                    {item.icon}
+                  </div>
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${item.trendColor} shadow-sm`}>
+                    {item.trend}
+                  </span>
+                </div>
+
+                {/* Big number */}
+                <div className="mb-4 relative z-10">
+                  <div className="text-3xl lg:text-4xl font-black text-slate-900 leading-none tracking-tight group-hover:text-green-700 transition-colors">
+                    <Counter end={item.end} suffix={item.suffix} />
+                  </div>
+                  {item.unit && (
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 block">
+                      {item.unit}
+                    </span>
+                  )}
+                </div>
+
+                {/* Label + desc */}
+                <div className="mt-auto pt-4 border-t border-slate-100 relative z-10">
+                  <p className="text-xs font-bold text-slate-900 mb-1">{item.label}</p>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* Progress bar — Highly dynamic */}
+          <div className="mt-6 p-6 md:p-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl flex flex-col md:flex-row md:items-center gap-8" data-aos="fade-up">
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-bold text-green-300 uppercase tracking-widest">2025 State-wide Target Progress</span>
+                <span className="text-xs font-black text-white">84% Complete</span>
+              </div>
+              <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden shadow-inner relative">
+                <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full" style={{ animation: 'loadProgress 2.5s ease-out forwards', width: '0%' }}>
+                  <div className="absolute inset-0 bg-white/20 animate-[pulse_2s_ease-in-out_infinite]" />
+                </div>
+              </div>
+              <div className="flex justify-between mt-3">
+                <span className="text-[11px] text-white/70 font-semibold">12,450 kg collected</span>
+                <span className="text-[11px] text-white/70 font-semibold">Goal: 15,000 kg</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4 md:border-l md:border-white/20 md:pl-8">
+              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center border border-white/10 shadow-lg">
+                <FaSeedling className="text-green-400 text-2xl animate-bounce" style={{ animationDuration: '3s' }} />
+              </div>
+              <div>
+                <p className="text-lg font-black text-white">420 Trees Saved</p>
+                <p className="text-[10px] text-green-300 font-bold uppercase tracking-widest mt-1">Equivalent Impact</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* --- FEATURE SECTIONS (HKS) --- */}
-      <section className="py-16 md:py-24 px-6 md:px-20 space-y-20 md:space-y-32">
-        {/* Section 1 */}
+      {/* ═══════════════════════════════════════════
+          HKS FEATURE SECTIONS — Light
+      ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 px-6 md:px-20 bg-slate-50 space-y-20 md:space-y-28">
+
+        {/* Section label */}
+        <div className="max-w-7xl mx-auto text-center" data-aos="fade-up">
+          <span className="text-xs font-black text-green-600 uppercase tracking-widest">Our Workforce</span>
+          <h2 className="text-3xl md:text-4xl font-black text-green-900 mt-3 tracking-tight">
+            The Haritha Karma Sena
+          </h2>
+          <div className="w-12 h-0.5 bg-green-600 mx-auto mt-4 rounded-full" />
+        </div>
+
+        {/* Feature 1 */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div className="w-full md:w-1/2" data-aos="fade-right">
+          <div className="w-full md:w-1/2" data-aos="fade-up">
             <div className="relative group">
-              <div className="absolute -inset-4 bg-green-100 rounded-3xl group-hover:bg-green-200 transition-all"></div>
+              <div className="absolute -inset-3 bg-green-50 rounded-3xl group-hover:bg-green-100 transition-all duration-500" />
               <img
                 src="https://haritham.kerala.gov.in/upload/news/1718772802-hks.jpg"
                 alt="Haritha Karma Sena members collecting waste"
                 loading="lazy"
-                className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
+                className="relative w-full rounded-2xl shadow-lg"
               />
             </div>
           </div>
-          <div className="w-full md:w-1/2" data-aos="fade-left">
-            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Empowering Waste Warriors</h3>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
+          <div className="w-full md:w-1/2" data-aos="fade-up" data-aos-delay="100">
+            <span className="text-xs font-black text-green-600 uppercase tracking-widest">Community First</span>
+            <h3 className="text-2xl md:text-4xl font-black text-green-900 mb-4 mt-3 tracking-tight leading-tight">
+              Empowering Waste Warriors
+            </h3>
+            <div className="w-10 h-0.5 bg-green-500 mb-6 rounded-full" />
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-4">
               The Haritha Karma Sena (HKS) are frontline waste management workers actively engaged in scientific waste collection and segregation across Kerala.
             </p>
-            <p className="mt-4 text-gray-600 text-base md:text-lg leading-relaxed">
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed">
               Supported by local self-government initiatives, these dedicated teams ensure door-to-door waste collection while creating livelihood opportunities.
             </p>
           </div>
         </div>
 
-        {/* Section 2 */}
+        {/* Feature 2 */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
-          <div className="w-full md:w-1/2" data-aos="fade-left">
+          <div className="w-full md:w-1/2" data-aos="fade-up">
             <div className="relative group">
-              <div className="absolute -inset-4 bg-yellow-100 rounded-3xl group-hover:bg-yellow-200 transition-all"></div>
+              <div className="absolute -inset-3 bg-amber-50 rounded-3xl group-hover:bg-amber-100 transition-all duration-500" />
               <img
                 src="https://th-i.thgim.com/public/news/national/kerala/waqs07/article68560214.ece/alternates/LANDSCAPE_1200/Haritha%20Karma%20Sena.jpg"
                 alt="Kerala local bodies showing waste management models"
                 loading="lazy"
-                className="relative w-full rounded-2xl shadow-2xl transform transition duration-500"
+                className="relative w-full rounded-2xl shadow-lg"
               />
             </div>
           </div>
-          <div className="w-full md:w-1/2" data-aos="fade-right">
-            <h3 className="text-2xl md:text-4xl font-bold text-green-900 mb-6">Economic Empowerment</h3>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
+          <div className="w-full md:w-1/2" data-aos="fade-up" data-aos-delay="100">
+            <span className="text-xs font-black text-green-600 uppercase tracking-widest">Economic Impact</span>
+            <h3 className="text-2xl md:text-4xl font-black text-green-900 mb-4 mt-3 tracking-tight leading-tight">
+              Economic Empowerment
+            </h3>
+            <div className="w-10 h-0.5 bg-green-500 mb-6 rounded-full" />
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-4">
               In Amballur Panchayat, improved plastic waste segregation has significantly enhanced the earning potential of Haritha Karma Sena volunteers.
             </p>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed">
+            <p className="text-gray-400 text-base md:text-lg leading-relaxed">
               By ensuring cleaner and better-sorted materials, workers sell recyclables at higher values, strengthening both the environment and the economy.
             </p>
           </div>
@@ -429,14 +564,26 @@ const Main = forwardRef((props, ref) => {
       {/* --- SCROLL TO TOP BUTTON --- */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-24 right-8 z-[100] p-4 bg-green-600 text-white rounded-2xl shadow-2xl transition-all duration-500 transform hover:-translate-y-2 active:scale-90 border border-white/20 hover:bg-slate-900 group ${showScroll ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20 pointer-events-none"}`}
+        className={`fixed bottom-24 right-6 z-[100] p-3.5 bg-green-600 text-white rounded-2xl shadow-2xl transition-all duration-500 transform hover:-translate-y-1 active:scale-90 border border-white/20 hover:bg-green-700 group ${showScroll ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20 pointer-events-none"}`}
       >
-        <FaArrowUp className="text-xl group-hover:animate-bounce-subtle" />
+        <FaArrowUp className="text-lg" />
       </button>
 
       {/* --- CHATBOT --- */}
       <Chatbot />
-    </div >
+
+      {/* Progress bar and particle animations */}
+      <style>{`
+        @keyframes loadProgress {
+          from { width: 0%; }
+          to { width: 84%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-30px) scale(1.05); }
+        }
+      `}</style>
+    </div>
   );
 });
 

@@ -209,12 +209,12 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
   return (
     <>
-      <nav className={`fixed top-0 z-[100] transition-all duration-300 font-sans flex items-center ${
+      <nav className={`fixed top-0 z-[100] w-full left-0 flex items-center font-sans border-b transition-all duration-300 ${
         isDashboard
-          ? "h-[68px] w-full lg:w-[calc(100%-16rem)] left-0 lg:left-64 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm text-slate-800"
+          ? "h-[72px] lg:w-[calc(100%-16rem)] lg:left-64 bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-sm text-slate-800"
           : location.pathname === "/" && !isScrolled
-            ? "w-full left-0 bg-transparent text-white py-5"
-            : "h-[68px] w-full left-0 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-sm text-slate-800"
+            ? "h-[88px] bg-transparent border-transparent shadow-none text-white"
+            : "h-[72px] bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-sm text-slate-800"
       }`}>
 
         <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
@@ -476,7 +476,7 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
 
       {/* ── MOBILE STICKY SERVICE SWITCHER SUB-BAR (ONLY ON SERVICE PAGES) ── */}
       {isServicePage && (
-        <div className="fixed top-[68px] left-0 w-full z-40 bg-white/95 backdrop-blur-xl px-3 py-2 border-b border-emerald-100/90 shadow-xs md:hidden">
+        <div className="fixed top-[72px] left-0 w-full z-40 bg-white/95 backdrop-blur-xl px-3 py-2 border-b border-emerald-100/90 shadow-xs md:hidden">
           <div className="w-full max-w-sm mx-auto grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80">
             <button
               onClick={() => nav('/pick-up')}
