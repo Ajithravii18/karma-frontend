@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 .env.*
+src/.env
+*.cjs
+*.py
 !.env.example
 
 # Editor directories and files
