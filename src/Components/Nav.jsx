@@ -211,10 +211,10 @@ const Nav = ({ onHomeClick, onAboutClick, onServiceClick, onContactClick, onGall
     <>
       <nav className={`fixed top-0 z-[100] w-full left-0 flex items-center font-sans border-b transition-all duration-300 ${
         isDashboard
-          ? "h-[72px] lg:w-[calc(100%-16rem)] lg:left-64 bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-sm text-slate-800"
+          ? "h-[72px] lg:w-[calc(100%-16rem)] lg:left-64 bg-white border-slate-200 shadow-sm text-slate-800"
           : location.pathname === "/" && !isScrolled
             ? "h-[88px] bg-transparent border-transparent shadow-none text-white"
-            : "h-[72px] bg-white/95 backdrop-blur-xl border-slate-200/90 shadow-sm text-slate-800"
+            : "h-[72px] bg-white border-slate-200 shadow-sm text-slate-800"
       }`}>
 
         <div className="w-full px-4 sm:px-6 flex items-center relative z-10 justify-between">
