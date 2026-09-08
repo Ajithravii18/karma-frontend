@@ -322,141 +322,122 @@ const Main = forwardRef((props, ref) => {
       </section>
 
       {/* ═══════════════════════════════════════════
-          ENVIRONMENTAL IMPACT — Solid Dark Green
+          ENVIRONMENTAL IMPACT — Dark Green Strip
       ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-24 px-6 md:px-20 bg-[#062c16]">
+      <section className="py-20 md:py-28 px-6 md:px-20 bg-green-950">
         <div className="max-w-7xl mx-auto">
 
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12" data-aos="fade-up">
+          {/* ── Header ── */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14" data-aos="fade-up">
             <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#104325] rounded-full mb-4 shadow-[0_4px_14px_0_rgba(16,67,37,0.39)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Statewide Impact</span>
-              </div>
-              <h2 className="text-3xl md:text-5xl lg:text-[2.75rem] font-black text-white tracking-tight leading-tight drop-shadow-lg">
+              <span className="text-xs font-black text-green-400 uppercase tracking-widest">Statewide Dashboard · Live</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white mt-3 tracking-tight leading-tight">
                 Our Environmental Impact
               </h2>
+              <div className="w-12 h-0.5 bg-green-500 mt-4 rounded-full" />
             </div>
-            <div className="flex items-center gap-2.5 px-4 py-2 bg-[#21432f] rounded-full self-start md:self-auto shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-              <FaGlobeAsia className="text-emerald-400 text-sm animate-[spin_10s_linear_infinite] drop-shadow-sm" />
-              <span className="text-[11px] font-bold text-white uppercase tracking-wider">
-                Live Data - {formatTime(lastUpdated)}
-              </span>
+            <div className="flex items-center gap-2 self-start md:self-auto">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-xs font-bold text-green-500 uppercase tracking-widest">Updated {formatTime(lastUpdated)}</span>
             </div>
           </div>
 
-          {/* 4 metric cards — Solid Dashboard style */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* ── 4 Stat Columns ── */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/10 border border-white/10 rounded-2xl bg-white/5 mb-10 overflow-hidden" data-aos="fade-up">
             {[
-              {
-                icon: <FaRecycle className="text-xl" />,
-                label: "Waste Collected",
-                end: 12450, suffix: "+", unit: "KG",
-                desc: "Total across all panchayats",
-                color: "text-emerald-500",
-                bg: "bg-emerald-50",
-                trend: "↑ 8.2%",
-                trendColor: "text-emerald-600 bg-emerald-100/60",
-              },
-              {
-                icon: <FaTruck className="text-xl" />,
-                label: "Waste Recycled",
-                end: 8320, suffix: "+", unit: "KG",
-                desc: "Successfully processed material",
-                color: "text-blue-500",
-                bg: "bg-blue-50",
-                trend: "↑ 12.4%",
-                trendColor: "text-blue-600 bg-blue-100/60",
-              },
-              {
-                icon: <FaGlobeAsia className="text-xl" />,
-                label: "CO₂ Reduced",
-                end: 5200, suffix: "+", unit: "KG",
-                desc: "Carbon emissions prevented",
-                color: "text-teal-500",
-                bg: "bg-teal-50",
-                trend: "↑ 5.1%",
-                trendColor: "text-teal-600 bg-teal-100/60",
-              },
-              {
-                icon: <FaUsers className="text-xl" />,
-                label: "Communities",
-                end: 120, suffix: "+", unit: "",
-                desc: "Active participating panchayats",
-                color: "text-indigo-500",
-                bg: "bg-indigo-50",
-                trend: "+3 this month",
-                trendColor: "text-indigo-600 bg-indigo-100/60",
-              },
+              { icon: <FaRecycle />, label: "Waste Collected", end: 12450, suffix: "+", unit: "KG",        tag: "↑ 8.2%",  tagClass: "bg-green-400/20 text-green-300" },
+              { icon: <FaTruck />,   label: "Waste Recycled",  end: 8320,  suffix: "+", unit: "KG",        tag: "↑ 12.4%", tagClass: "bg-blue-400/20 text-blue-300" },
+              { icon: <FaWind />,    label: "CO₂ Reduced",     end: 5200,  suffix: "+", unit: "KG",        tag: "↑ 5.1%",  tagClass: "bg-teal-400/20 text-teal-300" },
+              { icon: <FaUsers />,   label: "Communities",     end: 120,   suffix: "+", unit: "Panchayats", tag: "+3 new",  tagClass: "bg-amber-400/20 text-amber-300" },
             ].map((item, i) => (
               <div
                 key={i}
                 data-aos="fade-up"
-                data-aos-delay={i * 100}
-                className="group bg-white rounded-2xl p-6 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)] flex flex-col hover:-translate-y-2 hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.6)] transition-all duration-300"
+                data-aos-delay={i * 80}
+                className="flex flex-col p-7 md:p-10 hover:bg-white/5 transition-colors duration-300 group"
               >
-                {/* Icon + trend */}
-                <div className="flex items-start justify-between mb-8">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${item.bg} ${item.color} group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                    {item.icon}
-                  </div>
-                  <span className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full ${item.trendColor} shadow-sm`}>
-                    {item.trend}
-                  </span>
+                <div className="text-green-500 text-lg mb-5 group-hover:text-green-300 transition-colors duration-300">
+                  {item.icon}
                 </div>
-
-                {/* Big number */}
-                <div className="mb-5">
-                  <div className="text-3xl lg:text-[2rem] font-black text-[#101828] leading-none tracking-tight group-hover:text-emerald-700 transition-colors duration-300">
-                    <Counter end={item.end} suffix={item.suffix} />
-                  </div>
-                  {item.unit && (
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 block">
-                      {item.unit}
-                    </span>
-                  )}
+                <div className="text-4xl md:text-5xl font-black text-white leading-none tracking-tight">
+                  <Counter end={item.end} suffix={item.suffix} />
                 </div>
-
-                {/* Label + desc */}
-                <div className="mt-auto pt-4 border-t border-slate-100">
-                  <p className="text-xs font-bold text-[#101828] mb-1">{item.label}</p>
-                  <p className="text-[11px] text-slate-400">{item.desc}</p>
+                <div className="text-[10px] font-black text-green-600 uppercase tracking-widest mt-1.5 mb-5">{item.unit}</div>
+                <div className="border-t border-white/10 pt-4 flex items-center justify-between mt-auto">
+                  <span className="text-sm font-bold text-white/70">{item.label}</span>
+                  <span className={`text-[10px] font-black px-2 py-1 rounded-full ${item.tagClass}`}>{item.tag}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Progress bar — Solid Dark Container */}
-          <div className="mt-8 p-7 md:p-8 bg-[#183925] rounded-2xl flex flex-col md:flex-row md:items-center gap-8 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] hover:shadow-[0_25px_60px_-12px_rgba(0,0,0,0.6)] hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest drop-shadow-sm">2025 State-wide Target Progress</span>
-                <span className="text-[11px] font-bold text-white drop-shadow-sm">84% Complete</span>
+          {/* ── Bottom Two Columns ── */}
+          <div className="grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="100">
+
+            {/* Progress Card */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-black text-green-400 uppercase tracking-widest">2025 State-wide Target</span>
+                <span className="text-xs font-black text-green-300 bg-green-400/15 px-3 py-1 rounded-full">84% Complete</span>
               </div>
-              <div className="w-full h-2.5 bg-[#062c16] rounded-full overflow-hidden shadow-inner relative">
-                <div className="absolute top-0 left-0 h-full bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.6)]" style={{ animation: 'loadProgress 2.5s ease-out forwards', width: '0%' }}>
-                  <div className="absolute inset-0 bg-white/20 animate-[pulse_2s_ease-in-out_infinite]" />
-                </div>
+              <p className="text-white/40 text-sm mb-6 mt-1">Statewide waste collection toward annual goal of 15,000 kg</p>
+
+              <div className="w-full h-1.5 bg-white/10 rounded-full mb-2">
+                <div
+                  className="h-full bg-green-500 rounded-full"
+                  style={{ animation: "loadProgress 2.5s ease-out forwards", width: "0%" }}
+                />
               </div>
-              <div className="flex justify-between mt-3">
-                <span className="text-[10px] text-emerald-100/70 font-semibold">12,450 kg collected</span>
-                <span className="text-[10px] text-emerald-100/70 font-semibold">Goal: 15,000 kg</span>
+              <div className="flex justify-between text-xs font-semibold text-white/30">
+                <span>12,450 kg collected</span>
+                <span>Goal: 15,000 kg</span>
+              </div>
+
+              <div className="mt-8 divide-y divide-white/10">
+                {[
+                  { label: "On Track",  value: "84%",      color: "text-green-400" },
+                  { label: "Remaining", value: "2,550 kg", color: "text-amber-400" },
+                  { label: "Days Left", value: "122 days", color: "text-blue-400" },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-center justify-between py-3">
+                    <span className="text-sm font-semibold text-white/50">{s.label}</span>
+                    <span className={`text-lg font-black ${s.color}`}>{s.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
-            
-            <div className="flex items-center gap-4 md:border-l md:border-[#21432f] md:pl-8">
-              <div className="w-12 h-12 bg-[#21432f] rounded-xl flex items-center justify-center border border-[#2a553c] shadow-inner group cursor-default">
-                <FaSeedling className="text-emerald-400 text-xl animate-[pulse_3s_ease-in-out_infinite] group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" />
+
+            {/* Equivalent Impact Card */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+              <span className="text-xs font-black text-green-400 uppercase tracking-widest">Equivalent Impact</span>
+              <p className="text-white/40 text-sm mt-1 mb-8">What these numbers mean for Kerala's environment</p>
+
+              <div className="divide-y divide-white/10">
+                {[
+                  { icon: <FaLeaf />,            label: "Trees Saved", value: "420",    color: "text-green-400",  bg: "bg-green-400/15" },
+                  { icon: <FaThermometerHalf />, label: "CO₂ Offset",  value: "5.2 T",  color: "text-blue-400",   bg: "bg-blue-400/15" },
+                  { icon: <FaSeedling />,         label: "Eco Points",  value: "2,400+", color: "text-teal-400",   bg: "bg-teal-400/15" },
+                ].map((eq, i) => (
+                  <div key={i} className="flex items-center gap-4 py-4 group">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${eq.bg} ${eq.color} group-hover:scale-110 transition-transform duration-200`}>
+                      {eq.icon}
+                    </div>
+                    <span className="text-sm font-semibold text-white/50 flex-1">{eq.label}</span>
+                    <span className={`text-2xl font-black ${eq.color}`}>{eq.value}</span>
+                  </div>
+                ))}
               </div>
-              <div>
-                <p className="text-lg font-black text-white drop-shadow-md">420 Trees Saved</p>
-                <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-0.5 drop-shadow-sm">Equivalent Impact</p>
+
+              <div className="flex items-center gap-2 mt-8 pt-5 border-t border-white/10">
+                <FaGlobeAsia className="text-green-600 text-xs" />
+                <span className="text-xs text-white/30 font-medium">Data refreshed every 60 seconds</span>
               </div>
             </div>
+
           </div>
         </div>
       </section>
+
 
       {/* ═══════════════════════════════════════════
           HKS FEATURE SECTIONS — Light
